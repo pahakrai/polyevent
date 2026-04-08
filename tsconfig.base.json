@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "preserve",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@event-booking-app/shared-types": ["libs/shared-types/src/index.ts"],
+      "@event-booking-app/kafka-client": ["libs/kafka-client/src/index.ts"],
+      "@event-booking-app/database-client": ["libs/database-client/src/index.ts"],
+      "@event-booking-app/elasticsearch-client": ["libs/elasticsearch-client/src/index.ts"],
+      "@event-booking-app/utils": ["libs/utils/src/index.ts"]
+    }
+  }
+}

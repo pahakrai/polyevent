@@ -1,0 +1,18 @@
+{
+  "$schema": "./node_modules/nx/schemas/workspace-schema.json",
+  "version": 2,
+  "projects": {
+    "frontend": "apps/frontend",
+    "api-gateway": "apps/nestjs-services/api-gateway",
+    "auth-service": "apps/nestjs-services/auth-service",
+    "user-service": "apps/nestjs-services/user-service",
+    "vendor-service": "apps/nestjs-services/vendor-service",
+    "event-service": "apps/nestjs-services/event-service",
+    "booking-service": "apps/nestjs-services/booking-service",
+    "shared-types": "libs/shared-types",
+    "kafka-client": "libs/kafka-client",
+    "database-client": "libs/database-client",
+    "elasticsearch-client": "libs/elasticsearch-client",
+    "utils": "libs/utils"
+  }
+}
