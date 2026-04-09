@@ -14,7 +14,19 @@
       "Bash(npm install:*)",
       "Bash(npm run:*)",
       "Bash(git init:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git config:*)",
+      "Bash(git remote:*)",
+      "Bash(git branch:*)",
+      "Bash(git push:*)",
+      "Bash(xargs wc:*)",
+      "Bash(xargs -I {} head -15 {})",
+      "Bash(xargs cat:*)",
+      "Bash(grep -r \"@polydom\\\\|polydom\" /c/Users/user/repo/polydom/tsconfig*.json /c/Users/user/repo/polydom/nx.json)",
+      "Bash(awk '{print $2, $1}')",
+      "Bash(sort -k2 -rn)",
+      "Bash([ -d \"/c/Users/user/repo/polydom/apps/nestjs-services/$service/src/database/migrations\" ])"
     ]
   },
   "enableAllProjectMcpServers": true,

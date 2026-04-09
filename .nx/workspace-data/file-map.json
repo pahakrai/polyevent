@@ -1,0 +1,463 @@
+{
+  "version": "6.0",
+  "nxVersion": "22.6.4",
+  "pathMappings": {
+    "@event-booking-app/shared-types": [
+      "libs/shared-types/src/index.ts"
+    ],
+    "@event-booking-app/kafka-client": [
+      "libs/kafka-client/src/index.ts"
+    ],
+    "@event-booking-app/database-client": [
+      "libs/database-client/src/index.ts"
+    ],
+    "@event-booking-app/elasticsearch-client": [
+      "libs/elasticsearch-client/src/index.ts"
+    ],
+    "@event-booking-app/utils": [
+      "libs/utils/src/index.ts"
+    ]
+  },
+  "nxJsonPlugins": [],
+  "fileMap": {
+    "nonProjectFiles": [
+      {
+        "file": ".claude/settings.local.json",
+        "hash": "10260819007430624426"
+      },
+      {
+        "file": ".env.example",
+        "hash": "5629408253934016271"
+      },
+      {
+        "file": ".gitignore",
+        "hash": "16788933634016478512"
+      },
+      {
+        "file": ".mcp.json",
+        "hash": "12374840765403452"
+      },
+      {
+        "file": "CLAUDE.md",
+        "hash": "11771825926385315093"
+      },
+      {
+        "file": "DATABASE_SETUP.md",
+        "hash": "3609932330501013238"
+      },
+      {
+        "file": "LIBRARY_AUDIT.md",
+        "hash": "6721287226051533712"
+      },
+      {
+        "file": "README.md",
+        "hash": "1716317662541521334"
+      },
+      {
+        "file": "apps/nestjs-services/api-gateway/package.json",
+        "hash": "1658315154941917076"
+      },
+      {
+        "file": "apps/nestjs-services/api-gateway/src/app.module.ts",
+        "hash": "12543256929898361331"
+      },
+      {
+        "file": "apps/nestjs-services/api-gateway/src/main.ts",
+        "hash": "10149742210241752728"
+      },
+      {
+        "file": "apps/nestjs-services/auth-service/package.json",
+        "hash": "17563355352026956307"
+      },
+      {
+        "file": "apps/nestjs-services/auth-service/src/database/client.ts",
+        "hash": "10472606658976773712"
+      },
+      {
+        "file": "apps/nestjs-services/auth-service/src/database/drizzle.config.ts",
+        "hash": "15587392433653920123"
+      },
+      {
+        "file": "apps/nestjs-services/auth-service/src/database/schema.ts",
+        "hash": "9200319616003916182"
+      },
+      {
+        "file": "apps/nestjs-services/auth-service/src/database/seed.ts",
+        "hash": "17186431218360313223"
+      },
+      {
+        "file": "apps/nestjs-services/event-service/package.json",
+        "hash": "14206385780871994961"
+      },
+      {
+        "file": "apps/nestjs-services/event-service/src/database/client.ts",
+        "hash": "17071257998227735304"
+      },
+      {
+        "file": "apps/nestjs-services/event-service/src/database/drizzle.config.ts",
+        "hash": "13730028566547406134"
+      },
+      {
+        "file": "apps/nestjs-services/event-service/src/database/schema.ts",
+        "hash": "17342595860791084088"
+      },
+      {
+        "file": "apps/nestjs-services/event-service/src/database/seed.ts",
+        "hash": "1030895438008882326"
+      },
+      {
+        "file": "apps/nestjs-services/user-service/package.json",
+        "hash": "7550826451971763776"
+      },
+      {
+        "file": "apps/nestjs-services/user-service/src/database/client.ts",
+        "hash": "12016357734130060700"
+      },
+      {
+        "file": "apps/nestjs-services/user-service/src/database/drizzle.config.ts",
+        "hash": "12363974207777094143"
+      },
+      {
+        "file": "apps/nestjs-services/user-service/src/database/schema.ts",
+        "hash": "18023794927265542038"
+      },
+      {
+        "file": "apps/nestjs-services/user-service/src/database/seed.ts",
+        "hash": "10303460762560022532"
+      },
+      {
+        "file": "apps/nestjs-services/vendor-service/package.json",
+        "hash": "369043761428580197"
+      },
+      {
+        "file": "apps/nestjs-services/vendor-service/src/database/client.ts",
+        "hash": "7106277071096848616"
+      },
+      {
+        "file": "apps/nestjs-services/vendor-service/src/database/drizzle.config.ts",
+        "hash": "10903402517207277693"
+      },
+      {
+        "file": "apps/nestjs-services/vendor-service/src/database/schema.ts",
+        "hash": "11321983645532859789"
+      },
+      {
+        "file": "apps/nestjs-services/vendor-service/src/database/seed.ts",
+        "hash": "18345060001136568692"
+      },
+      {
+        "file": "apps/python-workers/inference/search_ranker.py",
+        "hash": "6552098265790665306"
+      },
+      {
+        "file": "apps/python-workers/kafka-consumers/user_activity.py",
+        "hash": "2422241715188776341"
+      },
+      {
+        "file": "apps/python-workers/ml-training/data_pipeline.py",
+        "hash": "7094926228612518337"
+      },
+      {
+        "file": "apps/python-workers/requirements.txt",
+        "hash": "17790880969873881720"
+      },
+      {
+        "file": "docker-compose.yml",
+        "hash": "8847625533028306124"
+      },
+      {
+        "file": "kubernetes/deployments/api-gateway.yaml",
+        "hash": "1228238865893427862"
+      },
+      {
+        "file": "kubernetes/ingress/main.yaml",
+        "hash": "6881770087869676977"
+      },
+      {
+        "file": "kubernetes/namespaces/production.yaml",
+        "hash": "7651179841045392559"
+      },
+      {
+        "file": "kubernetes/services/api-gateway.yaml",
+        "hash": "12620553879027867683"
+      },
+      {
+        "file": "libs/README.md",
+        "hash": "6480955109153741294"
+      },
+      {
+        "file": "libs/database-client/README.md",
+        "hash": "14590027073732409400"
+      },
+      {
+        "file": "libs/database-client/src/index.ts",
+        "hash": "4013006593123977490"
+      },
+      {
+        "file": "libs/database-client/src/mongodb/client.ts",
+        "hash": "4669452872663671270"
+      },
+      {
+        "file": "libs/database-client/src/postgres/client.ts",
+        "hash": "15430409450600497533"
+      },
+      {
+        "file": "libs/database-client/src/redis/client.ts",
+        "hash": "8031300489976424531"
+      },
+      {
+        "file": "libs/database-client/tsconfig.json",
+        "hash": "14910574388472849694"
+      },
+      {
+        "file": "libs/database-client/tsconfig.lib.json",
+        "hash": "1228397500344543838"
+      },
+      {
+        "file": "libs/elasticsearch-client/README.md",
+        "hash": "13498479702770836583"
+      },
+      {
+        "file": "libs/elasticsearch-client/src/client.ts",
+        "hash": "14083504768454918861"
+      },
+      {
+        "file": "libs/elasticsearch-client/src/index.ts",
+        "hash": "11451905655900698995"
+      },
+      {
+        "file": "libs/elasticsearch-client/src/indices/event.index.ts",
+        "hash": "17313020960669719209"
+      },
+      {
+        "file": "libs/elasticsearch-client/src/queries/event.queries.ts",
+        "hash": "14765699366863561524"
+      },
+      {
+        "file": "libs/elasticsearch-client/tsconfig.json",
+        "hash": "14910574388472849694"
+      },
+      {
+        "file": "libs/elasticsearch-client/tsconfig.lib.json",
+        "hash": "1228397500344543838"
+      },
+      {
+        "file": "libs/kafka-client/README.md",
+        "hash": "2195129752643027704"
+      },
+      {
+        "file": "libs/kafka-client/src/consumers/base.consumer.ts",
+        "hash": "9976406348009847683"
+      },
+      {
+        "file": "libs/kafka-client/src/index.ts",
+        "hash": "1314284856679129417"
+      },
+      {
+        "file": "libs/kafka-client/src/producers/base.producer.ts",
+        "hash": "14876823922588707146"
+      },
+      {
+        "file": "libs/kafka-client/src/schemas/user-activity.schema.ts",
+        "hash": "7682868516964038093"
+      },
+      {
+        "file": "libs/kafka-client/tsconfig.json",
+        "hash": "14910574388472849694"
+      },
+      {
+        "file": "libs/kafka-client/tsconfig.lib.json",
+        "hash": "1228397500344543838"
+      },
+      {
+        "file": "libs/shared-types/README.md",
+        "hash": "14158794989228259769"
+      },
+      {
+        "file": "libs/shared-types/src/auth.interface.ts",
+        "hash": "4290227371067897635"
+      },
+      {
+        "file": "libs/shared-types/src/booking.interface.ts",
+        "hash": "5662277671908658443"
+      },
+      {
+        "file": "libs/shared-types/src/domain/entities/entity.ts",
+        "hash": "710759051512273416"
+      },
+      {
+        "file": "libs/shared-types/src/domain/entities/user.entity.ts",
+        "hash": "9344335295370911448"
+      },
+      {
+        "file": "libs/shared-types/src/domain/index.ts",
+        "hash": "17776818103623742227"
+      },
+      {
+        "file": "libs/shared-types/src/domain/repositories/base.repository.ts",
+        "hash": "9735710946686483660"
+      },
+      {
+        "file": "libs/shared-types/src/domain/repositories/user.repository.ts",
+        "hash": "13871244392413834186"
+      },
+      {
+        "file": "libs/shared-types/src/domain/value-objects/location.ts",
+        "hash": "13758985644299586429"
+      },
+      {
+        "file": "libs/shared-types/src/domain/value-objects/notification-settings.ts",
+        "hash": "14330363508937135295"
+      },
+      {
+        "file": "libs/shared-types/src/domain/value-objects/user-preferences.ts",
+        "hash": "11987902966479992787"
+      },
+      {
+        "file": "libs/shared-types/src/domain/value-objects/user-role.ts",
+        "hash": "8339183863073944887"
+      },
+      {
+        "file": "libs/shared-types/src/event.interface.ts",
+        "hash": "13586494647808905802"
+      },
+      {
+        "file": "libs/shared-types/src/index.ts",
+        "hash": "12302538591713708185"
+      },
+      {
+        "file": "libs/shared-types/src/persistence/index.ts",
+        "hash": "18165186767018723946"
+      },
+      {
+        "file": "libs/shared-types/src/persistence/interfaces/database-adapter.interface.ts",
+        "hash": "16405371118546255684"
+      },
+      {
+        "file": "libs/shared-types/src/persistence/interfaces/database-config.interface.ts",
+        "hash": "9134039248853165430"
+      },
+      {
+        "file": "libs/shared-types/src/persistence/interfaces/repository-factory.interface.ts",
+        "hash": "12951747732697070879"
+      },
+      {
+        "file": "libs/shared-types/src/user.interface.ts",
+        "hash": "10809267939077198955"
+      },
+      {
+        "file": "libs/shared-types/src/vendor.interface.ts",
+        "hash": "5397910840011394668"
+      },
+      {
+        "file": "libs/shared-types/tsconfig.json",
+        "hash": "14910574388472849694"
+      },
+      {
+        "file": "libs/shared-types/tsconfig.lib.json",
+        "hash": "1228397500344543838"
+      },
+      {
+        "file": "libs/utils/README.md",
+        "hash": "738884875471645193"
+      },
+      {
+        "file": "libs/utils/src/index.ts",
+        "hash": "10128229876940829604"
+      },
+      {
+        "file": "libs/utils/src/logger/console.logger.ts",
+        "hash": "7737896131579695934"
+      },
+      {
+        "file": "libs/utils/src/logger/logger.interface.ts",
+        "hash": "9633930139258311075"
+      },
+      {
+        "file": "libs/utils/src/logger/logger.service.ts",
+        "hash": "470463823359394166"
+      },
+      {
+        "file": "libs/utils/src/logger/nest-logger.adapter.ts",
+        "hash": "6743283142485387148"
+      },
+      {
+        "file": "libs/utils/src/transformers/date.transformer.ts",
+        "hash": "3262416956447932244"
+      },
+      {
+        "file": "libs/utils/src/validators/email.validator.ts",
+        "hash": "672915779533785273"
+      },
+      {
+        "file": "libs/utils/tsconfig.json",
+        "hash": "14910574388472849694"
+      },
+      {
+        "file": "libs/utils/tsconfig.lib.json",
+        "hash": "1228397500344543838"
+      },
+      {
+        "file": "nx.json",
+        "hash": "10245926671815782552"
+      },
+      {
+        "file": "package-lock.json",
+        "hash": "17782553471352416391"
+      },
+      {
+        "file": "package.json",
+        "hash": "16302348862531897842"
+      },
+      {
+        "file": "tools/postgres-init/01-create-databases.sql",
+        "hash": "68673562729572701"
+      },
+      {
+        "file": "tools/scripts/setup.sh",
+        "hash": "14093110045732811386"
+      },
+      {
+        "file": "tsconfig.base.json",
+        "hash": "2190697350756581398"
+      },
+      {
+        "file": "workspace.json",
+        "hash": "15903075263959366829"
+      }
+    ],
+    "projectFileMap": {
+      "frontend": [
+        {
+          "file": "apps/frontend/next.config.js",
+          "hash": "10371120209161442103"
+        },
+        {
+          "file": "apps/frontend/package.json",
+          "hash": "11565801418836951795",
+          "deps": [
+            "npm:@types/node",
+            "npm:@types/react",
+            "npm:@types/react-dom",
+            "npm:autoprefixer",
+            "npm:postcss@8.4.31",
+            "npm:typescript",
+            "npm:next@14.2.35",
+            "npm:react@18.3.1",
+            "npm:react-dom@18.3.1",
+            "npm:@tanstack/react-query",
+            "npm:zustand",
+            "npm:axios",
+            "npm:tailwindcss",
+            "npm:shadcn-ui"
+          ]
+        },
+        {
+          "file": "apps/frontend/src/app/page.tsx",
+          "hash": "17646463169637341489"
+        }
+      ]
+    }
+  },
+  "externalNodesHash": "17409946126703430532"
+}
