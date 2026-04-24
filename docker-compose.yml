@@ -114,11 +114,11 @@ services:
     volumes:
       - grafana_data:/var/lib/grafana
 
-  # Application Services (to be built locally)
+  # Application Services — built from repo root for monorepo context
   api-gateway:
     build:
-      context: ./apps/nestjs-services/api-gateway
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./apps/nestjs-services/api-gateway/Dockerfile
     depends_on:
       - postgres
       - redis
@@ -130,35 +130,26 @@ services:
       KAFKA_BROKERS: kafka:9092
     ports:
       - "3000:3000"
-    volumes:
-      - ./apps/nestjs-services/api-gateway:/app
-      - /app/node_modules
 
   frontend:
     build:
-      context: ./apps/frontend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./apps/frontend/Dockerfile
     ports:
       - "3002:3000"
     environment:
       NEXT_PUBLIC_API_URL: http://localhost:3000
-    volumes:
-      - ./apps/frontend:/app
-      - /app/node_modules
-      - /app/.next
 
   python-workers:
     build:
-      context: ./apps/python-workers
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./apps/python-workers/Dockerfile
     depends_on:
       - kafka
       - elasticsearch
     environment:
       KAFKA_BROKERS: kafka:9092
       ELASTICSEARCH_HOSTS: http://elasticsearch:9200
-    volumes:
-      - ./apps/python-workers:/app
     command: python -m kafka-consumers.user_activity
 
 volumes:

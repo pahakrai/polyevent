@@ -26,7 +26,10 @@
       "Bash(grep -r \"@polydom\\\\|polydom\" /c/Users/user/repo/polydom/tsconfig*.json /c/Users/user/repo/polydom/nx.json)",
       "Bash(awk '{print $2, $1}')",
       "Bash(sort -k2 -rn)",
-      "Bash([ -d \"/c/Users/user/repo/polydom/apps/nestjs-services/$service/src/database/migrations\" ])"
+      "Bash([ -d \"/c/Users/user/repo/polydom/apps/nestjs-services/$service/src/database/migrations\" ])",
+      "Bash(npx drizzle-kit:*)",
+      "Bash(cat C:/Users/user/repo/polydom/tools/postgres-init/*.sql)",
+      "Bash(nx show:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

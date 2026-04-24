@@ -1,0 +1,11 @@
+# Default deny-all ingress within the namespace.
+# Each service must be explicitly allowed via its own NetworkPolicy.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-all
+  namespace: production
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress

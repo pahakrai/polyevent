@@ -1,32 +1,37 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseAdapter } from '@polydom/shared-types';
-import { dbClient } from '../../../../database/client';
+import { PostgresClient } from '@polydom/database-client';
 
 /**
- * PostgreSQL adapter using Drizzle ORM
+ * PostgreSQL adapter wrapping the shared PostgresClient.
  */
 @Injectable()
 export class PostgresAdapter implements DatabaseAdapter {
-  constructor() {}
+  private client: PostgresClient;
+
+  constructor() {
+    this.client = new PostgresClient();
+  }
+
+  initialize(databaseUrl: string, schema: Record<string, unknown>) {
+    this.client.initialize(databaseUrl, schema);
+  }
 
   async connect(): Promise<void> {
-    await dbClient.connect();
+    await this.client.connect();
   }
 
   async disconnect(): Promise<void> {
-    await dbClient.disconnect();
+    await this.client.disconnect();
   }
 
   isConnected(): boolean {
-    // Since Neon serverless doesn't have persistent connection,
-    // we assume connected if client is initialized
-    return true;
+    return this.client.isConnected();
   }
 
   async beginTransaction(): Promise<void> {
-    // Drizzle with Neon serverless may not support transactions directly
-    // For now, we'll implement a placeholder
-    // In production, you'd use the appropriate transaction API
+    // Drizzle with Neon serverless does not support native transactions.
+    // Use Neon SQL transaction blocks in production.
     console.warn('Transactions not fully implemented for Neon serverless');
   }
 
@@ -39,13 +44,10 @@ export class PostgresAdapter implements DatabaseAdapter {
   }
 
   async executeQuery<T = any>(sql: string, params?: any[]): Promise<T[]> {
-    // For raw queries, we need access to the underlying client
-    // Neon client supports raw queries
-    const result = await dbClient.dbInstance.execute(sql, params);
-    return result as T[];
+    return this.client.executeQuery<T>(sql, params);
   }
 
   getClient(): any {
-    return dbClient.dbInstance;
+    return this.client.dbInstance;
   }
 }

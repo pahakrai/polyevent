@@ -1,0 +1,140 @@
+# PostgreSQL — single-instance with persistent storage.
+# For production HA: use CloudNativePG operator (https://cloudnative-pg.io)
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+  namespace: production
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+  storageClassName: standard
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-credentials
+  namespace: production
+type: Opaque
+stringData:
+  POSTGRES_USER: "eventbooking"
+  POSTGRES_PASSWORD: "change-me-use-sealed-secrets"
+  POSTGRES_DB: "eventbooking"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-init
+  namespace: production
+data:
+  01-create-databases.sql: |
+    CREATE DATABASE gateway_db;
+    CREATE DATABASE auth_db;
+    CREATE DATABASE user_db;
+    CREATE DATABASE vendor_db;
+    CREATE DATABASE event_db;
+    CREATE DATABASE booking_db;
+    CREATE DATABASE notification_db;
+    CREATE DATABASE analytics_db;
+    CREATE DATABASE admin_db;
+    GRANT ALL PRIVILEGES ON DATABASE gateway_db TO eventbooking;
+    GRANT ALL PRIVILEGES ON DATABASE auth_db TO eventbooking;
+    GRANT ALL PRIVILEGES ON DATABASE user_db TO eventbooking;
+    GRANT ALL PRIVILEGES ON DATABASE vendor_db TO eventbooking;
+    GRANT ALL PRIVILEGES ON DATABASE event_db TO eventbooking;
+    GRANT ALL PRIVILEGES ON DATABASE booking_db TO eventbooking;
+    GRANT ALL PRIVILEGES ON DATABASE notification_db TO eventbooking;
+    GRANT ALL PRIVILEGES ON DATABASE analytics_db TO eventbooking;
+    GRANT ALL PRIVILEGES ON DATABASE admin_db TO eventbooking;
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: production
+  labels:
+    app: postgres
+    tier: infrastructure
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+        tier: infrastructure
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 999
+        runAsGroup: 999
+        fsGroup: 999
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: postgres
+        image: postgres:15-alpine
+        ports:
+        - containerPort: 5432
+          protocol: TCP
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+        envFrom:
+        - secretRef:
+            name: postgres-credentials
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
+        - name: init-scripts
+          mountPath: /docker-entrypoint-initdb.d
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        livenessProbe:
+          exec:
+            command: ["pg_isready", "-U", "eventbooking"]
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+        readinessProbe:
+          exec:
+            command: ["pg_isready", "-U", "eventbooking"]
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+      volumes:
+      - name: postgres-data
+        persistentVolumeClaim:
+          claimName: postgres-pvc
+      - name: init-scripts
+        configMap:
+          name: postgres-init
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+  namespace: production
+spec:
+  selector:
+    app: postgres
+  ports:
+  - protocol: TCP
+    port: 5432
+    targetPort: 5432
+  type: ClusterIP

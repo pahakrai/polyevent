@@ -1,0 +1,58 @@
+# ============================================================================
+# Kafka — For production, use Strimzi operator instead of plain StatefulSet.
+# Strimzi provides: automated rolling updates, topic management, metrics, scaling.
+#
+# Install:  kubectl create -f 'https://strimzi.io/install/latest?namespace=production'
+# Then create a Kafka CR:
+#
+#   apiVersion: kafka.strimzi.io/v1beta2
+#   kind: Kafka
+#   metadata:
+#     name: eventbooking-cluster
+#     namespace: production
+#   spec:
+#     kafka:
+#       replicas: 3
+#       storage:
+#         type: jbod
+#         volumes:
+#           - type: persistent-claim
+#             size: 50Gi
+#       listeners:
+#         - name: plain
+#           port: 9092
+#           type: internal
+#           tls: false
+#       config:
+#         offsets.topic.replication.factor: 3
+#     zookeeper:
+#       replicas: 3
+#       storage:
+#         type: persistent-claim
+#         size: 20Gi
+#
+# This file documents the expected endpoint for app services.
+# ============================================================================
+
+# Minimal Kafka + Zookeeper for development only — NOT for production.
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-service
+  namespace: production
+  labels:
+    app: kafka
+spec:
+  clusterIP: None
+  selector:
+    app: kafka
+  ports:
+  - name: kafka
+    protocol: TCP
+    port: 9092
+    targetPort: 9092
+  - name: controller
+    protocol: TCP
+    port: 9093
+    targetPort: 9093

@@ -1,0 +1,21 @@
+# Allow ingress traffic to API Gateway from the frontend and external sources.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-api-gateway
+  namespace: production
+spec:
+  podSelector:
+    matchLabels:
+      app: api-gateway
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: frontend
+        - namespaceSelector: {}
+      ports:
+        - protocol: TCP
+          port: 3000
+  policyTypes:
+    - Ingress

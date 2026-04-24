@@ -18,11 +18,11 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
-      "@event-booking-app/shared-types": ["libs/shared-types/src/index.ts"],
-      "@event-booking-app/kafka-client": ["libs/kafka-client/src/index.ts"],
-      "@event-booking-app/database-client": ["libs/database-client/src/index.ts"],
-      "@event-booking-app/elasticsearch-client": ["libs/elasticsearch-client/src/index.ts"],
-      "@event-booking-app/utils": ["libs/utils/src/index.ts"]
+      "@polydom/shared-types": ["libs/shared-types/src/index.ts"],
+      "@polydom/kafka-client": ["libs/kafka-client/src/index.ts"],
+      "@polydom/database-client": ["libs/database-client/src/index.ts"],
+      "@polydom/elasticsearch-client": ["libs/elasticsearch-client/src/index.ts"],
+      "@polydom/utils": ["libs/utils/src/index.ts"]
     }
   }
 }

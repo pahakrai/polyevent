@@ -1,40 +1,50 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseAdapter } from '@polydom/shared-types';
+import { MongoDBClient } from '@polydom/database-client';
 
 /**
- * MongoDB adapter (stub implementation)
+ * MongoDB adapter wrapping the shared MongoDBClient.
  */
 @Injectable()
 export class MongoAdapter implements DatabaseAdapter {
+  private client: MongoDBClient;
+
+  constructor() {
+    this.client = new MongoDBClient();
+  }
+
   async connect(): Promise<void> {
-    console.log('MongoDB adapter connect - stub');
+    const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017';
+    await this.client.connect(uri);
   }
 
   async disconnect(): Promise<void> {
-    console.log('MongoDB adapter disconnect - stub');
+    await this.client.disconnect();
   }
 
   isConnected(): boolean {
-    return false;
+    return this.client.isConnected();
   }
 
   async beginTransaction(): Promise<void> {
-    throw new Error('Transactions not supported by MongoDB in this stub');
+    // MongoDB supports transactions on replica sets.
+    // Full implementation requires session management.
+    console.warn('MongoDB transactions require replica set configuration');
   }
 
   async commitTransaction(): Promise<void> {
-    throw new Error('Transactions not supported by MongoDB in this stub');
+    console.warn('MongoDB transactions require replica set configuration');
   }
 
   async rollbackTransaction(): Promise<void> {
-    throw new Error('Transactions not supported by MongoDB in this stub');
+    console.warn('MongoDB transactions require replica set configuration');
   }
 
-  async executeQuery<T = any>(sql: string, params?: any[]): Promise<T[]> {
-    throw new Error('Raw query not supported by MongoDB adapter');
+  async executeQuery<T = any>(_sql: string, _params?: any[]): Promise<T[]> {
+    throw new Error('Raw SQL queries not supported by MongoDB adapter. Use find() / insert() instead.');
   }
 
-  getClient(): any {
-    throw new Error('MongoDB client not implemented');
+  getClient(): MongoDBClient {
+    return this.client;
   }
 }

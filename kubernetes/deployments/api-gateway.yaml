@@ -8,6 +8,12 @@ metadata:
     tier: backend
 spec:
   replicas: 3
+  revisionHistoryLimit: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
   selector:
     matchLabels:
       app: api-gateway
@@ -18,26 +24,48 @@ spec:
         app: api-gateway
         tier: backend
     spec:
+      serviceAccountName: app-sa
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: api-gateway
         image: eventbooking/api-gateway:latest
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
+          protocol: TCP
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - ALL
         env:
         - name: NODE_ENV
-          value: "production"
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: NODE_ENV
         - name: DATABASE_URL
           valueFrom:
             secretKeyRef:
               name: database-secrets
-              key: postgres-url
+              key: gateway-database-url
         - name: REDIS_URL
           valueFrom:
             secretKeyRef:
               name: redis-secrets
               key: redis-url
         - name: KAFKA_BROKERS
-          value: "kafka-service:9092"
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: KAFKA_BROKERS
         resources:
           requests:
             memory: "256Mi"
@@ -49,12 +77,17 @@ spec:
           httpGet:
             path: /health
             port: 3000
-          initialDelaySeconds: 30
-          periodSeconds: 10
+          initialDelaySeconds: 15
+          periodSeconds: 20
+          timeoutSeconds: 5
+          failureThreshold: 3
         readinessProbe:
           httpGet:
             path: /health/ready
             port: 3000
           initialDelaySeconds: 5
-          periodSeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
       restartPolicy: Always
+      terminationGracePeriodSeconds: 30

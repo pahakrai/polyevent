@@ -9,7 +9,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
-    "db:generate": "drizzle-kit generate:pg --config=src/database/drizzle.config.ts",
+    "db:generate": "drizzle-kit generate --config src/database/drizzle.config.ts",
     "db:migrate": "drizzle-kit migrate --config=src/database/drizzle.config.ts",
     "db:studio": "drizzle-kit studio --config=src/database/drizzle.config.ts",
     "db:push": "drizzle-kit push --config=src/database/drizzle.config.ts",
