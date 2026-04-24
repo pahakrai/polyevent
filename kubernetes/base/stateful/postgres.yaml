@@ -1,5 +1,13 @@
 # PostgreSQL — single-instance with persistent storage.
 # For production HA: use CloudNativePG operator (https://cloudnative-pg.io)
+#
+# Note: For production, prefer Neon PostgreSQL (already configured via USE_NEON=true).
+# This in-cluster instance is a self-hosted fallback.
+#
+# Storage class per cloud (change in overlay or via Kustomize):
+#   DigitalOcean:  do-block-storage
+#   AWS EKS:       gp3
+#   GCP GKE:       standard-rwo
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

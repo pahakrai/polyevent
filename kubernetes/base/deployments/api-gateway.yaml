@@ -1,13 +1,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: vendor-service
+  name: api-gateway
   namespace: production
   labels:
-    app: vendor-service
+    app: api-gateway
     tier: backend
 spec:
-  replicas: 2
+  replicas: 3
   revisionHistoryLimit: 5
   strategy:
     type: RollingUpdate
@@ -16,12 +16,12 @@ spec:
       maxUnavailable: 0
   selector:
     matchLabels:
-      app: vendor-service
+      app: api-gateway
       tier: backend
   template:
     metadata:
       labels:
-        app: vendor-service
+        app: api-gateway
         tier: backend
     spec:
       serviceAccountName: app-sa
@@ -33,8 +33,8 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-      - name: vendor-service
-        image: eventbooking/vendor-service:latest
+      - name: api-gateway
+        image: polydom/api-gateway:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
@@ -51,16 +51,21 @@ spec:
             configMapKeyRef:
               name: app-config
               key: NODE_ENV
-        - name: VENDOR_DATABASE_URL
+        - name: DATABASE_URL
           valueFrom:
             secretKeyRef:
               name: database-secrets
-              key: vendor-database-url
+              key: gateway-database-url
         - name: REDIS_URL
           valueFrom:
             secretKeyRef:
               name: redis-secrets
               key: redis-url
+        - name: KAFKA_BROKERS
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: KAFKA_BROKERS
         resources:
           requests:
             memory: "256Mi"
@@ -86,18 +91,3 @@ spec:
           failureThreshold: 3
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: vendor-service
-  namespace: production
-spec:
-  selector:
-    app: vendor-service
-    tier: backend
-  ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 3000
-  type: ClusterIP

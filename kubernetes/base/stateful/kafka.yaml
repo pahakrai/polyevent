@@ -30,6 +30,7 @@
 #       storage:
 #         type: persistent-claim
 #         size: 20Gi
+#         class: do-block-storage   # DO: do-block-storage, AWS: gp3, GCP: standard-rwo
 #
 # This file documents the expected endpoint for app services.
 # ============================================================================

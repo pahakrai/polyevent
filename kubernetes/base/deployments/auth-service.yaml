@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: user-service
+  name: auth-service
   namespace: production
   labels:
-    app: user-service
+    app: auth-service
     tier: backend
 spec:
   replicas: 2
@@ -16,12 +16,12 @@ spec:
       maxUnavailable: 0
   selector:
     matchLabels:
-      app: user-service
+      app: auth-service
       tier: backend
   template:
     metadata:
       labels:
-        app: user-service
+        app: auth-service
         tier: backend
     spec:
       serviceAccountName: app-sa
@@ -33,8 +33,8 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-      - name: user-service
-        image: eventbooking/user-service:latest
+      - name: auth-service
+        image: polydom/auth-service:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
@@ -51,16 +51,21 @@ spec:
             configMapKeyRef:
               name: app-config
               key: NODE_ENV
-        - name: USER_DATABASE_URL
+        - name: AUTH_DATABASE_URL
           valueFrom:
             secretKeyRef:
               name: database-secrets
-              key: user-database-url
+              key: auth-database-url
         - name: REDIS_URL
           valueFrom:
             secretKeyRef:
               name: redis-secrets
               key: redis-url
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: jwt-secrets
+              key: jwt-secret
         resources:
           requests:
             memory: "256Mi"
@@ -90,11 +95,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: user-service
+  name: auth-service
   namespace: production
 spec:
   selector:
-    app: user-service
+    app: auth-service
     tier: backend
   ports:
   - protocol: TCP

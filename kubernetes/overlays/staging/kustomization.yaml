@@ -1,0 +1,114 @@
+# Staging overlay — apply with:
+#   kubectl apply -k kubernetes/overlays/staging
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: staging
+
+resources:
+  - ../../base
+
+images:
+  - name: polydom/api-gateway
+    newTag: latest
+  - name: polydom/auth-service
+    newTag: latest
+  - name: polydom/user-service
+    newTag: latest
+  - name: polydom/vendor-service
+    newTag: latest
+  - name: polydom/event-service
+    newTag: latest
+  - name: polydom/frontend
+    newTag: latest
+
+# Staging runs fewer replicas with lower resource limits
+patches:
+  # API Gateway — 1 replica for staging
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: api-gateway
+      spec:
+        replicas: 1
+    target:
+      kind: Deployment
+      name: api-gateway
+
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: auth-service
+      spec:
+        replicas: 1
+    target:
+      kind: Deployment
+      name: auth-service
+
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: user-service
+      spec:
+        replicas: 1
+    target:
+      kind: Deployment
+      name: user-service
+
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: vendor-service
+      spec:
+        replicas: 1
+    target:
+      kind: Deployment
+      name: vendor-service
+
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: event-service
+      spec:
+        replicas: 1
+    target:
+      kind: Deployment
+      name: event-service
+
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: frontend
+      spec:
+        replicas: 1
+    target:
+      kind: Deployment
+      name: frontend
+
+# Staging resource tuning — half production resources
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: api-gateway
+      spec:
+        template:
+          spec:
+            containers:
+              - name: api-gateway
+                resources:
+                  requests:
+                    memory: "128Mi"
+                    cpu: "100m"
+                  limits:
+                    memory: "256Mi"
+                    cpu: "250m"
+    target:
+      kind: Deployment
+      name: api-gateway

@@ -1,0 +1,111 @@
+# Production overlay — apply with:
+#   kubectl apply -k kubernetes/overlays/production
+#
+# Override image registries for your cloud:
+#   DigitalOcean:  registry.digitalocean.com/<project>/
+#   AWS ECR:       <account>.dkr.ecr.<region>.amazonaws.com/
+#   GCP GCR:       gcr.io/<project>/
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: production
+
+resources:
+  - ../../base
+
+# Image registry — replace with your cloud registry before deploying.
+# The base images use generic names so they build/push to any registry.
+images:
+  - name: polydom/api-gateway
+    newTag: latest
+  - name: polydom/auth-service
+    newTag: latest
+  - name: polydom/user-service
+    newTag: latest
+  - name: polydom/vendor-service
+    newTag: latest
+  - name: polydom/event-service
+    newTag: latest
+  - name: polydom/frontend
+    newTag: latest
+
+# Production replica counts and resource tuning
+patches:
+  # API Gateway — scale up
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: api-gateway
+      spec:
+        replicas: 3
+    target:
+      kind: Deployment
+      name: api-gateway
+
+  # Auth Service — 2 replicas
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: auth-service
+      spec:
+        replicas: 2
+    target:
+      kind: Deployment
+      name: auth-service
+
+  # User Service — 2 replicas
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: user-service
+      spec:
+        replicas: 2
+    target:
+      kind: Deployment
+      name: user-service
+
+  # Vendor Service — 2 replicas
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: vendor-service
+      spec:
+        replicas: 2
+    target:
+      kind: Deployment
+      name: vendor-service
+
+  # Event Service — 2 replicas
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: event-service
+      spec:
+        replicas: 2
+    target:
+      kind: Deployment
+      name: event-service
+
+  # Frontend — 2 replicas
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: frontend
+      spec:
+        replicas: 2
+    target:
+      kind: Deployment
+      name: frontend
+
+# For production secrets, use SealedSecrets (or External Secrets Operator).
+# Generate with:  kubeseal --format=yaml < secret.yaml > sealed-secret.yaml
+# Then add sealed secrets as additional resources:
+#   - secrets/sealed-database-secrets.yaml
+#   - secrets/sealed-jwt-secrets.yaml
+#   - secrets/sealed-redis-secrets.yaml

@@ -1,11 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend
+  name: user-service
   namespace: production
   labels:
-    app: frontend
-    tier: frontend
+    app: user-service
+    tier: backend
 spec:
   replicas: 2
   revisionHistoryLimit: 5
@@ -16,13 +16,13 @@ spec:
       maxUnavailable: 0
   selector:
     matchLabels:
-      app: frontend
-      tier: frontend
+      app: user-service
+      tier: backend
   template:
     metadata:
       labels:
-        app: frontend
-        tier: frontend
+        app: user-service
+        tier: backend
     spec:
       serviceAccountName: app-sa
       securityContext:
@@ -33,8 +33,8 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-      - name: frontend
-        image: eventbooking/frontend:latest
+      - name: user-service
+        image: polydom/user-service:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
@@ -51,8 +51,16 @@ spec:
             configMapKeyRef:
               name: app-config
               key: NODE_ENV
-        - name: NEXT_PUBLIC_API_URL
-          value: "http://api-gateway.production.svc.cluster.local"
+        - name: USER_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database-secrets
+              key: user-database-url
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: redis-secrets
+              key: redis-url
         resources:
           requests:
             memory: "256Mi"
@@ -62,15 +70,15 @@ spec:
             cpu: "500m"
         livenessProbe:
           httpGet:
-            path: /
+            path: /health
             port: 3000
-          initialDelaySeconds: 20
+          initialDelaySeconds: 15
           periodSeconds: 20
           timeoutSeconds: 5
           failureThreshold: 3
         readinessProbe:
           httpGet:
-            path: /
+            path: /health/ready
             port: 3000
           initialDelaySeconds: 5
           periodSeconds: 10
@@ -82,12 +90,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: frontend
+  name: user-service
   namespace: production
 spec:
   selector:
-    app: frontend
-    tier: frontend
+    app: user-service
+    tier: backend
   ports:
   - protocol: TCP
     port: 80

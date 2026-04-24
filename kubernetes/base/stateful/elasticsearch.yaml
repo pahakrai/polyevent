@@ -38,6 +38,7 @@
 #               resources:
 #                 requests:
 #                   storage: 50Gi
+#               storageClassName: do-block-storage  # DO: do-block-storage, AWS: gp3, GCP: standard-rwo
 #
 # This file documents the expected endpoint for app services.
 # ============================================================================

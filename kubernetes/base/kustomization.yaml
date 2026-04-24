@@ -1,0 +1,33 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - namespace.yaml
+  - configmaps/app-config.yaml
+  - secrets/database-secrets.yaml
+  - secrets/jwt-secrets.yaml
+  - secrets/redis-secrets.yaml
+  - service-accounts/app-sa.yaml
+  - stateful/postgres.yaml
+  - stateful/redis.yaml
+  - stateful/kafka.yaml
+  - stateful/elasticsearch.yaml
+  - deployments/api-gateway.yaml
+  - deployments/auth-service.yaml
+  - deployments/user-service.yaml
+  - deployments/vendor-service.yaml
+  - deployments/event-service.yaml
+  - deployments/frontend.yaml
+  - services/api-gateway.yaml
+  - network-policies/deny-all.yaml
+  - network-policies/allow-api-gateway.yaml
+  - network-policies/allow-backend.yaml
+  - pod-disruption-budgets/api-gateway-pdb.yaml
+  - pod-disruption-budgets/backend-pdb.yaml
+  - ingress/main.yaml
+  - hpa/api-gateway-hpa.yaml
+  - hpa/auth-service-hpa.yaml
+  - hpa/user-service-hpa.yaml
+  - hpa/vendor-service-hpa.yaml
+  - hpa/event-service-hpa.yaml
+  - hpa/frontend-hpa.yaml

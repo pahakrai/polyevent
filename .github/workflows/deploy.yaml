@@ -1,0 +1,113 @@
+# Build, push, and deploy all services to Kubernetes.
+#
+# Required GitHub Secrets (per environment):
+#   REGISTRY        — Docker registry URL (e.g. registry.digitalocean.com/polydom)
+#   REGISTRY_USER   — Registry username
+#   REGISTRY_TOKEN  — Registry access token
+#   KUBE_CONFIG     — Base64-encoded kubeconfig for the target cluster
+#
+# Required GitHub Variables (per environment):
+#   KUSTOMIZE_OVERLAY — Path to the overlay (e.g. kubernetes/overlays/production)
+
+name: Build & Deploy
+
+on:
+  push:
+    branches: [main]
+  release:
+    types: [published]
+
+env:
+  REGISTRY: ${{ secrets.REGISTRY }}
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run test
+
+  build-and-push:
+    name: Build & Push
+    needs: test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service:
+          - api-gateway
+          - auth-service
+          - user-service
+          - vendor-service
+          - event-service
+          - frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.REGISTRY }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./apps/nestjs-services/${{ matrix.service }}/Dockerfile
+          target: production
+          push: true
+          tags: |
+            ${{ secrets.REGISTRY }}/${{ matrix.service }}:${{ github.sha }}
+            ${{ secrets.REGISTRY }}/${{ matrix.service }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    name: Deploy
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.ref_name == 'main' && 'staging' || 'production' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set image tags via Kustomize
+        run: |
+          cd ${{ vars.KUSTOMIZE_OVERLAY }}
+          kustomize edit set image \
+            polydom/api-gateway=${{ secrets.REGISTRY }}/api-gateway:${{ github.sha }} \
+            polydom/auth-service=${{ secrets.REGISTRY }}/auth-service:${{ github.sha }} \
+            polydom/user-service=${{ secrets.REGISTRY }}/user-service:${{ github.sha }} \
+            polydom/vendor-service=${{ secrets.REGISTRY }}/vendor-service:${{ github.sha }} \
+            polydom/event-service=${{ secrets.REGISTRY }}/event-service:${{ github.sha }} \
+            polydom/frontend=${{ secrets.REGISTRY }}/frontend:${{ github.sha }}
+
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v4
+
+      - name: Configure kubeconfig
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > $HOME/.kube/config
+
+      - name: Deploy
+        run: kubectl apply -k ${{ vars.KUSTOMIZE_OVERLAY }} --prune -l app.kubernetes.io/managed-by=kustomize
+
+      - name: Verify rollout
+        run: |
+          kubectl rollout status deployment/api-gateway --timeout=5m
+          kubectl rollout status deployment/auth-service --timeout=5m
+          kubectl rollout status deployment/user-service --timeout=5m
+          kubectl rollout status deployment/vendor-service --timeout=5m
+          kubectl rollout status deployment/event-service --timeout=5m

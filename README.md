@@ -626,80 +626,93 @@ trivy image polydom/auth-service:latest        # Trivy (OSS)
 
 ## Kubernetes Deployment
 
-### Prerequisites
-- **kubectl** configured with a cluster context
-- **Docker registry** accessible from the cluster (Docker Hub, ECR, GCR, etc.)
-- **Ingress controller** installed in the cluster (nginx-ingress)
+### Manifest structure (Kustomize)
 
-### 1. Create the namespace
-
-```bash
-kubectl apply -f kubernetes/namespaces/production.yaml
+```
+kubernetes/
+  base/                  # Common manifests (all environments)
+    namespace.yaml
+    configmaps/          # App config
+    secrets/             # Placeholder secrets (encrypt before production use)
+    service-accounts/    # RBAC
+    deployments/         # Application deployments
+    services/            # Service definitions
+    hpa/                 # Horizontal Pod Autoscalers
+    network-policies/    # Zero-trust network rules
+    pod-disruption-budgets/
+    stateful/            # Postgres, Redis, Kafka, Elasticsearch
+    ingress/             # TLS ingress with cert-manager
+  overlays/
+    production/          # Production-specific patches (replicas, images, resources)
+    staging/             # Staging (fewer replicas, lower resources)
+  local/                 # Local K8s dev (used by Skaffold)
 ```
 
-### 2. Deploy secrets and config
+### Quick deploy with Kustomize
 
 ```bash
-kubectl apply -f kubernetes/secrets/
-kubectl apply -f kubernetes/configmaps/
+# Preview what will be applied
+kubectl kustomize kubernetes/overlays/production
+
+# Deploy production
+kubectl apply -k kubernetes/overlays/production
+
+# Deploy staging
+kubectl apply -k kubernetes/overlays/staging
 ```
 
-> **Production note**: Replace placeholder values in secrets with real credentials before applying.
-> Use **Sealed Secrets** or **External Secrets Operator** for GitOps-compatible secret management.
+### Set image registry for your cloud
 
-### 3. Deploy stateful infrastructure
+Before deploying, update the image registry in the overlay `kustomization.yaml`:
 
 ```bash
-kubectl apply -f kubernetes/stateful/postgres.yaml
-kubectl apply -f kubernetes/stateful/redis.yaml
+# DigitalOcean Container Registry
+cd kubernetes/overlays/production
+kustomize edit set image \
+  polydom/*=registry.digitalocean.com/<your-project>/*:latest
+
+# AWS Elastic Container Registry
+kustomize edit set image \
+  polydom/*=<account-id>.dkr.ecr.<region>.amazonaws.com/*:latest
+
+# Google Container Registry
+kustomize edit set image \
+  polydom/*=gcr.io/<your-project>/*:latest
 ```
 
-For Kafka and Elasticsearch, use operators in production:
-- **Kafka**: [Strimzi operator](https://strimzi.io) — see CR reference in `kubernetes/stateful/kafka.yaml`
-- **Elasticsearch**: [ECK operator](https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-overview.html) — see CR reference in `kubernetes/stateful/elasticsearch.yaml`
+### Deploy stateful infrastructure (operators)
 
-### 4. Deploy application services
+For production Kafka and Elasticsearch, use operators instead of raw manifests:
 
 ```bash
-# Deploy all backend services
-kubectl apply -f kubernetes/deployments/
+# Install Strimzi (Kafka) and ECK (Elasticsearch) operators
+./tools/scripts/install-operators.sh
 
-# Deploy services (ClusterIP)
-kubectl apply -f kubernetes/services/
+# Create Kafka cluster (set STORAGE_CLASS per cloud)
+STORAGE_CLASS=do-block-storage ./tools/scripts/create-kafka-cluster.sh
 
-# Deploy network policies
-kubectl apply -f kubernetes/network-policies/
-
-# Deploy pod disruption budgets
-kubectl apply -f kubernetes/pod-disruption-budgets/
-
-# Deploy service account and RBAC
-kubectl apply -f kubernetes/service-accounts/
+# Create Elasticsearch cluster
+STORAGE_CLASS=do-block-storage ./tools/scripts/create-es-cluster.sh
 ```
 
-### 5. Deploy ingress
+Storage classes per cloud:
+| Cloud | Storage Class |
+|-------|--------------|
+| DigitalOcean | `do-block-storage` |
+| AWS EKS | `gp3` |
+| GCP GKE | `standard-rwo` |
+
+### Secure secrets for production
+
+Do not commit plaintext secrets. Use Sealed Secrets:
 
 ```bash
-kubectl apply -f kubernetes/ingress/
-```
+# Install Sealed Secrets controller in your cluster (one-time)
+helm repo add sealed-secrets https://bitnami-labs.github.io/sealed-secrets
+helm install sealed-secrets sealed-secrets/sealed-secrets -n kube-system
 
-### 6. Verify deployment
-
-```bash
-kubectl get pods -n production
-kubectl get svc -n production
-kubectl get ingress -n production
-
-# Check health endpoints
-kubectl port-forward -n production svc/api-gateway 3000:80
-curl http://localhost:3000/health
-curl http://localhost:3000/health/ready
-```
-
-### 7. Apply all manifests at once
-
-```bash
-kubectl apply -f kubernetes/ --recursive
+# Generate encrypted secrets from the placeholder files
+./tools/secrets/generate-sealed-secrets.sh production
 ```
 
 ### Rolling restart (after image update)
@@ -708,6 +721,165 @@ kubectl apply -f kubernetes/ --recursive
 kubectl rollout restart deployment/auth-service -n production
 kubectl rollout status deployment/auth-service -n production
 ```
+
+### Verify deployment
+
+```bash
+kubectl get pods -n production
+kubectl get svc -n production
+kubectl get ingress -n production
+kubectl get hpa -n production
+
+# Check health endpoints
+kubectl port-forward -n production svc/api-gateway 3000:80
+curl http://localhost:3000/health
+curl http://localhost:3000/health/ready
+```
+
+---
+
+## Cloud Deployment
+
+### DigitalOcean (DOKS)
+
+```bash
+# 1. Create cluster
+doctl kubernetes cluster create polydom-prod \
+  --region nyc1 \
+  --size s-4vcpu-8gb \
+  --count 3
+
+# 2. Install cluster components
+doctl kubernetes cluster kubeconfig save polydom-prod
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm install ingress-nginx ingress-nginx/ingress-nginx
+
+helm repo add jetstack https://charts.jetstack.io
+helm install cert-manager jetstack/cert-manager \
+  --namespace cert-manager --create-namespace \
+  --set installCRDs=true
+
+# 3. Create container registry
+doctl registry create polydom-registry
+
+# 4. Build, push, deploy
+docker build -f apps/nestjs-services/auth-service/Dockerfile \
+  -t registry.digitalocean.com/polydom-registry/auth-service:latest .
+doctl registry login
+docker push registry.digitalocean.com/polydom-registry/auth-service:latest
+
+# 5. Update overlay and apply
+cd kubernetes/overlays/production
+kustomize edit set image \
+  polydom/*=registry.digitalocean.com/polydom-registry/*:latest
+kubectl apply -k .
+```
+
+### AWS (EKS)
+
+```bash
+# 1. Create cluster
+eksctl create cluster \
+  --name polydom-prod \
+  --region us-east-1 \
+  --nodegroup-name standard \
+  --node-type t3.xlarge \
+  --nodes 3
+
+# 2. Install cluster components (same as DO)
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm install ingress-nginx ingress-nginx/ingress-nginx
+
+helm repo add jetstack https://charts.jetstack.io
+helm install cert-manager jetstack/cert-manager \
+  --namespace cert-manager --create-namespace \
+  --set installCRDs=true
+
+# 3. Create ECR repository and authenticate
+aws ecr create-repository --repository-name polydom/auth-service
+aws ecr get-login-password --region us-east-1 | \
+  docker login --username AWS --password-stdin <account-id>.dkr.ecr.us-east-1.amazonaws.com
+
+# 4. Build, tag, push
+docker build -f apps/nestjs-services/auth-service/Dockerfile \
+  -t <account-id>.dkr.ecr.us-east-1.amazonaws.com/polydom/auth-service:latest .
+docker push <account-id>.dkr.ecr.us-east-1.amazonaws.com/polydom/auth-service:latest
+
+# 5. Update overlay and apply
+cd kubernetes/overlays/production
+kustomize edit set image \
+  polydom/*=<account-id>.dkr.ecr.us-east-1.amazonaws.com/polydom/*:latest
+kubectl apply -k .
+```
+
+### Google Cloud (GKE)
+
+```bash
+# 1. Create cluster
+gcloud container clusters create polydom-prod \
+  --region us-central1 \
+  --machine-type e2-standard-4 \
+  --num-nodes 3
+
+# 2. Install cluster components (same as DO/AWS)
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm install ingress-nginx ingress-nginx/ingress-nginx
+
+helm repo add jetstack https://charts.jetstack.io
+helm install cert-manager jetstack/cert-manager \
+  --namespace cert-manager --create-namespace \
+  --set installCRDs=true
+
+# 3. Configure GCR
+gcloud auth configure-docker
+
+# 4. Build, tag, push
+docker build -f apps/nestjs-services/auth-service/Dockerfile \
+  -t gcr.io/<project-id>/polydom/auth-service:latest .
+docker push gcr.io/<project-id>/polydom/auth-service:latest
+
+# 5. Update overlay and apply
+cd kubernetes/overlays/production
+kustomize edit set image \
+  polydom/*=gcr.io/<project-id>/polydom/*:latest
+kubectl apply -k .
+```
+
+### All Clouds — DNS & TLS
+
+After deploying the ingress:
+
+```bash
+# Get the load balancer external IP
+kubectl get ingress main-ingress -n production
+
+# Configure DNS (point your domains to the LB IP):
+#   api.<your-domain.com>   → <LB-IP>
+#   app.<your-domain.com>   → <LB-IP>
+
+# For automatic DNS sync, install ExternalDNS:
+helm repo add external-dns https://kubernetes-sigs.github.io/external-dns/
+helm install external-dns external-dns/external-dns \
+  --set provider=digitalocean  # or aws, or google
+
+# cert-manager will automatically provision TLS certificates
+# once the DNS records resolve. Verify:
+kubectl get certificate -n production
+```
+
+### Cloud Checklist
+
+| Component | DigitalOcean | AWS | Google Cloud |
+|-----------|-------------|-----|-------------|
+| **Cluster** | DOKS | EKS | GKE |
+| **Registry** | DOCR | ECR | GCR / Artifact Registry |
+| **Storage** | `do-block-storage` | `gp3` | `standard-rwo` |
+| **Ingress** | NGINX (Helm) | NGINX (Helm) | NGINX (Helm) |
+| **TLS** | cert-manager + Let's Encrypt | cert-manager + Let's Encrypt | cert-manager + Let's Encrypt |
+| **DNS sync** | ExternalDNS | ExternalDNS | ExternalDNS |
+| **Database** | [Neon](https://neon.tech) (serverless Postgres) — already configured via `USE_NEON=true` | | |
+| **CI/CD** | GitHub Actions (`.github/workflows/deploy.yaml`) | | |
+| **Secrets** | Sealed Secrets or External Secrets Operator | | |
 
 ---
 

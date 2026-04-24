@@ -29,7 +29,13 @@
       "Bash([ -d \"/c/Users/user/repo/polydom/apps/nestjs-services/$service/src/database/migrations\" ])",
       "Bash(npx drizzle-kit:*)",
       "Bash(cat C:/Users/user/repo/polydom/tools/postgres-init/*.sql)",
-      "Bash(nx show:*)"
+      "Bash(nx show:*)",
+      "Bash(mkdir -p kubernetes/base)",
+      "Bash(mv kubernetes/deployments kubernetes/base/)",
+      "Bash(mv kubernetes/network-policies kubernetes/base/)",
+      "Bash(mv kubernetes/pod-disruption-budgets kubernetes/base/)",
+      "Bash(mv kubernetes/service-accounts kubernetes/base/)",
+      "Bash(chmod +x:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

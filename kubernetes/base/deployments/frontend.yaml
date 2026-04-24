@@ -1,11 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: event-service
+  name: frontend
   namespace: production
   labels:
-    app: event-service
-    tier: backend
+    app: frontend
+    tier: frontend
 spec:
   replicas: 2
   revisionHistoryLimit: 5
@@ -16,13 +16,13 @@ spec:
       maxUnavailable: 0
   selector:
     matchLabels:
-      app: event-service
-      tier: backend
+      app: frontend
+      tier: frontend
   template:
     metadata:
       labels:
-        app: event-service
-        tier: backend
+        app: frontend
+        tier: frontend
     spec:
       serviceAccountName: app-sa
       securityContext:
@@ -33,8 +33,8 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-      - name: event-service
-        image: eventbooking/event-service:latest
+      - name: frontend
+        image: polydom/frontend:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
@@ -51,21 +51,8 @@ spec:
             configMapKeyRef:
               name: app-config
               key: NODE_ENV
-        - name: EVENT_DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: database-secrets
-              key: event-database-url
-        - name: REDIS_URL
-          valueFrom:
-            secretKeyRef:
-              name: redis-secrets
-              key: redis-url
-        - name: KAFKA_BROKERS
-          valueFrom:
-            configMapKeyRef:
-              name: app-config
-              key: KAFKA_BROKERS
+        - name: NEXT_PUBLIC_API_URL
+          value: "http://api-gateway.production.svc.cluster.local"
         resources:
           requests:
             memory: "256Mi"
@@ -75,15 +62,15 @@ spec:
             cpu: "500m"
         livenessProbe:
           httpGet:
-            path: /health
+            path: /
             port: 3000
-          initialDelaySeconds: 15
+          initialDelaySeconds: 20
           periodSeconds: 20
           timeoutSeconds: 5
           failureThreshold: 3
         readinessProbe:
           httpGet:
-            path: /health/ready
+            path: /
             port: 3000
           initialDelaySeconds: 5
           periodSeconds: 10
@@ -95,12 +82,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: event-service
+  name: frontend
   namespace: production
 spec:
   selector:
-    app: event-service
-    tier: backend
+    app: frontend
+    tier: frontend
   ports:
   - protocol: TCP
     port: 80

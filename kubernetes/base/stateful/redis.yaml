@@ -1,5 +1,10 @@
 # Redis — single-instance with persistent storage and AOF persistence.
 # For production HA: use Redis Sentinel or Redis Cluster.
+#
+# Storage class per cloud (change in overlay or via Kustomize):
+#   DigitalOcean:  do-block-storage
+#   AWS EKS:       gp3
+#   GCP GKE:       standard-rwo
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
