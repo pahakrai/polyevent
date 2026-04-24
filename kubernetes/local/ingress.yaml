@@ -1,0 +1,24 @@
+# Local ingress — no TLS, plain HTTP
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: polydom-ingress
+  namespace: polydom-dev
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: api-gateway
+            port:
+              number: 3000
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: api-gateway
+            port:
+              number: 3000

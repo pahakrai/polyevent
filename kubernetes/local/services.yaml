@@ -1,0 +1,295 @@
+# Application services — local dev settings: 1 replica, low resources, NodePort access
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+  namespace: polydom-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+      - name: api-gateway
+        image: polydom/api-gateway:dev
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 3000
+        env:
+        - name: GATEWAY_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database-secrets
+              key: gateway-database-url
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: redis-secrets
+              key: redis-url
+        - name: NODE_ENV
+          value: development
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 3000
+          initialDelaySeconds: 5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-gateway
+  namespace: polydom-dev
+spec:
+  selector:
+    app: api-gateway
+  ports:
+  - port: 3000
+    targetPort: 3000
+  type: NodePort
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-service
+  namespace: polydom-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-service
+  template:
+    metadata:
+      labels:
+        app: auth-service
+    spec:
+      containers:
+      - name: auth-service
+        image: polydom/auth-service:dev
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 3000
+        env:
+        - name: AUTH_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database-secrets
+              key: auth-database-url
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: redis-secrets
+              key: redis-url
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: jwt-secrets
+              key: jwt-secret
+        - name: NODE_ENV
+          value: development
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-service
+  namespace: polydom-dev
+spec:
+  selector:
+    app: auth-service
+  ports:
+  - port: 3000
+    targetPort: 3000
+  type: ClusterIP
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+  namespace: polydom-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+      - name: user-service
+        image: polydom/user-service:dev
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 3000
+        env:
+        - name: USER_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database-secrets
+              key: user-database-url
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: redis-secrets
+              key: redis-url
+        - name: NODE_ENV
+          value: development
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+  namespace: polydom-dev
+spec:
+  selector:
+    app: user-service
+  ports:
+  - port: 3000
+    targetPort: 3000
+  type: ClusterIP
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vendor-service
+  namespace: polydom-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vendor-service
+  template:
+    metadata:
+      labels:
+        app: vendor-service
+    spec:
+      containers:
+      - name: vendor-service
+        image: polydom/vendor-service:dev
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 3000
+        env:
+        - name: VENDOR_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database-secrets
+              key: vendor-database-url
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: redis-secrets
+              key: redis-url
+        - name: NODE_ENV
+          value: development
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vendor-service
+  namespace: polydom-dev
+spec:
+  selector:
+    app: vendor-service
+  ports:
+  - port: 3000
+    targetPort: 3000
+  type: ClusterIP
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: event-service
+  namespace: polydom-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: event-service
+  template:
+    metadata:
+      labels:
+        app: event-service
+    spec:
+      containers:
+      - name: event-service
+        image: polydom/event-service:dev
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 3000
+        env:
+        - name: EVENT_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database-secrets
+              key: event-database-url
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: redis-secrets
+              key: redis-url
+        - name: NODE_ENV
+          value: development
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: event-service
+  namespace: polydom-dev
+spec:
+  selector:
+    app: event-service
+  ports:
+  - port: 3000
+    targetPort: 3000
+  type: ClusterIP

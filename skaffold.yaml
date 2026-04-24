@@ -1,0 +1,47 @@
+# Skaffold configuration for local Kubernetes development.
+# Requires:  minikube / kind / Docker Desktop K8s
+# Usage:     skaffold dev
+#
+# Skaffold watches source files, rebuilds images, and redeploys automatically.
+apiVersion: skaffold/v4beta5
+kind: Config
+metadata:
+  name: polydom
+build:
+  artifacts:
+    - image: polydom/api-gateway
+      context: .
+      docker:
+        dockerfile: apps/nestjs-services/api-gateway/Dockerfile
+        target: production
+    - image: polydom/auth-service
+      context: .
+      docker:
+        dockerfile: apps/nestjs-services/auth-service/Dockerfile
+        target: production
+    - image: polydom/user-service
+      context: .
+      docker:
+        dockerfile: apps/nestjs-services/user-service/Dockerfile
+        target: production
+    - image: polydom/vendor-service
+      context: .
+      docker:
+        dockerfile: apps/nestjs-services/vendor-service/Dockerfile
+        target: production
+    - image: polydom/event-service
+      context: .
+      docker:
+        dockerfile: apps/nestjs-services/event-service/Dockerfile
+        target: production
+  local:
+    push: false  # load directly into local cluster
+manifests:
+  rawYaml:
+    - kubernetes/local/namespace.yaml
+    - kubernetes/local/secrets.yaml
+    - kubernetes/local/infrastructure.yaml
+    - kubernetes/local/services.yaml
+    - kubernetes/local/ingress.yaml
+deploy:
+  kubectl: {}
