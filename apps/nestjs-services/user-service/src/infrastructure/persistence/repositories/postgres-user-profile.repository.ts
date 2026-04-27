@@ -4,7 +4,7 @@ import { UserProfile } from '../../../domain/entities/user-profile.entity';
 import { UserRole } from '@polydom/shared-types';
 import { PostgresAdapter } from '../adapters/postgres.adapter';
 import { UserProfileMapper } from '../mappers/user-profile.mapper';
-import { users } from '../../../../database/schema';
+import { users } from '../../../database/schema';
 import { eq, and, like, sql } from 'drizzle-orm';
 
 @Injectable()
@@ -29,7 +29,7 @@ export class PostgresUserProfileRepository implements UserProfileRepository {
   async find(criteria: Partial<UserProfile>): Promise<UserProfile[]> {
     // Simplified implementation: find by exact match on available fields
     const db = this.adapter.getClient();
-    const whereConditions = [];
+    const whereConditions: ReturnType<typeof eq>[] = [];
 
     if (criteria.id) {
       whereConditions.push(eq(users.id, criteria.id));
@@ -91,7 +91,7 @@ export class PostgresUserProfileRepository implements UserProfileRepository {
     }
 
     // Simplified: count by email only for demonstration
-    const whereConditions = [];
+    const whereConditions: ReturnType<typeof eq>[] = [];
     if (criteria.email) {
       whereConditions.push(eq(users.email, criteria.email));
     }
@@ -114,7 +114,7 @@ export class PostgresUserProfileRepository implements UserProfileRepository {
 
   async findByRole(role: UserRole): Promise<UserProfile[]> {
     const db = this.adapter.getClient();
-    const result = await db.select().from(users).where(eq(users.role, role));
+    const result = await db.select().from(users).where(eq(users.role, role as unknown as "USER" | "VENDOR" | "ADMIN"));
     return result.map(UserProfileMapper.toDomain);
   }
 

@@ -22,10 +22,11 @@ let PostgresClient = PostgresClient_1 = class PostgresClient {
         this.logger = new common_1.Logger(PostgresClient_1.name);
     }
     initialize(databaseUrl, schema) {
-        const { neon } = require('@neondatabase/serverless');
-        const { drizzle } = require('drizzle-orm/neon-serverless');
-        this._client = neon(databaseUrl);
-        this._db = drizzle(this._client, { schema });
+        const { Pool } = require('pg');
+        const { drizzle } = require('drizzle-orm/node-postgres');
+        const pool = new Pool({ connectionString: databaseUrl, max: 10 });
+        this._client = pool;
+        this._db = drizzle(pool, { schema });
         this.logger.log('PostgreSQL client initialized');
         return this._db;
     }

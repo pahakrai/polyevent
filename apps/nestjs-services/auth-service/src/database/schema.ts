@@ -31,7 +31,7 @@ export const users = pgTable('users', {
   location: json('location'),
   preferences: json('preferences'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
-  updatedAt: timestamp('updated_at').notNull().$onUpdate(() => new Date()),
+  updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdate(() => new Date()),
 });
 
 // UserActivity table (for login/logout tracking)

@@ -1,0 +1,140 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------------------------------------------------------ */
+/*  Warm Studio — Light Theme (default)                                */
+/*  30-60-10 composition: 60% neutral · 30% surface · 10% accent      */
+/* ------------------------------------------------------------------ */
+:root {
+  /* --- 60% — Neutral canvas --- */
+  --background: 36 30% 97%;
+  --foreground: 240 8% 15%;
+
+  /* --- 30% — Surfaces --- */
+  --card: 36 25% 94%;
+  --card-foreground: 240 8% 15%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 8% 15%;
+  --secondary: 240 6% 88%;
+  --secondary-foreground: 240 6% 25%;
+  --muted: 240 6% 93%;
+  --muted-foreground: 240 5% 45%;
+
+  /* --- 10% — Accents --- */
+  --primary: 16 70% 45%;
+  --primary-foreground: 0 0% 100%;
+  --accent: 36 65% 48%;
+  --accent-foreground: 0 0% 100%;
+
+  /* --- Semantic --- */
+  --destructive: 0 72% 50%;
+  --destructive-foreground: 0 0% 100%;
+  --success: 150 55% 38%;
+  --success-foreground: 0 0% 100%;
+  --warning: 38 80% 45%;
+  --warning-foreground: 240 8% 15%;
+
+  /* --- Borders & inputs --- */
+  --border: 240 6% 86%;
+  --input: 240 6% 86%;
+  --ring: 16 70% 45%;
+
+  /* --- Shape --- */
+  --radius: 0.625rem;
+
+  /* --- Sidebar tokens --- */
+  --sidebar-background: 240 8% 15%;
+  --sidebar-foreground: 36 25% 90%;
+  --sidebar-primary: 16 70% 45%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 240 6% 22%;
+  --sidebar-accent-foreground: 36 25% 90%;
+  --sidebar-border: 240 6% 22%;
+  --sidebar-ring: 16 70% 45%;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Warm Studio — Dark Theme                                           */
+/* ------------------------------------------------------------------ */
+.dark {
+  --background: 240 8% 9%;
+  --foreground: 36 25% 92%;
+
+  --card: 240 7% 13%;
+  --card-foreground: 36 25% 92%;
+  --popover: 240 8% 11%;
+  --popover-foreground: 36 25% 92%;
+  --secondary: 240 5% 22%;
+  --secondary-foreground: 36 20% 88%;
+  --muted: 240 5% 18%;
+  --muted-foreground: 240 5% 58%;
+
+  --primary: 16 65% 52%;
+  --primary-foreground: 0 0% 100%;
+  --accent: 36 60% 50%;
+  --accent-foreground: 0 0% 100%;
+
+  --destructive: 0 65% 50%;
+  --destructive-foreground: 0 0% 100%;
+  --success: 150 50% 42%;
+  --success-foreground: 0 0% 100%;
+  --warning: 38 75% 48%;
+  --warning-foreground: 240 8% 15%;
+
+  --border: 240 5% 26%;
+  --input: 240 5% 26%;
+  --ring: 16 65% 52%;
+
+  --sidebar-background: 240 8% 6%;
+  --sidebar-foreground: 36 25% 88%;
+  --sidebar-primary: 16 65% 52%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 240 5% 18%;
+  --sidebar-accent-foreground: 36 25% 88%;
+  --sidebar-border: 240 5% 20%;
+  --sidebar-ring: 16 65% 52%;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Base layer overrides                                               */
+/* ------------------------------------------------------------------ */
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* --- Typography scale --- */
+  h1, .h1 { @apply text-4xl font-bold tracking-tight; }
+  h2, .h2 { @apply text-2xl font-semibold tracking-tight; }
+  h3, .h3 { @apply text-xl font-semibold tracking-tight; }
+  h4, .h4 { @apply text-lg font-medium; }
+
+  /* --- Link defaults --- */
+  a:not([class]) {
+    @apply text-primary underline-offset-4 hover:underline;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Utility layer — reusable abstractions                              */
+/* ------------------------------------------------------------------ */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+}

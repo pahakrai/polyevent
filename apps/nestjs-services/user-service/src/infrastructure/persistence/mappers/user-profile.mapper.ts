@@ -1,6 +1,6 @@
 import { UserProfile } from '../../../domain/entities/user-profile.entity';
 import { UserRole, UserPreferences, Location } from '@polydom/shared-types';
-import { User as DrizzleUser } from '../../../../database/schema';
+import { User as DrizzleUser } from '../../../database/schema';
 
 /**
  * Maps between Drizzle schema types and UserProfile domain entity
@@ -41,7 +41,7 @@ export class UserProfileMapper {
       firstName: userProfile.firstName,
       lastName: userProfile.lastName,
       phone: userProfile.phone ?? null,
-      role: userProfile.role,
+      role: userProfile.role as unknown as "USER" | "VENDOR" | "ADMIN",
       location: userProfile.location ? JSON.stringify(userProfile.location) : null,
       preferences: JSON.stringify(userProfile.preferences),
       createdAt: userProfile.createdAt,

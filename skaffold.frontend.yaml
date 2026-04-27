@@ -1,0 +1,33 @@
+apiVersion: skaffold/v4beta5
+kind: Config
+metadata:
+  name: polydom-frontend
+build:
+  artifacts:
+    - image: polydom/api-gateway
+      context: .
+      docker:
+        dockerfile: apps/nestjs-services/api-gateway/Dockerfile
+        target: production
+    - image: polydom/auth-service
+      context: .
+      docker:
+        dockerfile: apps/nestjs-services/auth-service/Dockerfile
+        target: production
+    - image: polydom/frontend
+      context: .
+      docker:
+        dockerfile: apps/frontend/Dockerfile
+        target: runner
+  local:
+    push: false
+    concurrency: 1
+manifests:
+  rawYaml:
+    - kubernetes/local/namespace.yaml
+    - kubernetes/local/secrets.yaml
+    - kubernetes/local/postgres.yaml
+    - kubernetes/local/infrastructure.yaml
+    - kubernetes/local/services.yaml
+deploy:
+  kubectl: {}

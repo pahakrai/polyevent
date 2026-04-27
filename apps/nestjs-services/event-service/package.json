@@ -16,7 +16,9 @@
     "db:seed": "tsx src/database/seed.ts"
   },
   "dependencies": {
+    "@polydom/kafka-client": "*",
     "@nestjs/common": "^10.0.0",
+    "@nestjs/config": "^4.0.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
     "class-validator": "^0.14.0",

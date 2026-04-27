@@ -380,11 +380,15 @@ spec:
             secretKeyRef:
               name: kafka-secrets
               key: kafka-brokers
+        - name: FEATURE_STORE_URL
+          value: redis://redis:6379
         - name: ELASTICSEARCH_HOSTS
           valueFrom:
             secretKeyRef:
               name: elasticsearch-secrets
               key: elasticsearch-hosts
+        - name: TRAINING_DATA_PATH
+          value: /data/training
         resources:
           requests:
             memory: "256Mi"
@@ -416,22 +420,41 @@ spec:
       - name: inference
         image: polydom/python-workers:dev
         imagePullPolicy: Never
-        command: ["python", "-m", "inference.search_ranker"]
+        command: ["uvicorn", "inference.api:app", "--host", "0.0.0.0", "--port", "8000"]
         ports:
         - containerPort: 8000
         env:
+        - name: KAFKA_BROKERS
+          valueFrom:
+            secretKeyRef:
+              name: kafka-secrets
+              key: kafka-brokers
+        - name: FEATURE_STORE_URL
+          value: redis://redis:6379
         - name: ELASTICSEARCH_HOSTS
           valueFrom:
             secretKeyRef:
               name: elasticsearch-secrets
               key: elasticsearch-hosts
+        - name: MODEL_PATH
+          value: /data/training/models
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 5
         resources:
           requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
             memory: "512Mi"
-            cpu: "1000m"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "2000m"
 ---
 apiVersion: v1
 kind: Service
@@ -476,6 +499,10 @@ spec:
             secretKeyRef:
               name: kafka-secrets
               key: kafka-brokers
+        - name: FEATURE_STORE_URL
+          value: redis://redis:6379
+        - name: KAFKA_CONSUMER_GROUP
+          value: python-workers
         resources:
           requests:
             memory: "256Mi"

@@ -24,9 +24,30 @@ sleep 10
 
 # Create Kafka topics
 echo "Creating Kafka topics..."
-docker-compose exec kafka kafka-topics --create --topic user-activities --partitions 3 --replication-factor 1 --bootstrap-server localhost:9092 || true
-docker-compose exec kafka kafka-topics --create --topic booking-events --partitions 3 --replication-factor 1 --bootstrap-server localhost:9092 || true
-docker-compose exec kafka kafka-topics --create --topic vendor-events --partitions 3 --replication-factor 1 --bootstrap-server localhost:9092 || true
+
+declare -A TOPICS=(
+  # Recommendation signal topics
+  ["user-activities"]="6"
+  ["event-lifecycle"]="6"
+  ["booking-events"]="6"
+  ["search-events"]="6"
+  ["recommendation-feedback"]="6"
+  ["location-context"]="6"
+  # Operational topics
+  ["vendor-events"]="3"
+  ["notification-events"]="3"
+  ["ml-training"]="3"
+)
+
+for topic in "${!TOPICS[@]}"; do
+  partitions=${TOPICS[$topic]}
+  echo "  Creating topic: $topic (partitions=$partitions, rf=1)"
+  docker-compose exec kafka kafka-topics --create \
+    --topic "$topic" \
+    --partitions "$partitions" \
+    --replication-factor 1 \
+    --bootstrap-server localhost:9092 || true
+done
 
 # Create Elasticsearch indices
 echo "Creating Elasticsearch indices..."

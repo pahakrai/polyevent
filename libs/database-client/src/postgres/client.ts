@@ -28,11 +28,12 @@ export class PostgresClient {
     databaseUrl: string,
     schema: TSchema,
   ) {
-    const { neon } = require('@neondatabase/serverless');
-    const { drizzle } = require('drizzle-orm/neon-serverless');
+    const { Pool } = require('pg');
+    const { drizzle } = require('drizzle-orm/node-postgres');
 
-    this._client = neon(databaseUrl);
-    this._db = drizzle(this._client, { schema });
+    const pool = new Pool({ connectionString: databaseUrl, max: 10 });
+    this._client = pool;
+    this._db = drizzle(pool, { schema });
 
     this.logger.log('PostgreSQL client initialized');
     return this._db;

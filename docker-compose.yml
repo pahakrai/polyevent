@@ -263,9 +263,78 @@ services:
     command: npx next dev
     working_dir: /app/apps/frontend
 
+  # =========================================================================
+  # Python Workers
+  # =========================================================================
+
+  kafka-consumers:
+    build:
+      context: ./apps/python-workers
+      dockerfile: Dockerfile
+    depends_on:
+      kafka:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      KAFKA_BROKERS: kafka:9092
+      KAFKA_CONSUMER_GROUP: python-workers-dev
+      FEATURE_STORE_URL: redis://:redispass123@redis:6379
+    volumes:
+      - ./apps/python-workers:/app
+    command: python -m kafka-consumers.user_activity
+    restart: unless-stopped
+
+  ml-training:
+    build:
+      context: ./apps/python-workers
+      dockerfile: Dockerfile
+    depends_on:
+      kafka:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      KAFKA_BROKERS: kafka:9092
+      FEATURE_STORE_URL: redis://:redispass123@redis:6379
+      TRAINING_DATA_PATH: /data/training
+      PIPELINE_MODE: incremental
+      PIPELINE_WINDOW_DAYS: "30"
+    volumes:
+      - ./apps/python-workers:/app
+      - training_data:/data/training
+    command: python -m ml-training.data_pipeline
+    restart: "no"
+
+  inference:
+    build:
+      context: ./apps/python-workers
+      dockerfile: Dockerfile
+    depends_on:
+      - redis
+      - elasticsearch
+    environment:
+      KAFKA_BROKERS: kafka:9092
+      FEATURE_STORE_URL: redis://:redispass123@redis:6379
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+      MODEL_PATH: /data/training/models
+      MODEL_VERSION: latest
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./apps/python-workers:/app
+      - training_data:/data/training
+    command: uvicorn inference.api:app --host 0.0.0.0 --port 8000 --reload
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
 volumes:
   postgres_data:
   mongodb_data:
   elasticsearch_data:
   prometheus_data:
   grafana_data:
+  training_data:

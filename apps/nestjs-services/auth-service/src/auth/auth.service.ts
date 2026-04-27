@@ -9,6 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import { db } from '../database/client';
 import { users } from '../database/schema';
 import { eq } from 'drizzle-orm';
+import { BaseProducer, USER_ACTIVITY_TOPIC, UserActivityMessage } from '@polydom/kafka-client';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import * as bcrypt from 'bcrypt';
@@ -20,6 +21,7 @@ export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly kafkaProducer: BaseProducer,
   ) {}
 
   async register(dto: RegisterDto) {
@@ -47,6 +49,9 @@ export class AuthService {
       .returning();
 
     this.logger.log(`User registered: ${user.email}`);
+
+    await this.trackUserActivity(user.id, 'register');
+    await this.trackUserActivity(user.id, 'login'); // auto-login after register
 
     return {
       id: user.id,
@@ -76,6 +81,8 @@ export class AuthService {
     const token = this.jwtService.sign(payload);
 
     this.logger.log(`User logged in: ${user.email}`);
+
+    await this.trackUserActivity(user.id, 'login');
 
     return {
       accessToken: token,
@@ -109,5 +116,24 @@ export class AuthService {
     }
 
     return user;
+  }
+
+  private async trackUserActivity(userId: string, type: string): Promise<void> {
+    try {
+      const message: UserActivityMessage = {
+        userId,
+        sessionId: `auth_${userId}`,
+        type: type as any,
+        timestamp: new Date().toISOString(),
+        pageUrl: '',
+        userAgent: 'auth-service',
+        metadata: { source: 'auth-service' },
+      };
+
+      await this.kafkaProducer.send(USER_ACTIVITY_TOPIC, message, userId);
+      this.logger.debug(`Tracked ${type} for user ${userId}`);
+    } catch (error) {
+      this.logger.warn(`Failed to track activity: ${(error as Error).message}`);
+    }
   }
 }
