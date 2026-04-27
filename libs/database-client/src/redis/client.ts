@@ -47,6 +47,9 @@ export class RedisClient {
         );
       }
 
+      if (!this.client) {
+        throw new Error('Redis client not initialized');
+      }
       await this.client.connect();
       this.logger.log('Connected to Redis');
     } catch (error) {

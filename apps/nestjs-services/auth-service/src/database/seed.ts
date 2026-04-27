@@ -1,7 +1,6 @@
 import { db } from './client';
 import { users, userActivities } from './schema';
 import * as dotenv from 'dotenv';
-import { eq } from 'drizzle-orm';
 
 dotenv.config();
 

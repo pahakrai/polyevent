@@ -34,12 +34,22 @@ build:
       docker:
         dockerfile: apps/nestjs-services/event-service/Dockerfile
         target: production
+    - image: polydom/frontend
+      context: .
+      docker:
+        dockerfile: apps/frontend/Dockerfile
+        target: runner
+    - image: polydom/python-workers
+      context: .
+      docker:
+        dockerfile: apps/python-workers/Dockerfile
   local:
     push: false  # load directly into local cluster
 manifests:
   rawYaml:
     - kubernetes/local/namespace.yaml
     - kubernetes/local/secrets.yaml
+    - kubernetes/local/postgres.yaml
     - kubernetes/local/infrastructure.yaml
     - kubernetes/local/services.yaml
     - kubernetes/local/ingress.yaml

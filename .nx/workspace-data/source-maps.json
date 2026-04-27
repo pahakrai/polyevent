@@ -192,5 +192,2165 @@
       "nx.json",
       "nx/target-defaults"
     ]
+  },
+  "apps/nestjs-services/api-gateway": {
+    "root": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "name": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "tags": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "tags.npm:private": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.0": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.1": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.2": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.3": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.4": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.5": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.packageName": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.packageVersion": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.isInPackageManagerWorkspaces": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.executor": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.options": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.metadata": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.options.script": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.metadata.scriptContent": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.metadata.runCommand": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev.executor": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev.options": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev.metadata": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev.options.script": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev.metadata.scriptContent": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev.metadata.runCommand": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.executor": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.options": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.metadata": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.options.script": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.metadata.scriptContent": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.metadata.runCommand": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test.executor": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test.options": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test.metadata": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test.options.script": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test.metadata.scriptContent": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test.metadata.runCommand": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch.executor": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch.options": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch.metadata": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch.options.script": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch.metadata.scriptContent": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch.metadata.runCommand": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov.executor": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov.options": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov.metadata": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov.options.script": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov.metadata.scriptContent": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov.metadata.runCommand": [
+      "apps/nestjs-services/api-gateway/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.dependsOn": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.build.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.build.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.test.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.test.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ]
+  },
+  "apps/nestjs-services/auth-service": {
+    "root": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "name": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "tags": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "tags.npm:private": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.0": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.1": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.2": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.3": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.4": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.5": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.6": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.7": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.8": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.9": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.10": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.packageName": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.packageVersion": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.isInPackageManagerWorkspaces": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.executor": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.options": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.metadata": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.options.script": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.metadata.scriptContent": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.metadata.runCommand": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev.executor": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev.options": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev.metadata": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev.options.script": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev.metadata.scriptContent": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev.metadata.runCommand": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.executor": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.options": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.metadata": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.options.script": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.metadata.scriptContent": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.metadata.runCommand": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test.executor": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test.options": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test.metadata": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test.options.script": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test.metadata.scriptContent": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test.metadata.runCommand": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch.executor": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch.options": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch.metadata": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch.options.script": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch.metadata.scriptContent": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch.metadata.runCommand": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov.executor": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov.options": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov.metadata": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov.options.script": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov.metadata.scriptContent": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov.metadata.runCommand": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:generate": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:generate.executor": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:generate.options": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:generate.metadata": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:generate.options.script": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:generate.metadata.scriptContent": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:generate.metadata.runCommand": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:migrate": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:migrate.executor": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:migrate.options": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:migrate.metadata": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:migrate.options.script": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:migrate.metadata.scriptContent": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:migrate.metadata.runCommand": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:studio": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:studio.executor": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:studio.options": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:studio.metadata": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:studio.options.script": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:studio.metadata.scriptContent": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:studio.metadata.runCommand": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:push": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:push.executor": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:push.options": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:push.metadata": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:push.options.script": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:push.metadata.scriptContent": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:push.metadata.runCommand": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:seed": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:seed.executor": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:seed.options": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:seed.metadata": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:seed.options.script": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:seed.metadata.scriptContent": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:seed.metadata.runCommand": [
+      "apps/nestjs-services/auth-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.dependsOn": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.build.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.build.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.test.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.test.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ]
+  },
+  "apps/nestjs-services/event-service": {
+    "root": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "name": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "tags": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "tags.npm:private": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.0": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.1": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.2": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.3": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.4": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.5": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.6": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.7": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.8": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.9": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.10": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.packageName": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.packageVersion": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.isInPackageManagerWorkspaces": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.executor": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.options": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.metadata": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.options.script": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.metadata.scriptContent": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.metadata.runCommand": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev.executor": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev.options": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev.metadata": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev.options.script": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev.metadata.scriptContent": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev.metadata.runCommand": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.executor": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.options": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.metadata": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.options.script": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.metadata.scriptContent": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.metadata.runCommand": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test.executor": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test.options": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test.metadata": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test.options.script": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test.metadata.scriptContent": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test.metadata.runCommand": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch.executor": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch.options": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch.metadata": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch.options.script": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch.metadata.scriptContent": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch.metadata.runCommand": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov.executor": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov.options": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov.metadata": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov.options.script": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov.metadata.scriptContent": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov.metadata.runCommand": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:generate": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:generate.executor": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:generate.options": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:generate.metadata": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:generate.options.script": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:generate.metadata.scriptContent": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:generate.metadata.runCommand": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:migrate": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:migrate.executor": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:migrate.options": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:migrate.metadata": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:migrate.options.script": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:migrate.metadata.scriptContent": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:migrate.metadata.runCommand": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:studio": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:studio.executor": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:studio.options": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:studio.metadata": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:studio.options.script": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:studio.metadata.scriptContent": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:studio.metadata.runCommand": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:push": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:push.executor": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:push.options": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:push.metadata": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:push.options.script": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:push.metadata.scriptContent": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:push.metadata.runCommand": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:seed": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:seed.executor": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:seed.options": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:seed.metadata": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:seed.options.script": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:seed.metadata.scriptContent": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:seed.metadata.runCommand": [
+      "apps/nestjs-services/event-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.dependsOn": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.build.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.build.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.test.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.test.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ]
+  },
+  "apps/nestjs-services/user-service": {
+    "root": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "name": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "tags": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "tags.npm:private": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.0": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.1": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.2": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.3": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.4": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.5": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.6": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.7": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.8": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.9": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.10": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.packageName": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.packageVersion": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.isInPackageManagerWorkspaces": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.executor": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.options": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.metadata": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.options.script": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.metadata.scriptContent": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.metadata.runCommand": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev.executor": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev.options": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev.metadata": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev.options.script": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev.metadata.scriptContent": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev.metadata.runCommand": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.executor": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.options": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.metadata": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.options.script": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.metadata.scriptContent": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.metadata.runCommand": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test.executor": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test.options": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test.metadata": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test.options.script": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test.metadata.scriptContent": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test.metadata.runCommand": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch.executor": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch.options": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch.metadata": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch.options.script": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch.metadata.scriptContent": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch.metadata.runCommand": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov.executor": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov.options": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov.metadata": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov.options.script": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov.metadata.scriptContent": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov.metadata.runCommand": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:generate": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:generate.executor": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:generate.options": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:generate.metadata": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:generate.options.script": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:generate.metadata.scriptContent": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:generate.metadata.runCommand": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:migrate": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:migrate.executor": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:migrate.options": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:migrate.metadata": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:migrate.options.script": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:migrate.metadata.scriptContent": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:migrate.metadata.runCommand": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:studio": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:studio.executor": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:studio.options": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:studio.metadata": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:studio.options.script": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:studio.metadata.scriptContent": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:studio.metadata.runCommand": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:push": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:push.executor": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:push.options": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:push.metadata": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:push.options.script": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:push.metadata.scriptContent": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:push.metadata.runCommand": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:seed": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:seed.executor": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:seed.options": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:seed.metadata": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:seed.options.script": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:seed.metadata.scriptContent": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:seed.metadata.runCommand": [
+      "apps/nestjs-services/user-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.dependsOn": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.build.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.build.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.test.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.test.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ]
+  },
+  "apps/nestjs-services/vendor-service": {
+    "root": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "name": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "tags": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "tags.npm:private": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.0": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.1": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.2": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.3": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.4": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.5": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.6": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.7": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.8": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.9": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups.NPM Scripts.10": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.packageName": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.packageVersion": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.isInPackageManagerWorkspaces": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.executor": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.options": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.metadata": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.options.script": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.metadata.scriptContent": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start.metadata.runCommand": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev.executor": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev.options": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev.metadata": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev.options.script": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev.metadata.scriptContent": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.start:dev.metadata.runCommand": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.executor": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.options": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.metadata": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.options.script": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.metadata.scriptContent": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.metadata.runCommand": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test.executor": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test.options": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test.metadata": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test.options.script": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test.metadata.scriptContent": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test.metadata.runCommand": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch.executor": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch.options": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch.metadata": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch.options.script": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch.metadata.scriptContent": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:watch.metadata.runCommand": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov.executor": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov.options": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov.metadata": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov.options.script": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov.metadata.scriptContent": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.test:cov.metadata.runCommand": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:generate": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:generate.executor": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:generate.options": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:generate.metadata": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:generate.options.script": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:generate.metadata.scriptContent": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:generate.metadata.runCommand": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:migrate": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:migrate.executor": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:migrate.options": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:migrate.metadata": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:migrate.options.script": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:migrate.metadata.scriptContent": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:migrate.metadata.runCommand": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:studio": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:studio.executor": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:studio.options": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:studio.metadata": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:studio.options.script": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:studio.metadata.scriptContent": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:studio.metadata.runCommand": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:push": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:push.executor": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:push.options": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:push.metadata": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:push.options.script": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:push.metadata.scriptContent": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:push.metadata.runCommand": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:seed": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:seed.executor": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:seed.options": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:seed.metadata": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:seed.options.script": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:seed.metadata.scriptContent": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.db:seed.metadata.runCommand": [
+      "apps/nestjs-services/vendor-service/package.json",
+      "nx/core/package-json"
+    ],
+    "targets.build.dependsOn": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.build.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.build.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.test.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.test.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ]
+  },
+  "libs/database-client": {
+    "root": [
+      "libs/database-client/package.json",
+      "nx/core/package-json"
+    ],
+    "name": [
+      "libs/database-client/package.json",
+      "nx/core/package-json"
+    ],
+    "tags": [
+      "libs/database-client/package.json",
+      "nx/core/package-json"
+    ],
+    "tags.npm:private": [
+      "libs/database-client/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups": [
+      "libs/database-client/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js": [
+      "libs/database-client/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.packageName": [
+      "libs/database-client/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.packageVersion": [
+      "libs/database-client/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.packageMain": [
+      "libs/database-client/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.isInPackageManagerWorkspaces": [
+      "libs/database-client/package.json",
+      "nx/core/package-json"
+    ],
+    "targets": [
+      "libs/database-client/package.json",
+      "nx/core/package-json"
+    ]
+  },
+  "libs/elasticsearch-client": {
+    "root": [
+      "libs/elasticsearch-client/package.json",
+      "nx/core/package-json"
+    ],
+    "name": [
+      "libs/elasticsearch-client/package.json",
+      "nx/core/package-json"
+    ],
+    "tags": [
+      "libs/elasticsearch-client/package.json",
+      "nx/core/package-json"
+    ],
+    "tags.npm:private": [
+      "libs/elasticsearch-client/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups": [
+      "libs/elasticsearch-client/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js": [
+      "libs/elasticsearch-client/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.packageName": [
+      "libs/elasticsearch-client/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.packageVersion": [
+      "libs/elasticsearch-client/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.packageMain": [
+      "libs/elasticsearch-client/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.isInPackageManagerWorkspaces": [
+      "libs/elasticsearch-client/package.json",
+      "nx/core/package-json"
+    ],
+    "targets": [
+      "libs/elasticsearch-client/package.json",
+      "nx/core/package-json"
+    ]
+  },
+  "libs/kafka-client": {
+    "root": [
+      "libs/kafka-client/package.json",
+      "nx/core/package-json"
+    ],
+    "name": [
+      "libs/kafka-client/package.json",
+      "nx/core/package-json"
+    ],
+    "tags": [
+      "libs/kafka-client/package.json",
+      "nx/core/package-json"
+    ],
+    "tags.npm:private": [
+      "libs/kafka-client/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups": [
+      "libs/kafka-client/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js": [
+      "libs/kafka-client/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.packageName": [
+      "libs/kafka-client/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.packageVersion": [
+      "libs/kafka-client/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.packageMain": [
+      "libs/kafka-client/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.isInPackageManagerWorkspaces": [
+      "libs/kafka-client/package.json",
+      "nx/core/package-json"
+    ],
+    "targets": [
+      "libs/kafka-client/package.json",
+      "nx/core/package-json"
+    ]
+  },
+  "libs/shared-types": {
+    "root": [
+      "libs/shared-types/package.json",
+      "nx/core/package-json"
+    ],
+    "name": [
+      "libs/shared-types/package.json",
+      "nx/core/package-json"
+    ],
+    "tags": [
+      "libs/shared-types/package.json",
+      "nx/core/package-json"
+    ],
+    "tags.npm:private": [
+      "libs/shared-types/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups": [
+      "libs/shared-types/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js": [
+      "libs/shared-types/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.packageName": [
+      "libs/shared-types/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.packageVersion": [
+      "libs/shared-types/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.packageMain": [
+      "libs/shared-types/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.isInPackageManagerWorkspaces": [
+      "libs/shared-types/package.json",
+      "nx/core/package-json"
+    ],
+    "targets": [
+      "libs/shared-types/package.json",
+      "nx/core/package-json"
+    ]
+  },
+  "libs/utils": {
+    "root": [
+      "libs/utils/package.json",
+      "nx/core/package-json"
+    ],
+    "name": [
+      "libs/utils/package.json",
+      "nx/core/package-json"
+    ],
+    "tags": [
+      "libs/utils/package.json",
+      "nx/core/package-json"
+    ],
+    "tags.npm:private": [
+      "libs/utils/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.targetGroups": [
+      "libs/utils/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js": [
+      "libs/utils/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.packageName": [
+      "libs/utils/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.packageVersion": [
+      "libs/utils/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.packageMain": [
+      "libs/utils/package.json",
+      "nx/core/package-json"
+    ],
+    "metadata.js.isInPackageManagerWorkspaces": [
+      "libs/utils/package.json",
+      "nx/core/package-json"
+    ],
+    "targets": [
+      "libs/utils/package.json",
+      "nx/core/package-json"
+    ]
   }
 }

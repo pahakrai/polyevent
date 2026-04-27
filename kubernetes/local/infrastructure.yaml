@@ -1,16 +1,11 @@
-# Local dev infrastructure — single replicas, modest resources, no HA
+# Local dev infrastructure — single replicas, modest resources, persistent volumes
+# PostgreSQL instances are defined separately in postgres.yaml (database-per-service pattern)
 ---
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: postgres-pvc
-  namespace: polydom-dev
-spec:
-  accessModes: [ReadWriteOnce]
-  resources:
-    requests:
-      storage: 5Gi
+
 ---
+# ============================================================
+# Redis
+# ============================================================
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -21,75 +16,6 @@ spec:
   resources:
     requests:
       storage: 2Gi
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: postgres-init
-  namespace: polydom-dev
-data:
-  01-create-databases.sql: |
-    CREATE DATABASE gateway_db;
-    CREATE DATABASE auth_db;
-    CREATE DATABASE user_db;
-    CREATE DATABASE vendor_db;
-    CREATE DATABASE event_db;
-    GRANT ALL PRIVILEGES ON DATABASE gateway_db TO eventbooking;
-    GRANT ALL PRIVILEGES ON DATABASE auth_db TO eventbooking;
-    GRANT ALL PRIVILEGES ON DATABASE user_db TO eventbooking;
-    GRANT ALL PRIVILEGES ON DATABASE vendor_db TO eventbooking;
-    GRANT ALL PRIVILEGES ON DATABASE event_db TO eventbooking;
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: postgres
-  namespace: polydom-dev
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: postgres
-  template:
-    metadata:
-      labels:
-        app: postgres
-    spec:
-      containers:
-      - name: postgres
-        image: postgres:15-alpine
-        ports:
-        - containerPort: 5432
-        env:
-        - name: POSTGRES_USER
-          value: eventbooking
-        - name: POSTGRES_PASSWORD
-          value: eventbooking123
-        - name: POSTGRES_DB
-          value: eventbooking
-        volumeMounts:
-        - name: data
-          mountPath: /var/lib/postgresql/data
-        - name: init
-          mountPath: /docker-entrypoint-initdb.d
-      volumes:
-      - name: data
-        persistentVolumeClaim:
-          claimName: postgres-pvc
-      - name: init
-        configMap:
-          name: postgres-init
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: postgres
-  namespace: polydom-dev
-spec:
-  selector:
-    app: postgres
-  ports:
-  - port: 5432
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -130,3 +56,426 @@ spec:
     app: redis
   ports:
   - port: 6379
+
+---
+# ============================================================
+# MongoDB
+# ============================================================
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongodb-pvc
+  namespace: polydom-dev
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb
+  namespace: polydom-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+      - name: mongodb
+        image: mongo:7
+        ports:
+        - containerPort: 27017
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          value: root
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          value: mongopass123
+        volumeMounts:
+        - name: data
+          mountPath: /data/db
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: mongodb-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb
+  namespace: polydom-dev
+spec:
+  selector:
+    app: mongodb
+  ports:
+  - port: 27017
+
+---
+# ============================================================
+# Zookeeper (required by Kafka)
+# ============================================================
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: zookeeper-pvc
+  namespace: polydom-dev
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zookeeper
+  namespace: polydom-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zookeeper
+  template:
+    metadata:
+      labels:
+        app: zookeeper
+    spec:
+      containers:
+      - name: zookeeper
+        image: confluentinc/cp-zookeeper:7.4.0
+        ports:
+        - containerPort: 2181
+        env:
+        - name: ZOOKEEPER_CLIENT_PORT
+          value: "2181"
+        - name: ZOOKEEPER_TICK_TIME
+          value: "2000"
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/zookeeper/data
+        - name: log
+          mountPath: /var/lib/zookeeper/log
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: zookeeper-pvc
+      - name: log
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zookeeper
+  namespace: polydom-dev
+spec:
+  selector:
+    app: zookeeper
+  ports:
+  - port: 2181
+
+---
+# ============================================================
+# Kafka
+# ============================================================
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: kafka-pvc
+  namespace: polydom-dev
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka
+  namespace: polydom-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka
+  template:
+    metadata:
+      labels:
+        app: kafka
+    spec:
+      containers:
+      - name: kafka
+        image: confluentinc/cp-kafka:7.4.0
+        ports:
+        - containerPort: 9092
+        env:
+        - name: KAFKA_BROKER_ID
+          value: "1"
+        - name: KAFKA_ZOOKEEPER_CONNECT
+          value: zookeeper:2181
+        - name: KAFKA_ADVERTISED_LISTENERS
+          value: PLAINTEXT://kafka:9092
+        - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+          value: "1"
+        - name: KAFKA_TRANSACTION_STATE_LOG_MIN_ISR
+          value: "1"
+        - name: KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR
+          value: "1"
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/kafka/data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: kafka-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka
+  namespace: polydom-dev
+spec:
+  selector:
+    app: kafka
+  ports:
+  - port: 9092
+
+---
+# ============================================================
+# Elasticsearch
+# ============================================================
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: elasticsearch-pvc
+  namespace: polydom-dev
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elasticsearch
+  namespace: polydom-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: elasticsearch
+  template:
+    metadata:
+      labels:
+        app: elasticsearch
+    spec:
+      containers:
+      - name: elasticsearch
+        image: elasticsearch:8.11.0
+        ports:
+        - containerPort: 9200
+        env:
+        - name: discovery.type
+          value: single-node
+        - name: xpack.security.enabled
+          value: "false"
+        - name: ES_JAVA_OPTS
+          value: "-Xms512m -Xmx512m"
+        volumeMounts:
+        - name: data
+          mountPath: /usr/share/elasticsearch/data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: elasticsearch-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: elasticsearch
+  namespace: polydom-dev
+spec:
+  selector:
+    app: elasticsearch
+  ports:
+  - port: 9200
+
+---
+# ============================================================
+# Kibana
+# ============================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kibana
+  namespace: polydom-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kibana
+  template:
+    metadata:
+      labels:
+        app: kibana
+    spec:
+      containers:
+      - name: kibana
+        image: kibana:8.11.0
+        ports:
+        - containerPort: 5601
+        env:
+        - name: ELASTICSEARCH_HOSTS
+          value: http://elasticsearch:9200
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kibana
+  namespace: polydom-dev
+spec:
+  selector:
+    app: kibana
+  ports:
+  - port: 5601
+
+---
+# ============================================================
+# Prometheus
+# ============================================================
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prometheus-pvc
+  namespace: polydom-dev
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: polydom-dev
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+    scrape_configs:
+      - job_name: api-gateway
+        static_configs:
+          - targets: ['api-gateway:3000']
+      - job_name: prometheus
+        static_configs:
+          - targets: ['localhost:9090']
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+  namespace: polydom-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      containers:
+      - name: prometheus
+        image: prom/prometheus:latest
+        ports:
+        - containerPort: 9090
+        volumeMounts:
+        - name: data
+          mountPath: /prometheus
+        - name: config
+          mountPath: /etc/prometheus/prometheus.yml
+          subPath: prometheus.yml
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: prometheus-pvc
+      - name: config
+        configMap:
+          name: prometheus-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+  namespace: polydom-dev
+spec:
+  selector:
+    app: prometheus
+  ports:
+  - port: 9090
+
+---
+# ============================================================
+# Grafana
+# ============================================================
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grafana-pvc
+  namespace: polydom-dev
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+  namespace: polydom-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+      - name: grafana
+        image: grafana/grafana:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: GF_SECURITY_ADMIN_PASSWORD
+          value: admin
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/grafana
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: grafana-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  namespace: polydom-dev
+spec:
+  selector:
+    app: grafana
+  ports:
+  - port: 3000

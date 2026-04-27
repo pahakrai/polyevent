@@ -10,8 +10,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run test` - Run tests for all projects
 - `npm run lint` - Lint all projects
 - `npm run format` - Format code with Prettier
-- `npm run docker:up` - Start Docker Compose services (PostgreSQL, MongoDB, Redis, Kafka, Elasticsearch, etc.)
-- `npm run docker:down` - Stop Docker Compose services
+- `npm run docker:up` - Start all Docker Compose services (databases + apps with hot reload)
+- `npm run docker:down` - Stop all Docker Compose services
+- `npm run dev:infra` - Start Docker Compose **infrastructure only** (databases, message queues, search) — for running services natively
+- `npm run dev:infra:down` - Stop infrastructure-only Docker Compose
+- `npm run skaffold:dev` - Skaffold watch mode: build + deploy all services to local Kubernetes with port-forward
+- `npm run skaffold:run` - Skaffold one-shot: build + deploy all services to local Kubernetes once
+- `npm run skaffold:build` - Skaffold build only (no deploy)
 - `npm run k8s:apply` - Apply Kubernetes manifests
 - `npm run k8s:delete` - Delete Kubernetes resources
 
@@ -98,10 +103,52 @@ See `DATABASE_SETUP.md` for detailed instructions.
 
 ## Development Workflow
 
-### Local development
-1. Start dependencies: `npm run docker:up`
-2. Run services: `nx run-many --target=serve --projects=frontend,api-gateway,auth-service` (or use `npm start` for all)
-3. Frontend runs on http://localhost:3002, API Gateway on http://localhost:3000
+Two local development options are available:
+
+### Option 1: Docker Compose (databases only) — lightweight
+
+Run infrastructure in Docker, run services natively on the host. Best for rapid iteration on individual services.
+
+```bash
+npm run dev:infra          # Start PostgreSQL, MongoDB, Redis, Kafka, Elasticsearch, etc.
+                           # All with named volumes for persistence across restarts
+
+# Run services natively in separate terminals:
+cd apps/nestjs-services/auth-service && npm run start:dev
+cd apps/frontend && npm run dev
+
+# Or start multiple at once:
+nx run-many --target=serve --projects=frontend,api-gateway,auth-service
+```
+
+| Service | URL |
+|---------|-----|
+| Frontend | http://localhost:3002 |
+| API Gateway | http://localhost:3000 |
+| PostgreSQL | localhost:5432 |
+| Redis | localhost:6379 |
+| Kafka | localhost:9092 |
+| Elasticsearch | http://localhost:9200 |
+| Kibana | http://localhost:5601 |
+| Grafana | http://localhost:3001 |
+
+### Option 2: Skaffold + Kubernetes (full stack) — production-like
+
+All microservices, frontend, and Python workers run in a local Kubernetes cluster with persistent volumes. Requires: Docker Desktop K8s, minikube, or kind.
+
+```bash
+npm run skaffold:dev       # Watch mode: rebuilds + redeploys on file changes with port-forward
+npm run skaffold:run       # One-shot: build + deploy, then exit
+```
+
+This deploys everything to the `polydom-dev` namespace:
+- **PostgreSQL**: 9 separate instances (one per microservice) following database-per-service pattern
+- **Infrastructure**: Redis, MongoDB, Kafka, Zookeeper, Elasticsearch, Kibana, Prometheus, Grafana
+- **Services**: API Gateway, Auth, User, Vendor, Event
+- **Frontend**: Next.js (via `polydom/frontend`)
+- **Python workers**: ML training, inference, Kafka consumers (via `polydom/python-workers`)
+
+All stateful services use PersistentVolumeClaims. Data survives pod restarts and cluster reboots.
 
 ### Creating a new microservice
 1. Generate NestJS service: `nx generate @nx/nest:library <service-name> --directory=apps/nestjs-services`
@@ -168,7 +215,7 @@ See `README.md` for detailed descriptions of each service (Auth, User, Vendor, E
 | **Python workers** | Basic structure | ML training, inference, Kafka consumers stubs |
 | **Shared libraries** | Mostly stub implementations | See `LIBRARY_AUDIT.md` for details |
 | **Database schemas** | Defined per service | May need expansion for full functionality |
-| **Kubernetes manifests** | Basic deployment files | API Gateway and frontend only |
+| **Kubernetes manifests** | Complete | Production, staging, and local dev overlays with all services + infrastructure |
 | **Docker Compose** | Complete | All dependencies (PostgreSQL, MongoDB, Redis, Kafka, Elasticsearch, etc.) |
 | **Monitoring** | Configured | Prometheus/Grafana in Docker Compose |
 

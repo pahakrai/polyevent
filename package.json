@@ -4,6 +4,7 @@
   "private": true,
   "workspaces": [
     "apps/*",
+    "apps/nestjs-services/*",
     "libs/*"
   ],
   "scripts": {
@@ -22,6 +23,9 @@
     "k8s:delete:staging": "kubectl delete -k kubernetes/overlays/staging",
     "k8s:dev:up": "docker compose -f docker-compose.infra.yml up -d && kubectl apply -f kubernetes/local/ --recursive",
     "k8s:dev:down": "kubectl delete -f kubernetes/local/ --recursive && docker compose -f docker-compose.infra.yml down",
+    "skaffold:dev": "skaffold dev --port-forward",
+    "skaffold:build": "skaffold build",
+    "skaffold:run": "skaffold run --port-forward",
     "db:generate:auth": "cd apps/nestjs-services/auth-service && npm run db:generate",
     "db:migrate:auth": "cd apps/nestjs-services/auth-service && npm run db:migrate",
     "db:seed:auth": "cd apps/nestjs-services/auth-service && npm run db:seed",
@@ -90,6 +94,7 @@
     "eslint": "^8.0.0",
     "nx": "latest",
     "prettier": "^3.0.0",
+    "ts-node": "^10.9.2",
     "tsx": "^4.0.0",
     "typescript": "^5.3.0"
   }

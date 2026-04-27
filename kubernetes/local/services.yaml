@@ -1,4 +1,4 @@
-# Application services — local dev settings: 1 replica, low resources, NodePort access
+# Application services — local dev settings: 1 replica, low resources
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -271,6 +271,11 @@ spec:
             secretKeyRef:
               name: redis-secrets
               key: redis-url
+        - name: KAFKA_BROKERS
+          valueFrom:
+            secretKeyRef:
+              name: kafka-secrets
+              key: kafka-brokers
         - name: NODE_ENV
           value: development
         resources:
@@ -293,3 +298,188 @@ spec:
   - port: 3000
     targetPort: 3000
   type: ClusterIP
+
+---
+# ============================================================
+# Frontend (Next.js)
+# ============================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: polydom-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: polydom/frontend:dev
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 3000
+        env:
+        - name: NODE_ENV
+          value: development
+        - name: NEXT_PUBLIC_API_URL
+          value: http://api-gateway:3000
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: polydom-dev
+spec:
+  selector:
+    app: frontend
+  ports:
+  - port: 3000
+    targetPort: 3000
+  type: ClusterIP
+
+---
+# ============================================================
+# Python Workers — ML Training
+# ============================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ml-training
+  namespace: polydom-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ml-training
+  template:
+    metadata:
+      labels:
+        app: ml-training
+    spec:
+      containers:
+      - name: ml-training
+        image: polydom/python-workers:dev
+        imagePullPolicy: Never
+        command: ["python", "-m", "ml-training.data_pipeline"]
+        env:
+        - name: KAFKA_BROKERS
+          valueFrom:
+            secretKeyRef:
+              name: kafka-secrets
+              key: kafka-brokers
+        - name: ELASTICSEARCH_HOSTS
+          valueFrom:
+            secretKeyRef:
+              name: elasticsearch-secrets
+              key: elasticsearch-hosts
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "1000m"
+
+---
+# ============================================================
+# Python Workers — Inference (Search Ranker)
+# ============================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inference
+  namespace: polydom-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inference
+  template:
+    metadata:
+      labels:
+        app: inference
+    spec:
+      containers:
+      - name: inference
+        image: polydom/python-workers:dev
+        imagePullPolicy: Never
+        command: ["python", "-m", "inference.search_ranker"]
+        ports:
+        - containerPort: 8000
+        env:
+        - name: ELASTICSEARCH_HOSTS
+          valueFrom:
+            secretKeyRef:
+              name: elasticsearch-secrets
+              key: elasticsearch-hosts
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "1000m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: inference
+  namespace: polydom-dev
+spec:
+  selector:
+    app: inference
+  ports:
+  - port: 8000
+    targetPort: 8000
+  type: ClusterIP
+
+---
+# ============================================================
+# Python Workers — Kafka Consumers (User Activity)
+# ============================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-consumers
+  namespace: polydom-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-consumers
+  template:
+    metadata:
+      labels:
+        app: kafka-consumers
+    spec:
+      containers:
+      - name: kafka-consumers
+        image: polydom/python-workers:dev
+        imagePullPolicy: Never
+        command: ["python", "-m", "kafka-consumers.user_activity"]
+        env:
+        - name: KAFKA_BROKERS
+          valueFrom:
+            secretKeyRef:
+              name: kafka-secrets
+              key: kafka-brokers
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "1000m"
