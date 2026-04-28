@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { KafkaModule } from '@polydom/kafka-client';
 import { EventModule } from './event/event.module';
+import { HealthController } from './health.controller';
 
 @Module({
   imports: [
@@ -16,5 +17,6 @@ import { EventModule } from './event/event.module';
     }),
     EventModule,
   ],
+  controllers: [HealthController],
 })
 export class AppModule {}

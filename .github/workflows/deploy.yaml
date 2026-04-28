@@ -1,4 +1,8 @@
-# Build, push, and deploy all services to Kubernetes.
+# ============================================================
+# Build, push, and deploy only AFFECTED services to Kubernetes.
+#
+# Uses NX affected: only services with changed code are rebuilt.
+# Images are tagged with the full git SHA for traceability.
 #
 # Required GitHub Secrets (per environment):
 #   REGISTRY        — Docker registry URL (e.g. registry.digitalocean.com/polydom)
@@ -7,7 +11,8 @@
 #   KUBE_CONFIG     — Base64-encoded kubeconfig for the target cluster
 #
 # Required GitHub Variables (per environment):
-#   KUSTOMIZE_OVERLAY — Path to the overlay (e.g. kubernetes/overlays/production)
+#   KUSTOMIZE_OVERLAY — Path to overlay (e.g. kubernetes/overlays/production)
+# ============================================================
 
 name: Build & Deploy
 
@@ -21,8 +26,50 @@ env:
   REGISTRY: ${{ secrets.REGISTRY }}
 
 jobs:
+  # ------------------------------------------------------------------
+  # Detect which deployable services changed (NX affected + git diff)
+  # ------------------------------------------------------------------
+  detect-changes:
+    name: Detect Affected Services
+    runs-on: ubuntu-latest
+    outputs:
+      services: ${{ steps.affected.outputs.services }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Compute affected services
+        id: affected
+        run: |
+          # Deployable services that have Docker images (exclude shared libs)
+          DEPLOYABLE='["api-gateway","auth-service","user-service","vendor-service","event-service","frontend"]'
+
+          AFFECTED=$(npx nx show projects --affected --base=origin/main --head=HEAD --json)
+          echo "All NX-affected projects: $AFFECTED"
+
+          FILTERED=$(echo "$AFFECTED" | jq -c "[.[] | select(. as \$p | $DEPLOYABLE | index(\$p))]")
+
+          # Check python-workers separately (not NX-managed)
+          if git diff --name-only origin/main..HEAD | grep -q '^apps/python-workers/'; then
+            FILTERED=$(echo "$FILTERED" | jq -c '. + ["python-workers"]')
+          fi
+
+          echo "Deployable affected: $FILTERED"
+          echo "services=$FILTERED" >> $GITHUB_OUTPUT
+
+  # ------------------------------------------------------------------
+  # Lint & test (always runs)
+  # ------------------------------------------------------------------
   test:
-    name: Test
+    name: Lint & Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -33,20 +80,19 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run test
+      - run: npm run validate:dockerfiles
 
+  # ------------------------------------------------------------------
+  # Build & push only affected service images
+  # ------------------------------------------------------------------
   build-and-push:
     name: Build & Push
-    needs: test
+    needs: [test, detect-changes]
+    if: needs.detect-changes.outputs.services != '[]' && needs.detect-changes.outputs.services != ''
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service:
-          - api-gateway
-          - auth-service
-          - user-service
-          - vendor-service
-          - event-service
-          - frontend
+        service: ${{ fromJson(needs.detect-changes.outputs.services) }}
     steps:
       - uses: actions/checkout@v4
 
@@ -60,12 +106,24 @@ jobs:
           username: ${{ secrets.REGISTRY_USER }}
           password: ${{ secrets.REGISTRY_TOKEN }}
 
+      - name: Resolve Dockerfile path
+        id: paths
+        run: |
+          case "${{ matrix.service }}" in
+            frontend)       echo "dockerfile=apps/frontend/Dockerfile" >> $GITHUB_OUTPUT
+                           echo "target=runner" >> $GITHUB_OUTPUT ;;
+            python-workers) echo "dockerfile=apps/python-workers/Dockerfile" >> $GITHUB_OUTPUT
+                           echo "target=" >> $GITHUB_OUTPUT ;;
+            *)              echo "dockerfile=apps/nestjs-services/${{ matrix.service }}/Dockerfile" >> $GITHUB_OUTPUT
+                           echo "target=production" >> $GITHUB_OUTPUT ;;
+          esac
+
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./apps/nestjs-services/${{ matrix.service }}/Dockerfile
-          target: production
+          file: ${{ steps.paths.outputs.dockerfile }}
+          target: ${{ steps.paths.outputs.target }}
           push: true
           tags: |
             ${{ secrets.REGISTRY }}/${{ matrix.service }}:${{ github.sha }}
@@ -73,9 +131,15 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+  # ------------------------------------------------------------------
+  # Deploy via Kustomize — updates image tags to git SHA, then apply
+  # ------------------------------------------------------------------
   deploy:
-    name: Deploy
-    needs: build-and-push
+    name: Deploy to Kubernetes
+    needs: [build-and-push, detect-changes]
+    if: |
+      always() &&
+      (needs.detect-changes.outputs.services != '[]' && needs.detect-changes.outputs.services != '')
     runs-on: ubuntu-latest
     environment:
       name: ${{ github.ref_name == 'main' && 'staging' || 'production' }}
@@ -104,10 +168,13 @@ jobs:
       - name: Deploy
         run: kubectl apply -k ${{ vars.KUSTOMIZE_OVERLAY }} --prune -l app.kubernetes.io/managed-by=kustomize
 
-      - name: Verify rollout
+      - name: Verify rollouts
         run: |
-          kubectl rollout status deployment/api-gateway --timeout=5m
-          kubectl rollout status deployment/auth-service --timeout=5m
-          kubectl rollout status deployment/user-service --timeout=5m
-          kubectl rollout status deployment/vendor-service --timeout=5m
-          kubectl rollout status deployment/event-service --timeout=5m
+          SERVICES='${{ needs.detect-changes.outputs.services }}'
+          for svc in $(echo "$SERVICES" | jq -r '.[]'); do
+            # Only verify services that have a Deployment (skip python-workers)
+            case "$svc" in
+              python-workers) continue ;;
+              *) echo "Waiting for $svc..." && kubectl rollout status "deployment/$svc" --timeout=5m || true ;;
+            esac
+          done

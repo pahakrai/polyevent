@@ -1,10 +1,23 @@
-# Application services — local dev settings: 1 replica, low resources
+# Local dev services — all NestJS microservices + Frontend
+# Skaffold auto-replaces image tags with content-hash tags at deploy time.
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: app-sa
+  namespace: polydom-dev
+
+---
+# ============================================================
+# API Gateway
+# ============================================================
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: api-gateway
   namespace: polydom-dev
+  labels:
+    app: api-gateway
 spec:
   replicas: 1
   selector:
@@ -15,13 +28,28 @@ spec:
       labels:
         app: api-gateway
     spec:
+      serviceAccountName: app-sa
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: api-gateway
         image: polydom/api-gateway:dev
-        imagePullPolicy: Never
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
+          name: http
+        - containerPort: 9229
+          name: debug
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
         env:
+        - name: NODE_ENV
+          value: development
         - name: GATEWAY_DATABASE_URL
           valueFrom:
             secretKeyRef:
@@ -32,12 +60,12 @@ spec:
             secretKeyRef:
               name: redis-secrets
               key: redis-url
-        - name: NODE_ENV
-          value: development
+        - name: AUTH_SERVICE_URL
+          value: http://auth-service:3000
         resources:
           requests:
-            memory: "128Mi"
-            cpu: "100m"
+            memory: "64Mi"
+            cpu: "50m"
           limits:
             memory: "256Mi"
             cpu: "500m"
@@ -46,11 +74,13 @@ spec:
             path: /health
             port: 3000
           initialDelaySeconds: 10
+          periodSeconds: 20
         readinessProbe:
           httpGet:
             path: /health/ready
             port: 3000
           initialDelaySeconds: 5
+          periodSeconds: 10
 ---
 apiVersion: v1
 kind: Service
@@ -63,14 +93,23 @@ spec:
   ports:
   - port: 3000
     targetPort: 3000
+    name: http
+  - port: 9229
+    targetPort: 9229
+    name: debug
   type: NodePort
 
 ---
+# ============================================================
+# Auth Service
+# ============================================================
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: auth-service
   namespace: polydom-dev
+  labels:
+    app: auth-service
 spec:
   replicas: 1
   selector:
@@ -81,13 +120,28 @@ spec:
       labels:
         app: auth-service
     spec:
+      serviceAccountName: app-sa
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: auth-service
         image: polydom/auth-service:dev
-        imagePullPolicy: Never
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
+          name: http
+        - containerPort: 9230
+          name: debug
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
         env:
+        - name: NODE_ENV
+          value: development
         - name: AUTH_DATABASE_URL
           valueFrom:
             secretKeyRef:
@@ -103,15 +157,27 @@ spec:
             secretKeyRef:
               name: jwt-secrets
               key: jwt-secret
-        - name: NODE_ENV
-          value: development
+        - name: PORT
+          value: "3000"
         resources:
           requests:
-            memory: "128Mi"
-            cpu: "100m"
+            memory: "64Mi"
+            cpu: "50m"
           limits:
             memory: "256Mi"
             cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 10
 ---
 apiVersion: v1
 kind: Service
@@ -124,180 +190,10 @@ spec:
   ports:
   - port: 3000
     targetPort: 3000
-  type: ClusterIP
-
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: user-service
-  namespace: polydom-dev
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: user-service
-  template:
-    metadata:
-      labels:
-        app: user-service
-    spec:
-      containers:
-      - name: user-service
-        image: polydom/user-service:dev
-        imagePullPolicy: Never
-        ports:
-        - containerPort: 3000
-        env:
-        - name: USER_DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: database-secrets
-              key: user-database-url
-        - name: REDIS_URL
-          valueFrom:
-            secretKeyRef:
-              name: redis-secrets
-              key: redis-url
-        - name: NODE_ENV
-          value: development
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "100m"
-          limits:
-            memory: "256Mi"
-            cpu: "500m"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: user-service
-  namespace: polydom-dev
-spec:
-  selector:
-    app: user-service
-  ports:
-  - port: 3000
-    targetPort: 3000
-  type: ClusterIP
-
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: vendor-service
-  namespace: polydom-dev
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: vendor-service
-  template:
-    metadata:
-      labels:
-        app: vendor-service
-    spec:
-      containers:
-      - name: vendor-service
-        image: polydom/vendor-service:dev
-        imagePullPolicy: Never
-        ports:
-        - containerPort: 3000
-        env:
-        - name: VENDOR_DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: database-secrets
-              key: vendor-database-url
-        - name: REDIS_URL
-          valueFrom:
-            secretKeyRef:
-              name: redis-secrets
-              key: redis-url
-        - name: NODE_ENV
-          value: development
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "100m"
-          limits:
-            memory: "256Mi"
-            cpu: "500m"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: vendor-service
-  namespace: polydom-dev
-spec:
-  selector:
-    app: vendor-service
-  ports:
-  - port: 3000
-    targetPort: 3000
-  type: ClusterIP
-
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: event-service
-  namespace: polydom-dev
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: event-service
-  template:
-    metadata:
-      labels:
-        app: event-service
-    spec:
-      containers:
-      - name: event-service
-        image: polydom/event-service:dev
-        imagePullPolicy: Never
-        ports:
-        - containerPort: 3000
-        env:
-        - name: EVENT_DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: database-secrets
-              key: event-database-url
-        - name: REDIS_URL
-          valueFrom:
-            secretKeyRef:
-              name: redis-secrets
-              key: redis-url
-        - name: KAFKA_BROKERS
-          valueFrom:
-            secretKeyRef:
-              name: kafka-secrets
-              key: kafka-brokers
-        - name: NODE_ENV
-          value: development
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "100m"
-          limits:
-            memory: "256Mi"
-            cpu: "500m"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: event-service
-  namespace: polydom-dev
-spec:
-  selector:
-    app: event-service
-  ports:
-  - port: 3000
-    targetPort: 3000
-  type: ClusterIP
+    name: http
+  - port: 9230
+    targetPort: 9230
+    name: debug
 
 ---
 # ============================================================
@@ -308,6 +204,8 @@ kind: Deployment
 metadata:
   name: frontend
   namespace: polydom-dev
+  labels:
+    app: frontend
 spec:
   replicas: 1
   selector:
@@ -318,24 +216,46 @@ spec:
       labels:
         app: frontend
     spec:
+      serviceAccountName: app-sa
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: frontend
         image: polydom/frontend:dev
-        imagePullPolicy: Never
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
         env:
         - name: NODE_ENV
           value: development
         - name: NEXT_PUBLIC_API_URL
-          value: http://api-gateway:3000
+          value: http://api-gateway:3000/api
         resources:
           requests:
-            memory: "128Mi"
-            cpu: "100m"
+            memory: "64Mi"
+            cpu: "50m"
           limits:
             memory: "256Mi"
             cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 10
 ---
 apiVersion: v1
 kind: Service
@@ -348,165 +268,276 @@ spec:
   ports:
   - port: 3000
     targetPort: 3000
-  type: ClusterIP
 
 ---
 # ============================================================
-# Python Workers — ML Training
+# User Service
 # ============================================================
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ml-training
+  name: user-service
   namespace: polydom-dev
+  labels:
+    app: user-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ml-training
+      app: user-service
   template:
     metadata:
       labels:
-        app: ml-training
+        app: user-service
     spec:
+      serviceAccountName: app-sa
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        seccompProfile:
+          type: RuntimeDefault
       containers:
-      - name: ml-training
-        image: polydom/python-workers:dev
-        imagePullPolicy: Never
-        command: ["python", "-m", "ml-training.data_pipeline"]
+      - name: user-service
+        image: polydom/user-service:dev
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
+          name: http
+        - containerPort: 9231
+          name: debug
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
         env:
-        - name: KAFKA_BROKERS
+        - name: NODE_ENV
+          value: development
+        - name: USER_DATABASE_URL
           valueFrom:
             secretKeyRef:
-              name: kafka-secrets
-              key: kafka-brokers
-        - name: FEATURE_STORE_URL
-          value: redis://redis:6379
-        - name: ELASTICSEARCH_HOSTS
+              name: database-secrets
+              key: user-database-url
+        - name: REDIS_URL
           valueFrom:
             secretKeyRef:
-              name: elasticsearch-secrets
-              key: elasticsearch-hosts
-        - name: TRAINING_DATA_PATH
-          value: /data/training
+              name: redis-secrets
+              key: redis-url
+        - name: PORT
+          value: "3000"
         resources:
           requests:
-            memory: "256Mi"
-            cpu: "250m"
+            memory: "64Mi"
+            cpu: "50m"
           limits:
-            memory: "512Mi"
-            cpu: "1000m"
-
----
-# ============================================================
-# Python Workers — Inference (Search Ranker)
-# ============================================================
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: inference
-  namespace: polydom-dev
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: inference
-  template:
-    metadata:
-      labels:
-        app: inference
-    spec:
-      containers:
-      - name: inference
-        image: polydom/python-workers:dev
-        imagePullPolicy: Never
-        command: ["uvicorn", "inference.api:app", "--host", "0.0.0.0", "--port", "8000"]
-        ports:
-        - containerPort: 8000
-        env:
-        - name: KAFKA_BROKERS
-          valueFrom:
-            secretKeyRef:
-              name: kafka-secrets
-              key: kafka-brokers
-        - name: FEATURE_STORE_URL
-          value: redis://redis:6379
-        - name: ELASTICSEARCH_HOSTS
-          valueFrom:
-            secretKeyRef:
-              name: elasticsearch-secrets
-              key: elasticsearch-hosts
-        - name: MODEL_PATH
-          value: /data/training/models
+            memory: "256Mi"
+            cpu: "500m"
         livenessProbe:
           httpGet:
             path: /health
-            port: 8000
+            port: 3000
           initialDelaySeconds: 10
+          periodSeconds: 20
         readinessProbe:
           httpGet:
-            path: /health
-            port: 8000
+            path: /health/ready
+            port: 3000
           initialDelaySeconds: 5
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "500m"
-          limits:
-            memory: "2Gi"
-            cpu: "2000m"
+          periodSeconds: 10
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: inference
+  name: user-service
   namespace: polydom-dev
 spec:
   selector:
-    app: inference
+    app: user-service
   ports:
-  - port: 8000
-    targetPort: 8000
-  type: ClusterIP
+  - port: 3000
+    targetPort: 3000
+    name: http
+  - port: 9231
+    targetPort: 9231
+    name: debug
 
 ---
 # ============================================================
-# Python Workers — Kafka Consumers (User Activity)
+# Vendor Service
 # ============================================================
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kafka-consumers
+  name: vendor-service
   namespace: polydom-dev
+  labels:
+    app: vendor-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: kafka-consumers
+      app: vendor-service
   template:
     metadata:
       labels:
-        app: kafka-consumers
+        app: vendor-service
     spec:
+      serviceAccountName: app-sa
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        seccompProfile:
+          type: RuntimeDefault
       containers:
-      - name: kafka-consumers
-        image: polydom/python-workers:dev
-        imagePullPolicy: Never
-        command: ["python", "-m", "kafka-consumers.user_activity"]
+      - name: vendor-service
+        image: polydom/vendor-service:dev
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
+          name: http
+        - containerPort: 9232
+          name: debug
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
         env:
-        - name: KAFKA_BROKERS
+        - name: NODE_ENV
+          value: development
+        - name: VENDOR_DATABASE_URL
           valueFrom:
             secretKeyRef:
-              name: kafka-secrets
-              key: kafka-brokers
-        - name: FEATURE_STORE_URL
-          value: redis://redis:6379
-        - name: KAFKA_CONSUMER_GROUP
-          value: python-workers
+              name: database-secrets
+              key: vendor-database-url
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: redis-secrets
+              key: redis-url
+        - name: PORT
+          value: "3000"
         resources:
           requests:
-            memory: "256Mi"
-            cpu: "250m"
+            memory: "64Mi"
+            cpu: "50m"
           limits:
-            memory: "512Mi"
-            cpu: "1000m"
+            memory: "256Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vendor-service
+  namespace: polydom-dev
+spec:
+  selector:
+    app: vendor-service
+  ports:
+  - port: 3000
+    targetPort: 3000
+    name: http
+  - port: 9232
+    targetPort: 9232
+    name: debug
+
+---
+# ============================================================
+# Event Service
+# ============================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: event-service
+  namespace: polydom-dev
+  labels:
+    app: event-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: event-service
+  template:
+    metadata:
+      labels:
+        app: event-service
+    spec:
+      serviceAccountName: app-sa
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: event-service
+        image: polydom/event-service:dev
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
+          name: http
+        - containerPort: 9233
+          name: debug
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
+        env:
+        - name: NODE_ENV
+          value: development
+        - name: EVENT_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database-secrets
+              key: event-database-url
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: redis-secrets
+              key: redis-url
+        - name: PORT
+          value: "3000"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: event-service
+  namespace: polydom-dev
+spec:
+  selector:
+    app: event-service
+  ports:
+  - port: 3000
+    targetPort: 3000
+    name: http
+  - port: 9233
+    targetPort: 9233
+    name: debug

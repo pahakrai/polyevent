@@ -13,7 +13,7 @@ const NAV_LINKS = [
 ];
 
 export function DefaultLayout({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
+  const pathname = usePathname() ?? "";
 
   return (
     <div className="flex min-h-screen flex-col bg-background">

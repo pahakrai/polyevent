@@ -1,12 +1,12 @@
 {
   "apps/frontend": {
     "root": [
-      "apps/frontend/package.json",
-      "nx/core/package-json"
+      "apps/frontend/project.json",
+      "nx/core/project-json"
     ],
     "name": [
-      "apps/frontend/package.json",
-      "nx/core/package-json"
+      "apps/frontend/project.json",
+      "nx/core/project-json"
     ],
     "tags": [
       "apps/frontend/package.json",
@@ -32,23 +32,11 @@
       "apps/frontend/package.json",
       "nx/core/package-json"
     ],
-    "metadata.targetGroups.NPM Scripts.2": [
-      "apps/frontend/package.json",
-      "nx/core/package-json"
-    ],
-    "metadata.targetGroups.NPM Scripts.3": [
-      "apps/frontend/package.json",
-      "nx/core/package-json"
-    ],
     "metadata.js": [
       "apps/frontend/package.json",
       "nx/core/package-json"
     ],
     "metadata.js.packageName": [
-      "apps/frontend/package.json",
-      "nx/core/package-json"
-    ],
-    "metadata.js.packageVersion": [
       "apps/frontend/package.json",
       "nx/core/package-json"
     ],
@@ -88,34 +76,6 @@
       "apps/frontend/package.json",
       "nx/core/package-json"
     ],
-    "targets.build": [
-      "apps/frontend/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.executor": [
-      "apps/frontend/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.options": [
-      "apps/frontend/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.metadata": [
-      "apps/frontend/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.options.script": [
-      "apps/frontend/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.metadata.scriptContent": [
-      "apps/frontend/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.metadata.runCommand": [
-      "apps/frontend/package.json",
-      "nx/core/package-json"
-    ],
     "targets.start": [
       "apps/frontend/package.json",
       "nx/core/package-json"
@@ -144,33 +104,177 @@
       "apps/frontend/package.json",
       "nx/core/package-json"
     ],
+    "$schema": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.frontend": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.next": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.executor": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.outputs": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.command": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.cwd": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.production": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.production.command": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.development": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.development.command": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.executor": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options.command": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options.cwd": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
     "targets.lint": [
-      "apps/frontend/package.json",
-      "nx/core/package-json"
+      "apps/frontend/project.json",
+      "nx/core/project-json"
     ],
     "targets.lint.executor": [
-      "apps/frontend/package.json",
-      "nx/core/package-json"
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.outputs": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
     ],
     "targets.lint.options": [
-      "apps/frontend/package.json",
-      "nx/core/package-json"
+      "apps/frontend/project.json",
+      "nx/core/project-json"
     ],
-    "targets.lint.metadata": [
-      "apps/frontend/package.json",
-      "nx/core/package-json"
+    "targets.lint.options.lintFilePatterns": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
     ],
-    "targets.lint.options.script": [
-      "apps/frontend/package.json",
-      "nx/core/package-json"
+    "targets.test": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
     ],
-    "targets.lint.metadata.scriptContent": [
-      "apps/frontend/package.json",
-      "nx/core/package-json"
+    "targets.test.executor": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
     ],
-    "targets.lint.metadata.runCommand": [
-      "apps/frontend/package.json",
-      "nx/core/package-json"
+    "targets.test.outputs": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.configurations": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options.jestConfig": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options.passWithNoTests": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.configurations.ci": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.configurations.ci.ci": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.configurations.ci.codeCoverage": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.executor": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.dependsOn": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.options": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.options.push": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.options.engine": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.options.metadata": [
+      "apps/frontend/project.json",
+      "nx/core/project-json"
     ],
     "targets.build.dependsOn": [
       "nx.json",
@@ -191,16 +295,24 @@
     "targets.lint.parallelism": [
       "nx.json",
       "nx/target-defaults"
+    ],
+    "targets.test.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.test.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
     ]
   },
   "apps/nestjs-services/api-gateway": {
     "root": [
-      "apps/nestjs-services/api-gateway/package.json",
-      "nx/core/package-json"
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
     ],
     "name": [
-      "apps/nestjs-services/api-gateway/package.json",
-      "nx/core/package-json"
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
     ],
     "tags": [
       "apps/nestjs-services/api-gateway/package.json",
@@ -234,23 +346,11 @@
       "apps/nestjs-services/api-gateway/package.json",
       "nx/core/package-json"
     ],
-    "metadata.targetGroups.NPM Scripts.4": [
-      "apps/nestjs-services/api-gateway/package.json",
-      "nx/core/package-json"
-    ],
-    "metadata.targetGroups.NPM Scripts.5": [
-      "apps/nestjs-services/api-gateway/package.json",
-      "nx/core/package-json"
-    ],
     "metadata.js": [
       "apps/nestjs-services/api-gateway/package.json",
       "nx/core/package-json"
     ],
     "metadata.js.packageName": [
-      "apps/nestjs-services/api-gateway/package.json",
-      "nx/core/package-json"
-    ],
-    "metadata.js.packageVersion": [
       "apps/nestjs-services/api-gateway/package.json",
       "nx/core/package-json"
     ],
@@ -318,62 +418,6 @@
       "apps/nestjs-services/api-gateway/package.json",
       "nx/core/package-json"
     ],
-    "targets.build": [
-      "apps/nestjs-services/api-gateway/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.executor": [
-      "apps/nestjs-services/api-gateway/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.options": [
-      "apps/nestjs-services/api-gateway/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.metadata": [
-      "apps/nestjs-services/api-gateway/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.options.script": [
-      "apps/nestjs-services/api-gateway/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.metadata.scriptContent": [
-      "apps/nestjs-services/api-gateway/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.metadata.runCommand": [
-      "apps/nestjs-services/api-gateway/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test": [
-      "apps/nestjs-services/api-gateway/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test.executor": [
-      "apps/nestjs-services/api-gateway/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test.options": [
-      "apps/nestjs-services/api-gateway/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test.metadata": [
-      "apps/nestjs-services/api-gateway/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test.options.script": [
-      "apps/nestjs-services/api-gateway/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test.metadata.scriptContent": [
-      "apps/nestjs-services/api-gateway/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test.metadata.runCommand": [
-      "apps/nestjs-services/api-gateway/package.json",
-      "nx/core/package-json"
-    ],
     "targets.test:watch": [
       "apps/nestjs-services/api-gateway/package.json",
       "nx/core/package-json"
@@ -430,6 +474,238 @@
       "apps/nestjs-services/api-gateway/package.json",
       "nx/core/package-json"
     ],
+    "$schema": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.service": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.nest": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.executor": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.outputs": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.target": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.compiler": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.outputPath": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.main": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.tsConfig": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.generatePackageJson": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.production": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.production.generatePackageJson": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.production.optimization": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.production.extractLicenses": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.production.inspect": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.development": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.development.generatePackageJson": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.development.optimization": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.development.extractLicenses": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.development.inspect": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.executor": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options.buildTarget": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options.port": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations.production": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations.production.buildTarget": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations.development": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations.development.buildTarget": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.executor": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.outputs": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.options": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.options.lintFilePatterns": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.executor": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.outputs": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.configurations": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options.jestConfig": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options.passWithNoTests": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.configurations.ci": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.configurations.ci.ci": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.configurations.ci.codeCoverage": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.executor": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.dependsOn": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.options": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.options.push": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.options.engine": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.options.metadata": [
+      "apps/nestjs-services/api-gateway/project.json",
+      "nx/core/project-json"
+    ],
     "targets.build.dependsOn": [
       "nx.json",
       "nx/target-defaults"
@@ -439,6 +715,14 @@
       "nx/target-defaults"
     ],
     "targets.build.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.parallelism": [
       "nx.json",
       "nx/target-defaults"
     ],
@@ -453,12 +737,12 @@
   },
   "apps/nestjs-services/auth-service": {
     "root": [
-      "apps/nestjs-services/auth-service/package.json",
-      "nx/core/package-json"
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
     ],
     "name": [
-      "apps/nestjs-services/auth-service/package.json",
-      "nx/core/package-json"
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
     ],
     "tags": [
       "apps/nestjs-services/auth-service/package.json",
@@ -512,23 +796,11 @@
       "apps/nestjs-services/auth-service/package.json",
       "nx/core/package-json"
     ],
-    "metadata.targetGroups.NPM Scripts.9": [
-      "apps/nestjs-services/auth-service/package.json",
-      "nx/core/package-json"
-    ],
-    "metadata.targetGroups.NPM Scripts.10": [
-      "apps/nestjs-services/auth-service/package.json",
-      "nx/core/package-json"
-    ],
     "metadata.js": [
       "apps/nestjs-services/auth-service/package.json",
       "nx/core/package-json"
     ],
     "metadata.js.packageName": [
-      "apps/nestjs-services/auth-service/package.json",
-      "nx/core/package-json"
-    ],
-    "metadata.js.packageVersion": [
       "apps/nestjs-services/auth-service/package.json",
       "nx/core/package-json"
     ],
@@ -593,62 +865,6 @@
       "nx/core/package-json"
     ],
     "targets.start:dev.metadata.runCommand": [
-      "apps/nestjs-services/auth-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build": [
-      "apps/nestjs-services/auth-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.executor": [
-      "apps/nestjs-services/auth-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.options": [
-      "apps/nestjs-services/auth-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.metadata": [
-      "apps/nestjs-services/auth-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.options.script": [
-      "apps/nestjs-services/auth-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.metadata.scriptContent": [
-      "apps/nestjs-services/auth-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.metadata.runCommand": [
-      "apps/nestjs-services/auth-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test": [
-      "apps/nestjs-services/auth-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test.executor": [
-      "apps/nestjs-services/auth-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test.options": [
-      "apps/nestjs-services/auth-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test.metadata": [
-      "apps/nestjs-services/auth-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test.options.script": [
-      "apps/nestjs-services/auth-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test.metadata.scriptContent": [
-      "apps/nestjs-services/auth-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test.metadata.runCommand": [
       "apps/nestjs-services/auth-service/package.json",
       "nx/core/package-json"
     ],
@@ -848,6 +1064,238 @@
       "apps/nestjs-services/auth-service/package.json",
       "nx/core/package-json"
     ],
+    "$schema": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.service": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.nest": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.executor": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.outputs": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.target": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.compiler": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.outputPath": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.main": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.tsConfig": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.generatePackageJson": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.production": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.production.generatePackageJson": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.production.optimization": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.production.extractLicenses": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.production.inspect": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.development": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.development.generatePackageJson": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.development.optimization": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.development.extractLicenses": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.development.inspect": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.executor": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options.buildTarget": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options.port": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations.production": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations.production.buildTarget": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations.development": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations.development.buildTarget": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.executor": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.outputs": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.options": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.options.lintFilePatterns": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.executor": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.outputs": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.configurations": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options.jestConfig": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options.passWithNoTests": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.configurations.ci": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.configurations.ci.ci": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.configurations.ci.codeCoverage": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.executor": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.dependsOn": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.options": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.options.push": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.options.engine": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.options.metadata": [
+      "apps/nestjs-services/auth-service/project.json",
+      "nx/core/project-json"
+    ],
     "targets.build.dependsOn": [
       "nx.json",
       "nx/target-defaults"
@@ -857,6 +1305,14 @@
       "nx/target-defaults"
     ],
     "targets.build.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.parallelism": [
       "nx.json",
       "nx/target-defaults"
     ],
@@ -871,12 +1327,12 @@
   },
   "apps/nestjs-services/event-service": {
     "root": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
     ],
     "name": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
     ],
     "tags": [
       "apps/nestjs-services/event-service/package.json",
@@ -914,39 +1370,11 @@
       "apps/nestjs-services/event-service/package.json",
       "nx/core/package-json"
     ],
-    "metadata.targetGroups.NPM Scripts.5": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "metadata.targetGroups.NPM Scripts.6": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "metadata.targetGroups.NPM Scripts.7": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "metadata.targetGroups.NPM Scripts.8": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "metadata.targetGroups.NPM Scripts.9": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "metadata.targetGroups.NPM Scripts.10": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
     "metadata.js": [
       "apps/nestjs-services/event-service/package.json",
       "nx/core/package-json"
     ],
     "metadata.js.packageName": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "metadata.js.packageVersion": [
       "apps/nestjs-services/event-service/package.json",
       "nx/core/package-json"
     ],
@@ -1014,62 +1442,6 @@
       "apps/nestjs-services/event-service/package.json",
       "nx/core/package-json"
     ],
-    "targets.build": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.executor": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.options": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.metadata": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.options.script": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.metadata.scriptContent": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.metadata.runCommand": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test.executor": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test.options": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test.metadata": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test.options.script": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test.metadata.scriptContent": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test.metadata.runCommand": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
     "targets.test:watch": [
       "apps/nestjs-services/event-service/package.json",
       "nx/core/package-json"
@@ -1126,62 +1498,6 @@
       "apps/nestjs-services/event-service/package.json",
       "nx/core/package-json"
     ],
-    "targets.db:generate": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:generate.executor": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:generate.options": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:generate.metadata": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:generate.options.script": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:generate.metadata.scriptContent": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:generate.metadata.runCommand": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:migrate": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:migrate.executor": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:migrate.options": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:migrate.metadata": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:migrate.options.script": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:migrate.metadata.scriptContent": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:migrate.metadata.runCommand": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
     "targets.db:studio": [
       "apps/nestjs-services/event-service/package.json",
       "nx/core/package-json"
@@ -1210,61 +1526,317 @@
       "apps/nestjs-services/event-service/package.json",
       "nx/core/package-json"
     ],
+    "$schema": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.service": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.nest": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.executor": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.outputs": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.target": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.compiler": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.outputPath": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.main": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.tsConfig": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.generatePackageJson": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.production": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.production.generatePackageJson": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.production.optimization": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.production.extractLicenses": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.production.inspect": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.development": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.development.generatePackageJson": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.development.optimization": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.development.extractLicenses": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.development.inspect": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.executor": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options.buildTarget": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options.port": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations.production": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations.production.buildTarget": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations.development": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations.development.buildTarget": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.executor": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.outputs": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.options": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.options.lintFilePatterns": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.executor": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.outputs": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.configurations": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options.jestConfig": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options.passWithNoTests": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.configurations.ci": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.configurations.ci.ci": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.configurations.ci.codeCoverage": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.db:generate": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.db:generate.executor": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.db:generate.options": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.db:generate.options.command": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.db:generate.options.cwd": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.db:migrate": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.db:migrate.executor": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.db:migrate.options": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.db:migrate.options.command": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.db:migrate.options.cwd": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
     "targets.db:push": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
     ],
     "targets.db:push.executor": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
     ],
     "targets.db:push.options": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
     ],
-    "targets.db:push.metadata": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
+    "targets.db:push.options.command": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
     ],
-    "targets.db:push.options.script": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:push.metadata.scriptContent": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:push.metadata.runCommand": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
+    "targets.db:push.options.cwd": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
     ],
     "targets.db:seed": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
     ],
     "targets.db:seed.executor": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
     ],
     "targets.db:seed.options": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
     ],
-    "targets.db:seed.metadata": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
+    "targets.db:seed.options.command": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
     ],
-    "targets.db:seed.options.script": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
+    "targets.db:seed.options.cwd": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
     ],
-    "targets.db:seed.metadata.scriptContent": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
+    "targets.container": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
     ],
-    "targets.db:seed.metadata.runCommand": [
-      "apps/nestjs-services/event-service/package.json",
-      "nx/core/package-json"
+    "targets.container.executor": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.dependsOn": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.options": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.options.push": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.options.engine": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.options.metadata": [
+      "apps/nestjs-services/event-service/project.json",
+      "nx/core/project-json"
     ],
     "targets.build.dependsOn": [
       "nx.json",
@@ -1275,6 +1847,14 @@
       "nx/target-defaults"
     ],
     "targets.build.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.parallelism": [
       "nx.json",
       "nx/target-defaults"
     ],
@@ -1289,12 +1869,12 @@
   },
   "apps/nestjs-services/user-service": {
     "root": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
     ],
     "name": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
     ],
     "tags": [
       "apps/nestjs-services/user-service/package.json",
@@ -1332,39 +1912,11 @@
       "apps/nestjs-services/user-service/package.json",
       "nx/core/package-json"
     ],
-    "metadata.targetGroups.NPM Scripts.5": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "metadata.targetGroups.NPM Scripts.6": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "metadata.targetGroups.NPM Scripts.7": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "metadata.targetGroups.NPM Scripts.8": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "metadata.targetGroups.NPM Scripts.9": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "metadata.targetGroups.NPM Scripts.10": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
     "metadata.js": [
       "apps/nestjs-services/user-service/package.json",
       "nx/core/package-json"
     ],
     "metadata.js.packageName": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "metadata.js.packageVersion": [
       "apps/nestjs-services/user-service/package.json",
       "nx/core/package-json"
     ],
@@ -1432,62 +1984,6 @@
       "apps/nestjs-services/user-service/package.json",
       "nx/core/package-json"
     ],
-    "targets.build": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.executor": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.options": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.metadata": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.options.script": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.metadata.scriptContent": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.metadata.runCommand": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test.executor": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test.options": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test.metadata": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test.options.script": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test.metadata.scriptContent": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test.metadata.runCommand": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
     "targets.test:watch": [
       "apps/nestjs-services/user-service/package.json",
       "nx/core/package-json"
@@ -1544,62 +2040,6 @@
       "apps/nestjs-services/user-service/package.json",
       "nx/core/package-json"
     ],
-    "targets.db:generate": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:generate.executor": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:generate.options": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:generate.metadata": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:generate.options.script": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:generate.metadata.scriptContent": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:generate.metadata.runCommand": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:migrate": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:migrate.executor": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:migrate.options": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:migrate.metadata": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:migrate.options.script": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:migrate.metadata.scriptContent": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:migrate.metadata.runCommand": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
     "targets.db:studio": [
       "apps/nestjs-services/user-service/package.json",
       "nx/core/package-json"
@@ -1628,61 +2068,317 @@
       "apps/nestjs-services/user-service/package.json",
       "nx/core/package-json"
     ],
+    "$schema": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.service": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.nest": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.executor": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.outputs": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.target": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.compiler": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.outputPath": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.main": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.tsConfig": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.generatePackageJson": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.production": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.production.generatePackageJson": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.production.optimization": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.production.extractLicenses": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.production.inspect": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.development": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.development.generatePackageJson": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.development.optimization": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.development.extractLicenses": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.development.inspect": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.executor": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options.buildTarget": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options.port": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations.production": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations.production.buildTarget": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations.development": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations.development.buildTarget": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.executor": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.outputs": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.options": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.options.lintFilePatterns": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.executor": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.outputs": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.configurations": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options.jestConfig": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options.passWithNoTests": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.configurations.ci": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.configurations.ci.ci": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.configurations.ci.codeCoverage": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.db:generate": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.db:generate.executor": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.db:generate.options": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.db:generate.options.command": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.db:generate.options.cwd": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.db:migrate": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.db:migrate.executor": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.db:migrate.options": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.db:migrate.options.command": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.db:migrate.options.cwd": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
     "targets.db:push": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
     ],
     "targets.db:push.executor": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
     ],
     "targets.db:push.options": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
     ],
-    "targets.db:push.metadata": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
+    "targets.db:push.options.command": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
     ],
-    "targets.db:push.options.script": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:push.metadata.scriptContent": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:push.metadata.runCommand": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
+    "targets.db:push.options.cwd": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
     ],
     "targets.db:seed": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
     ],
     "targets.db:seed.executor": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
     ],
     "targets.db:seed.options": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
     ],
-    "targets.db:seed.metadata": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
+    "targets.db:seed.options.command": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
     ],
-    "targets.db:seed.options.script": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
+    "targets.db:seed.options.cwd": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
     ],
-    "targets.db:seed.metadata.scriptContent": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
+    "targets.container": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
     ],
-    "targets.db:seed.metadata.runCommand": [
-      "apps/nestjs-services/user-service/package.json",
-      "nx/core/package-json"
+    "targets.container.executor": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.dependsOn": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.options": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.options.push": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.options.engine": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.options.metadata": [
+      "apps/nestjs-services/user-service/project.json",
+      "nx/core/project-json"
     ],
     "targets.build.dependsOn": [
       "nx.json",
@@ -1693,6 +2389,14 @@
       "nx/target-defaults"
     ],
     "targets.build.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.parallelism": [
       "nx.json",
       "nx/target-defaults"
     ],
@@ -1707,12 +2411,12 @@
   },
   "apps/nestjs-services/vendor-service": {
     "root": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
     ],
     "name": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
     ],
     "tags": [
       "apps/nestjs-services/vendor-service/package.json",
@@ -1750,39 +2454,11 @@
       "apps/nestjs-services/vendor-service/package.json",
       "nx/core/package-json"
     ],
-    "metadata.targetGroups.NPM Scripts.5": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "metadata.targetGroups.NPM Scripts.6": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "metadata.targetGroups.NPM Scripts.7": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "metadata.targetGroups.NPM Scripts.8": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "metadata.targetGroups.NPM Scripts.9": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "metadata.targetGroups.NPM Scripts.10": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
     "metadata.js": [
       "apps/nestjs-services/vendor-service/package.json",
       "nx/core/package-json"
     ],
     "metadata.js.packageName": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "metadata.js.packageVersion": [
       "apps/nestjs-services/vendor-service/package.json",
       "nx/core/package-json"
     ],
@@ -1850,62 +2526,6 @@
       "apps/nestjs-services/vendor-service/package.json",
       "nx/core/package-json"
     ],
-    "targets.build": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.executor": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.options": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.metadata": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.options.script": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.metadata.scriptContent": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.build.metadata.runCommand": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test.executor": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test.options": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test.metadata": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test.options.script": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test.metadata.scriptContent": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.test.metadata.runCommand": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
     "targets.test:watch": [
       "apps/nestjs-services/vendor-service/package.json",
       "nx/core/package-json"
@@ -1962,62 +2582,6 @@
       "apps/nestjs-services/vendor-service/package.json",
       "nx/core/package-json"
     ],
-    "targets.db:generate": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:generate.executor": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:generate.options": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:generate.metadata": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:generate.options.script": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:generate.metadata.scriptContent": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:generate.metadata.runCommand": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:migrate": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:migrate.executor": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:migrate.options": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:migrate.metadata": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:migrate.options.script": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:migrate.metadata.scriptContent": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:migrate.metadata.runCommand": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
     "targets.db:studio": [
       "apps/nestjs-services/vendor-service/package.json",
       "nx/core/package-json"
@@ -2046,61 +2610,317 @@
       "apps/nestjs-services/vendor-service/package.json",
       "nx/core/package-json"
     ],
+    "$schema": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.service": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.nest": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.executor": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.outputs": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.target": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.compiler": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.outputPath": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.main": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.tsConfig": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.generatePackageJson": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.production": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.production.generatePackageJson": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.production.optimization": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.production.extractLicenses": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.production.inspect": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.development": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.development.generatePackageJson": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.development.optimization": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.development.extractLicenses": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.development.inspect": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.executor": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options.buildTarget": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options.port": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations.production": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations.production.buildTarget": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations.development": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations.development.buildTarget": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.executor": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.outputs": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.options": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.options.lintFilePatterns": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.executor": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.outputs": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.configurations": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options.jestConfig": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options.passWithNoTests": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.configurations.ci": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.configurations.ci.ci": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.configurations.ci.codeCoverage": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.db:generate": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.db:generate.executor": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.db:generate.options": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.db:generate.options.command": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.db:generate.options.cwd": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.db:migrate": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.db:migrate.executor": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.db:migrate.options": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.db:migrate.options.command": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.db:migrate.options.cwd": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
     "targets.db:push": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
     ],
     "targets.db:push.executor": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
     ],
     "targets.db:push.options": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
     ],
-    "targets.db:push.metadata": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
+    "targets.db:push.options.command": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
     ],
-    "targets.db:push.options.script": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:push.metadata.scriptContent": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
-    ],
-    "targets.db:push.metadata.runCommand": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
+    "targets.db:push.options.cwd": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
     ],
     "targets.db:seed": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
     ],
     "targets.db:seed.executor": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
     ],
     "targets.db:seed.options": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
     ],
-    "targets.db:seed.metadata": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
+    "targets.db:seed.options.command": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
     ],
-    "targets.db:seed.options.script": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
+    "targets.db:seed.options.cwd": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
     ],
-    "targets.db:seed.metadata.scriptContent": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
+    "targets.container": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
     ],
-    "targets.db:seed.metadata.runCommand": [
-      "apps/nestjs-services/vendor-service/package.json",
-      "nx/core/package-json"
+    "targets.container.executor": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.dependsOn": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.options": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.options.push": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.options.engine": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.container.options.metadata": [
+      "apps/nestjs-services/vendor-service/project.json",
+      "nx/core/project-json"
     ],
     "targets.build.dependsOn": [
       "nx.json",
@@ -2111,6 +2931,14 @@
       "nx/target-defaults"
     ],
     "targets.build.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.parallelism": [
       "nx.json",
       "nx/target-defaults"
     ],
@@ -2149,10 +2977,6 @@
       "nx/core/package-json"
     ],
     "metadata.js.packageName": [
-      "libs/database-client/package.json",
-      "nx/core/package-json"
-    ],
-    "metadata.js.packageVersion": [
       "libs/database-client/package.json",
       "nx/core/package-json"
     ],
@@ -2198,10 +3022,6 @@
       "libs/elasticsearch-client/package.json",
       "nx/core/package-json"
     ],
-    "metadata.js.packageVersion": [
-      "libs/elasticsearch-client/package.json",
-      "nx/core/package-json"
-    ],
     "metadata.js.packageMain": [
       "libs/elasticsearch-client/package.json",
       "nx/core/package-json"
@@ -2241,10 +3061,6 @@
       "nx/core/package-json"
     ],
     "metadata.js.packageName": [
-      "libs/kafka-client/package.json",
-      "nx/core/package-json"
-    ],
-    "metadata.js.packageVersion": [
       "libs/kafka-client/package.json",
       "nx/core/package-json"
     ],
@@ -2290,10 +3106,6 @@
       "libs/shared-types/package.json",
       "nx/core/package-json"
     ],
-    "metadata.js.packageVersion": [
-      "libs/shared-types/package.json",
-      "nx/core/package-json"
-    ],
     "metadata.js.packageMain": [
       "libs/shared-types/package.json",
       "nx/core/package-json"
@@ -2333,10 +3145,6 @@
       "nx/core/package-json"
     ],
     "metadata.js.packageName": [
-      "libs/utils/package.json",
-      "nx/core/package-json"
-    ],
-    "metadata.js.packageVersion": [
       "libs/utils/package.json",
       "nx/core/package-json"
     ],

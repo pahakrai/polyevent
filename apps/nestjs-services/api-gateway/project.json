@@ -1,0 +1,91 @@
+{
+  "name": "api-gateway",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/nestjs-services/api-gateway/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/dist"],
+      "options": {
+        "command": "nest build --webpack",
+        "cwd": "apps/nestjs-services/api-gateway"
+      },
+      "configurations": {
+        "production": {
+          "command": "nest build --webpack"
+        },
+        "development": {
+          "command": "nest build --webpack"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "options": {
+        "buildTarget": "api-gateway:build",
+        "port": 3000
+      },
+      "configurations": {
+        "production": {
+          "buildTarget": "api-gateway:build:production"
+        },
+        "development": {
+          "buildTarget": "api-gateway:build:development"
+        }
+      }
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest start --watch --webpack --debug 0.0.0.0:9229",
+        "cwd": "apps/nestjs-services/api-gateway"
+      }
+    },
+    "serve:debug": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest start --webpack --debug 0.0.0.0:9229",
+        "cwd": "apps/nestjs-services/api-gateway"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/nestjs-services/api-gateway/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/apps/nestjs-services/api-gateway"],
+      "options": {
+        "jestConfig": "apps/nestjs-services/api-gateway/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "container": {
+      "executor": "@nx-tools/nx-container:build",
+      "dependsOn": ["build"],
+      "options": {
+        "push": false,
+        "engine": "docker",
+        "metadata": {
+          "images": ["polydom/api-gateway"],
+          "load": true,
+          "tags": [
+            "type=sha,prefix=sha-",
+            "type=ref,event=branch"
+          ]
+        }
+      }
+    }
+  },
+  "tags": ["service", "nest"]
+}

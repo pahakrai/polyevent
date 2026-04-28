@@ -12,11 +12,11 @@ function SearchContent() {
   const searchParams = useSearchParams();
   const { trackPageView, trackSearchEvent } = useAnalytics();
 
-  const query = searchParams.get("query") || "";
-  const lat = parseFloat(searchParams.get("lat") || "");
-  const lon = parseFloat(searchParams.get("lon") || "");
-  const radiusKm = parseInt(searchParams.get("radiusKm") || "20");
-  const category = searchParams.get("category") || "";
+  const query = searchParams?.get("query") || "";
+  const lat = parseFloat(searchParams?.get("lat") || "");
+  const lon = parseFloat(searchParams?.get("lon") || "");
+  const radiusKm = parseInt(searchParams?.get("radiusKm") || "20");
+  const category = searchParams?.get("category") || "";
 
   const [events, setEvents] = useState<any[]>([]);
   const [total, setTotal] = useState(0);

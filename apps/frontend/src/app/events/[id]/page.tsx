@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 
 export default function EventDetailPage() {
   const params = useParams();
-  const id = params.id as string;
+  const id = (params?.id ?? "") as string;
   const { trackPageView, trackEventView, trackEventSave, trackEventShare } =
     useAnalytics();
 

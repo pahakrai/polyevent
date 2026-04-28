@@ -118,7 +118,20 @@
       "Bash(pkill -f \"kubectl.*port-forward\")",
       "Bash(AUTH_DATABASE_URL=\"postgresql://eventbooking:eventbooking123@localhost:5433/auth_db\" npx drizzle-kit generate --config=src/database/drizzle.config.ts)",
       "Bash(kind get *)",
-      "PowerShell(Start-Service *)"
+      "PowerShell(Start-Service *)",
+      "Bash(git check-ignore *)",
+      "Bash(docker system *)",
+      "Bash(docker volume *)",
+      "Bash(docker version *)",
+      "Bash(npx skaffold *)",
+      "Bash(npm dedupe *)",
+      "Bash(npx *)",
+      "Bash(npm pack *)",
+      "Bash(tar -xzf /tmp/nestjs-cli-10.4.9.tgz -O package/lib/compiler/webpack-compiler.js)",
+      "Bash(tar -xzf /tmp/nestjs-cli-10.4.9.tgz -O package/lib/compiler/defaults/webpack-defaults.js)",
+      "Bash(echo \"===EXIT: $? ===\")",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(skaffold build *)"
     ]
   },
   "enableAllProjectMcpServers": true,

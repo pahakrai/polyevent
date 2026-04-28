@@ -1,50 +1,74 @@
-# Skaffold configuration for local Kubernetes development.
-# Requires:  minikube / kind / Docker Desktop K8s
-# Usage:     skaffold dev
+# ============================================================
+# Skaffold configuration — polydom monorepo
 #
-# Skaffold watches source files, rebuilds images, and redeploys automatically.
+# NX-aware build pipeline:
+#   Dockerfiles use `nx build <project>` which resolves the full
+#   dependency graph, uses NX computation caching, and only rebuilds
+#   what changed. Skaffold handles image tagging + K8s deploy.
+#
+# Development:
+#   Frontend (Next.js): file sync → hot reload on save, no rebuild.
+#   Backend (NestJS):  no sync, no watch. Restart manually via VS Code
+#     task or `kubectl rollout restart deployment/<name>` on code changes.
+#
+# Profiles:
+#   default   — local dev: all services + frontend, no push
+#   production — CI: gitCommit tags, push to registry
+#   staging   — CI: gitCommit tags, push to registry
+#
+# Usage:
+#   skaffold dev --port-forward            # Dev mode: frontend HR, backend manual restart
+#   skaffold run --port-forward            # One-shot local deploy
+#   skaffold build --profile=production    # CI: build + tag + push
+# ============================================================
 apiVersion: skaffold/v4beta5
 kind: Config
 metadata:
   name: polydom
+
 build:
+  tagPolicy:
+    sha256: {}
   artifacts:
     - image: polydom/api-gateway
       context: .
       docker:
         dockerfile: apps/nestjs-services/api-gateway/Dockerfile
-        target: production
+        target: development
     - image: polydom/auth-service
       context: .
       docker:
         dockerfile: apps/nestjs-services/auth-service/Dockerfile
-        target: production
+        target: development
     - image: polydom/user-service
       context: .
       docker:
         dockerfile: apps/nestjs-services/user-service/Dockerfile
-        target: production
+        target: development
     - image: polydom/vendor-service
       context: .
       docker:
         dockerfile: apps/nestjs-services/vendor-service/Dockerfile
-        target: production
+        target: development
     - image: polydom/event-service
       context: .
       docker:
         dockerfile: apps/nestjs-services/event-service/Dockerfile
-        target: production
+        target: development
     - image: polydom/frontend
       context: .
       docker:
         dockerfile: apps/frontend/Dockerfile
-        target: runner
-    - image: polydom/python-workers
-      context: .
-      docker:
-        dockerfile: apps/python-workers/Dockerfile
+        target: development
+      sync:
+        manual:
+          - src: 'apps/frontend/**/*.{js,jsx,ts,tsx,css,scss}'
+            dest: /app/apps/frontend/
+          - src: 'libs/**/src/**/*.{ts,tsx}'
+            dest: /app/libs/
   local:
-    push: false  # load directly into local cluster
+    push: false
+
 manifests:
   rawYaml:
     - kubernetes/local/namespace.yaml
@@ -53,5 +77,87 @@ manifests:
     - kubernetes/local/infrastructure.yaml
     - kubernetes/local/services.yaml
     - kubernetes/local/ingress.yaml
+
 deploy:
   kubectl: {}
+
+portForward:
+  - resourceType: service
+    resourceName: api-gateway
+    namespace: polydom-dev
+    port: 3000
+    localPort: 3000
+  - resourceType: service
+    resourceName: api-gateway
+    namespace: polydom-dev
+    port: 9229
+    localPort: 9229
+  - resourceType: service
+    resourceName: auth-service
+    namespace: polydom-dev
+    port: 3000
+    localPort: 3010
+  - resourceType: service
+    resourceName: auth-service
+    namespace: polydom-dev
+    port: 9230
+    localPort: 9230
+  - resourceType: service
+    resourceName: user-service
+    namespace: polydom-dev
+    port: 3000
+    localPort: 3020
+  - resourceType: service
+    resourceName: user-service
+    namespace: polydom-dev
+    port: 9231
+    localPort: 9231
+  - resourceType: service
+    resourceName: vendor-service
+    namespace: polydom-dev
+    port: 3000
+    localPort: 3030
+  - resourceType: service
+    resourceName: vendor-service
+    namespace: polydom-dev
+    port: 9232
+    localPort: 9232
+  - resourceType: service
+    resourceName: event-service
+    namespace: polydom-dev
+    port: 3000
+    localPort: 3040
+  - resourceType: service
+    resourceName: event-service
+    namespace: polydom-dev
+    port: 9233
+    localPort: 9233
+  - resourceType: service
+    resourceName: frontend
+    namespace: polydom-dev
+    port: 3000
+    localPort: 3002
+
+# ---- Profiles ----
+profiles:
+  # Production: all services, git SHA tags, push to registry
+  - name: production
+    build:
+      tagPolicy:
+        gitCommit:
+          variant: Tags
+          prefix: ""
+          ignoreChanges: false
+      local:
+        push: true
+
+  # Staging: same as production (different K8s overlay applied separately)
+  - name: staging
+    build:
+      tagPolicy:
+        gitCommit:
+          variant: Tags
+          prefix: ""
+          ignoreChanges: false
+      local:
+        push: true

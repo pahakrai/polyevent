@@ -1,21 +1,21 @@
 {
   "run": {
-    "command": "nx run auth-service:build",
-    "startTime": "2026-04-25T09:34:50.806Z",
-    "endTime": "2026-04-25T09:34:53.681Z",
+    "command": "nx run vendor-service:serve:debug --verbose",
+    "startTime": "2026-04-28T15:09:23.134Z",
+    "endTime": "2026-04-28T15:09:27.419Z",
     "inner": false
   },
   "tasks": [
     {
-      "taskId": "auth-service:build",
-      "target": "build",
-      "projectName": "auth-service",
-      "hash": "7547141275921998796",
-      "startTime": "2026-04-25T09:34:50.818Z",
-      "endTime": "2026-04-25T09:34:53.585Z",
+      "taskId": "vendor-service:serve:debug",
+      "target": "serve:debug",
+      "projectName": "vendor-service",
+      "hash": "11355757650020782652",
+      "startTime": "2026-04-28T15:09:23.141Z",
+      "endTime": "2026-04-28T15:09:27.419Z",
       "params": "",
       "cacheStatus": "cache-miss",
-      "status": 0
+      "status": 1
     }
   ]
 }

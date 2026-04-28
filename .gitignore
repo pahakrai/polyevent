@@ -120,7 +120,6 @@ Thumbs.db
 
 # Docker
 **/.dockerignore
-**/Dockerfile
 
 # Kubernetes
 **/kubeconfig

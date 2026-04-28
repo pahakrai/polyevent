@@ -11,7 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function CategoryPage() {
   const params = useParams();
-  const category = (params.category as string).toUpperCase();
+  const category = ((params?.category ?? "") as string).toUpperCase();
   const { trackPageView, trackCategoryBrowse } = useAnalytics();
 
   const [events, setEvents] = useState<any[]>([]);

@@ -1,550 +1,86 @@
-# Per-service PostgreSQL instances — database-per-service pattern
-# Each microservice gets its own PostgreSQL pod + PVC + Service
+# Single shared PostgreSQL — lightweight dev (NOT database-per-service)
+# All service databases created via init script on first boot
 ---
-# ============================================================
-# Gateway DB
-# ============================================================
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: postgres-gateway-pvc
+  name: postgres-pvc
   namespace: polydom-dev
 spec:
-  accessModes: [ReadWriteOnce]
+  accessModes:
+    - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
 ---
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: postgres-gateway
-  namespace: polydom-dev
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: postgres-gateway
-  template:
-    metadata:
-      labels:
-        app: postgres-gateway
-    spec:
-      containers:
-      - name: postgres
-        image: postgres:15-alpine
-        ports:
-        - containerPort: 5432
-        env:
-        - name: POSTGRES_USER
-          value: eventbooking
-        - name: POSTGRES_PASSWORD
-          value: eventbooking123
-        - name: POSTGRES_DB
-          value: gateway_db
-        volumeMounts:
-        - name: data
-          mountPath: /var/lib/postgresql/data
-      volumes:
-      - name: data
-        persistentVolumeClaim:
-          claimName: postgres-gateway-pvc
----
 apiVersion: v1
-kind: Service
+kind: ConfigMap
 metadata:
-  name: postgres-gateway
+  name: postgres-init
   namespace: polydom-dev
-spec:
-  selector:
-    app: postgres-gateway
-  ports:
-  - port: 5432
-
----
-# ============================================================
-# Auth DB
-# ============================================================
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: postgres-auth-pvc
-  namespace: polydom-dev
-spec:
-  accessModes: [ReadWriteOnce]
-  resources:
-    requests:
-      storage: 1Gi
+data:
+  init.sql: |
+    CREATE DATABASE gateway_db;
+    CREATE DATABASE auth_db;
+    CREATE DATABASE user_db;
+    CREATE DATABASE vendor_db;
+    CREATE DATABASE event_db;
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres-auth
+  name: postgres
   namespace: polydom-dev
+  labels:
+    app: postgres
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: postgres-auth
+      app: postgres
   template:
     metadata:
       labels:
-        app: postgres-auth
+        app: postgres
     spec:
       containers:
       - name: postgres
-        image: postgres:15-alpine
+        image: postgres:16-alpine
         ports:
         - containerPort: 5432
         env:
         - name: POSTGRES_USER
-          value: eventbooking
+          value: postgres
         - name: POSTGRES_PASSWORD
-          value: eventbooking123
-        - name: POSTGRES_DB
-          value: auth_db
+          value: postgres
         volumeMounts:
         - name: data
           mountPath: /var/lib/postgresql/data
+        - name: init
+          mountPath: /docker-entrypoint-initdb.d
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
       volumes:
       - name: data
         persistentVolumeClaim:
-          claimName: postgres-auth-pvc
+          claimName: postgres-pvc
+      - name: init
+        configMap:
+          name: postgres-init
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: postgres-auth
+  name: postgres
   namespace: polydom-dev
 spec:
   selector:
-    app: postgres-auth
+    app: postgres
   ports:
   - port: 5432
-
----
-# ============================================================
-# User DB
-# ============================================================
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: postgres-user-pvc
-  namespace: polydom-dev
-spec:
-  accessModes: [ReadWriteOnce]
-  resources:
-    requests:
-      storage: 1Gi
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: postgres-user
-  namespace: polydom-dev
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: postgres-user
-  template:
-    metadata:
-      labels:
-        app: postgres-user
-    spec:
-      containers:
-      - name: postgres
-        image: postgres:15-alpine
-        ports:
-        - containerPort: 5432
-        env:
-        - name: POSTGRES_USER
-          value: eventbooking
-        - name: POSTGRES_PASSWORD
-          value: eventbooking123
-        - name: POSTGRES_DB
-          value: user_db
-        volumeMounts:
-        - name: data
-          mountPath: /var/lib/postgresql/data
-      volumes:
-      - name: data
-        persistentVolumeClaim:
-          claimName: postgres-user-pvc
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: postgres-user
-  namespace: polydom-dev
-spec:
-  selector:
-    app: postgres-user
-  ports:
-  - port: 5432
-
----
-# ============================================================
-# Vendor DB
-# ============================================================
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: postgres-vendor-pvc
-  namespace: polydom-dev
-spec:
-  accessModes: [ReadWriteOnce]
-  resources:
-    requests:
-      storage: 1Gi
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: postgres-vendor
-  namespace: polydom-dev
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: postgres-vendor
-  template:
-    metadata:
-      labels:
-        app: postgres-vendor
-    spec:
-      containers:
-      - name: postgres
-        image: postgres:15-alpine
-        ports:
-        - containerPort: 5432
-        env:
-        - name: POSTGRES_USER
-          value: eventbooking
-        - name: POSTGRES_PASSWORD
-          value: eventbooking123
-        - name: POSTGRES_DB
-          value: vendor_db
-        volumeMounts:
-        - name: data
-          mountPath: /var/lib/postgresql/data
-      volumes:
-      - name: data
-        persistentVolumeClaim:
-          claimName: postgres-vendor-pvc
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: postgres-vendor
-  namespace: polydom-dev
-spec:
-  selector:
-    app: postgres-vendor
-  ports:
-  - port: 5432
-
----
-# ============================================================
-# Event DB
-# ============================================================
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: postgres-event-pvc
-  namespace: polydom-dev
-spec:
-  accessModes: [ReadWriteOnce]
-  resources:
-    requests:
-      storage: 1Gi
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: postgres-event
-  namespace: polydom-dev
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: postgres-event
-  template:
-    metadata:
-      labels:
-        app: postgres-event
-    spec:
-      containers:
-      - name: postgres
-        image: postgres:15-alpine
-        ports:
-        - containerPort: 5432
-        env:
-        - name: POSTGRES_USER
-          value: eventbooking
-        - name: POSTGRES_PASSWORD
-          value: eventbooking123
-        - name: POSTGRES_DB
-          value: event_db
-        volumeMounts:
-        - name: data
-          mountPath: /var/lib/postgresql/data
-      volumes:
-      - name: data
-        persistentVolumeClaim:
-          claimName: postgres-event-pvc
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: postgres-event
-  namespace: polydom-dev
-spec:
-  selector:
-    app: postgres-event
-  ports:
-  - port: 5432
-
----
-# ============================================================
-# Booking DB
-# ============================================================
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: postgres-booking-pvc
-  namespace: polydom-dev
-spec:
-  accessModes: [ReadWriteOnce]
-  resources:
-    requests:
-      storage: 1Gi
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: postgres-booking
-  namespace: polydom-dev
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: postgres-booking
-  template:
-    metadata:
-      labels:
-        app: postgres-booking
-    spec:
-      containers:
-      - name: postgres
-        image: postgres:15-alpine
-        ports:
-        - containerPort: 5432
-        env:
-        - name: POSTGRES_USER
-          value: eventbooking
-        - name: POSTGRES_PASSWORD
-          value: eventbooking123
-        - name: POSTGRES_DB
-          value: booking_db
-        volumeMounts:
-        - name: data
-          mountPath: /var/lib/postgresql/data
-      volumes:
-      - name: data
-        persistentVolumeClaim:
-          claimName: postgres-booking-pvc
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: postgres-booking
-  namespace: polydom-dev
-spec:
-  selector:
-    app: postgres-booking
-  ports:
-  - port: 5432
-
----
-# ============================================================
-# Notification DB
-# ============================================================
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: postgres-notification-pvc
-  namespace: polydom-dev
-spec:
-  accessModes: [ReadWriteOnce]
-  resources:
-    requests:
-      storage: 1Gi
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: postgres-notification
-  namespace: polydom-dev
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: postgres-notification
-  template:
-    metadata:
-      labels:
-        app: postgres-notification
-    spec:
-      containers:
-      - name: postgres
-        image: postgres:15-alpine
-        ports:
-        - containerPort: 5432
-        env:
-        - name: POSTGRES_USER
-          value: eventbooking
-        - name: POSTGRES_PASSWORD
-          value: eventbooking123
-        - name: POSTGRES_DB
-          value: notification_db
-        volumeMounts:
-        - name: data
-          mountPath: /var/lib/postgresql/data
-      volumes:
-      - name: data
-        persistentVolumeClaim:
-          claimName: postgres-notification-pvc
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: postgres-notification
-  namespace: polydom-dev
-spec:
-  selector:
-    app: postgres-notification
-  ports:
-  - port: 5432
-
----
-# ============================================================
-# Analytics DB
-# ============================================================
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: postgres-analytics-pvc
-  namespace: polydom-dev
-spec:
-  accessModes: [ReadWriteOnce]
-  resources:
-    requests:
-      storage: 1Gi
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: postgres-analytics
-  namespace: polydom-dev
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: postgres-analytics
-  template:
-    metadata:
-      labels:
-        app: postgres-analytics
-    spec:
-      containers:
-      - name: postgres
-        image: postgres:15-alpine
-        ports:
-        - containerPort: 5432
-        env:
-        - name: POSTGRES_USER
-          value: eventbooking
-        - name: POSTGRES_PASSWORD
-          value: eventbooking123
-        - name: POSTGRES_DB
-          value: analytics_db
-        volumeMounts:
-        - name: data
-          mountPath: /var/lib/postgresql/data
-      volumes:
-      - name: data
-        persistentVolumeClaim:
-          claimName: postgres-analytics-pvc
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: postgres-analytics
-  namespace: polydom-dev
-spec:
-  selector:
-    app: postgres-analytics
-  ports:
-  - port: 5432
-
----
-# ============================================================
-# Admin DB
-# ============================================================
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: postgres-admin-pvc
-  namespace: polydom-dev
-spec:
-  accessModes: [ReadWriteOnce]
-  resources:
-    requests:
-      storage: 1Gi
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: postgres-admin
-  namespace: polydom-dev
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: postgres-admin
-  template:
-    metadata:
-      labels:
-        app: postgres-admin
-    spec:
-      containers:
-      - name: postgres
-        image: postgres:15-alpine
-        ports:
-        - containerPort: 5432
-        env:
-        - name: POSTGRES_USER
-          value: eventbooking
-        - name: POSTGRES_PASSWORD
-          value: eventbooking123
-        - name: POSTGRES_DB
-          value: admin_db
-        volumeMounts:
-        - name: data
-          mountPath: /var/lib/postgresql/data
-      volumes:
-      - name: data
-        persistentVolumeClaim:
-          claimName: postgres-admin-pvc
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: postgres-admin
-  namespace: polydom-dev
-spec:
-  selector:
-    app: postgres-admin
-  ports:
-  - port: 5432
+    targetPort: 5432

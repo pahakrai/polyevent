@@ -1,0 +1,119 @@
+{
+  "name": "vendor-service",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/nestjs-services/vendor-service/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/dist"],
+      "options": {
+        "command": "nest build --webpack",
+        "cwd": "apps/nestjs-services/vendor-service"
+      },
+      "configurations": {
+        "production": {
+          "command": "nest build --webpack"
+        },
+        "development": {
+          "command": "nest build --webpack"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "options": {
+        "buildTarget": "vendor-service:build",
+        "port": 3000
+      },
+      "configurations": {
+        "production": {
+          "buildTarget": "vendor-service:build:production"
+        },
+        "development": {
+          "buildTarget": "vendor-service:build:development"
+        }
+      }
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest start --watch --webpack --debug 0.0.0.0:9232",
+        "cwd": "apps/nestjs-services/vendor-service"
+      }
+    },
+    "serve:debug": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest start --webpack --debug 0.0.0.0:9232",
+        "cwd": "apps/nestjs-services/vendor-service"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/nestjs-services/vendor-service/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/apps/nestjs-services/vendor-service"],
+      "options": {
+        "jestConfig": "apps/nestjs-services/vendor-service/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "db:generate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx drizzle-kit generate --config src/database/drizzle.config.ts",
+        "cwd": "apps/nestjs-services/vendor-service"
+      }
+    },
+    "db:migrate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx drizzle-kit migrate --config src/database/drizzle.config.ts",
+        "cwd": "apps/nestjs-services/vendor-service"
+      }
+    },
+    "db:push": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx drizzle-kit push --config src/database/drizzle.config.ts",
+        "cwd": "apps/nestjs-services/vendor-service"
+      }
+    },
+    "db:seed": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx tsx src/database/seed.ts",
+        "cwd": "apps/nestjs-services/vendor-service"
+      }
+    },
+    "container": {
+      "executor": "@nx-tools/nx-container:build",
+      "dependsOn": ["build"],
+      "options": {
+        "push": false,
+        "engine": "docker",
+        "metadata": {
+          "images": ["polydom/vendor-service"],
+          "load": true,
+          "tags": [
+            "type=sha,prefix=sha-",
+            "type=ref,event=branch"
+          ]
+        }
+      }
+    }
+  },
+  "tags": ["service", "nest"]
+}

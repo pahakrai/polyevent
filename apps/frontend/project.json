@@ -1,0 +1,69 @@
+{
+  "name": "frontend",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/frontend",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/.next"],
+      "options": {
+        "command": "next build",
+        "cwd": "apps/frontend"
+      },
+      "configurations": {
+        "production": {
+          "command": "next build"
+        },
+        "development": {
+          "command": "next build"
+        }
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "next dev",
+        "cwd": "apps/frontend"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/frontend/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/apps/frontend"],
+      "options": {
+        "jestConfig": "apps/frontend/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "container": {
+      "executor": "@nx-tools/nx-container:build",
+      "dependsOn": ["build"],
+      "options": {
+        "push": false,
+        "engine": "docker",
+        "metadata": {
+          "images": ["polydom/frontend"],
+          "load": true,
+          "tags": [
+            "type=sha,prefix=sha-",
+            "type=ref,event=branch"
+          ]
+        }
+      }
+    }
+  },
+  "tags": ["frontend", "next"]
+}
