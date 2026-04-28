@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, Optional } from '@nestjs/common';
 import { eq, and, sql, like, or, inArray } from 'drizzle-orm';
 import { db } from '../database/client';
 import { events, Event, NewEvent } from '../database/schema';
@@ -14,7 +14,7 @@ import { CreateEventDto, UpdateEventDto, EventSearchDto } from './dto';
 export class EventService {
   private readonly logger = new Logger(EventService.name);
 
-  constructor(private readonly kafkaProducer: BaseProducer) {}
+  constructor(@Optional() private readonly kafkaProducer?: BaseProducer) {}
 
   // ── CRUD ────────────────────────────────────────────────────────────
 
@@ -267,6 +267,7 @@ export class EventService {
     type: EventLifecycleType,
     changedFields?: string[],
   ): Promise<void> {
+    if (!this.kafkaProducer) return;
     try {
       const location = event.location as Record<string, any>;
       const price = event.price as Record<string, any>;

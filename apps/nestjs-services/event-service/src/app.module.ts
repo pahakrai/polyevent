@@ -4,19 +4,26 @@ import { KafkaModule } from '@polydom/kafka-client';
 import { EventModule } from './event/event.module';
 import { HealthController } from './health.controller';
 
-@Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: ['.env', '../../../.env'],
-    }),
+const imports: any[] = [
+  ConfigModule.forRoot({
+    isGlobal: true,
+    envFilePath: ['.env', '../../../.env'],
+  }),
+  EventModule,
+];
+
+if (process.env.KAFKA_BROKERS) {
+  imports.push(
     KafkaModule.register({
       clientId: 'event-service',
-      brokers: (process.env.KAFKA_BROKERS || 'localhost:9092').split(','),
+      brokers: process.env.KAFKA_BROKERS.split(','),
       producer: true,
     }),
-    EventModule,
-  ],
+  );
+}
+
+@Module({
+  imports,
   controllers: [HealthController],
 })
 export class AppModule {}

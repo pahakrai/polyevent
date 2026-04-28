@@ -9,26 +9,39 @@ import { AuthProxyController } from './proxy/auth-proxy.controller';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpModule } from '@nestjs/axios';
 
-@Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: ['.env', '../../../.env'],
-    }),
+const imports: any[] = [
+  ConfigModule.forRoot({
+    isGlobal: true,
+    envFilePath: ['.env', '../../../.env'],
+  }),
+  HttpModule,
+];
+
+const controllers: any[] = [HealthController, AuthProxyController];
+
+const providers: any[] = [];
+
+const hasKafka = !!process.env.KAFKA_BROKERS;
+
+if (hasKafka) {
+  imports.push(
     KafkaModule.register({
       clientId: 'api-gateway',
-      brokers: (process.env.KAFKA_BROKERS || 'localhost:9092').split(','),
+      brokers: process.env.KAFKA_BROKERS!.split(','),
       producer: true,
     }),
-    HttpModule,
-  ],
-  controllers: [HealthController, TrackingController, AuthProxyController],
-  providers: [
-    TrackingService,
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: AnalyticsInterceptor,
-    },
-  ],
+  );
+  controllers.push(TrackingController);
+  providers.push(TrackingService);
+  providers.push({
+    provide: APP_INTERCEPTOR,
+    useClass: AnalyticsInterceptor,
+  });
+}
+
+@Module({
+  imports,
+  controllers,
+  providers,
 })
 export class AppModule {}

@@ -15603,11 +15603,6 @@
       },
       {
         "source": "auth-service",
-        "target": "npm:@types/bcrypt",
-        "type": "static"
-      },
-      {
-        "source": "auth-service",
         "target": "npm:@types/jest",
         "type": "static"
       },
@@ -15703,11 +15698,6 @@
       },
       {
         "source": "auth-service",
-        "target": "npm:bcrypt",
-        "type": "static"
-      },
-      {
-        "source": "auth-service",
         "target": "npm:class-transformer",
         "type": "static"
       },
@@ -15759,6 +15749,11 @@
       {
         "source": "auth-service",
         "target": "@polydom/database-client",
+        "type": "static"
+      },
+      {
+        "source": "auth-service",
+        "target": "npm:bcrypt",
         "type": "static"
       },
       {

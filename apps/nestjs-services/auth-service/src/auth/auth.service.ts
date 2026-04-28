@@ -1,5 +1,6 @@
 import {
   Injectable,
+  Optional,
   UnauthorizedException,
   ConflictException,
   Logger,
@@ -12,7 +13,7 @@ import { eq } from 'drizzle-orm';
 import { BaseProducer, USER_ACTIVITY_TOPIC, UserActivityMessage } from '@polydom/kafka-client';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class AuthService {
@@ -21,7 +22,7 @@ export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-    private readonly kafkaProducer: BaseProducer,
+    @Optional() private readonly kafkaProducer?: BaseProducer,
   ) {}
 
   async register(dto: RegisterDto) {
@@ -119,6 +120,7 @@ export class AuthService {
   }
 
   private async trackUserActivity(userId: string, type: string): Promise<void> {
+    if (!this.kafkaProducer) return;
     try {
       const message: UserActivityMessage = {
         userId,
