@@ -8,13 +8,18 @@ export const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-// Attach user context to every request for analytics
+// Attach user context and auth token to every request
 api.interceptors.request.use((config) => {
   if (typeof window !== 'undefined') {
     const userId = localStorage.getItem('userId') || 'anonymous';
     const sessionId = sessionStorage.getItem('sessionId') || generateSessionId();
     config.headers['x-user-id'] = userId;
     config.headers['x-session-id'] = sessionId;
+
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
   }
   return config;
 });

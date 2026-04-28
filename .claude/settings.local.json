@@ -131,7 +131,10 @@
       "Bash(tar -xzf /tmp/nestjs-cli-10.4.9.tgz -O package/lib/compiler/defaults/webpack-defaults.js)",
       "Bash(echo \"===EXIT: $? ===\")",
       "Bash(echo \"EXIT: $?\")",
-      "Bash(skaffold build *)"
+      "Bash(skaffold build *)",
+      "Bash(netstat -ano)",
+      "Bash(tasklist /fi \"imagename eq skaffold.exe\")",
+      "PowerShell(Stop-Process *)"
     ]
   },
   "enableAllProjectMcpServers": true,

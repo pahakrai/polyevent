@@ -1,9 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
+import { useAuthStore } from "@/stores/auth-store";
+import { Button } from "@/components/ui/button";
+import { useState, useRef, useEffect } from "react";
 
 const NAV_LINKS = [
   { href: "/search", label: "Search" },
@@ -12,8 +15,65 @@ const NAV_LINKS = [
   { href: "/category/JAM_SESSION", label: "Jam Sessions" },
 ];
 
+function UserMenu() {
+  const router = useRouter();
+  const { user, logout } = useAuthStore();
+  const [open, setOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  const handleLogout = () => {
+    logout();
+    setOpen(false);
+    router.push("/");
+  };
+
+  return (
+    <div className="relative" ref={menuRef}>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => setOpen(!open)}
+        className="gap-1.5"
+      >
+        <span className="hidden sm:inline">{user?.firstName || "Account"}</span>
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="opacity-50">
+          <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </Button>
+      {open && (
+        <div className="absolute right-0 top-full mt-1 w-48 rounded-md border border-border bg-card py-1 shadow-lg">
+          <div className="border-b border-border px-3 py-2">
+            <p className="text-sm font-medium">{user?.firstName} {user?.lastName}</p>
+            <p className="text-xs text-muted-foreground">{user?.email}</p>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="w-full px-3 py-1.5 text-left text-sm text-muted-foreground hover:bg-secondary hover:text-foreground"
+          >
+            Sign out
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function DefaultLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() ?? "";
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -50,6 +110,18 @@ export function DefaultLayout({ children }: { children: React.ReactNode }) {
           {/* Actions */}
           <div className="flex items-center gap-2">
             <ThemeToggle />
+            {!mounted ? null : isAuthenticated ? (
+              <UserMenu />
+            ) : (
+              <>
+                <Button variant="ghost" size="sm" asChild>
+                  <Link href="/login">Sign in</Link>
+                </Button>
+                <Button size="sm" asChild className="hidden sm:inline-flex">
+                  <Link href="/register">Register</Link>
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </header>
