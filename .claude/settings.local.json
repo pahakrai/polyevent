@@ -135,7 +135,8 @@
       "Bash(netstat -ano)",
       "Bash(tasklist /fi \"imagename eq skaffold.exe\")",
       "PowerShell(Stop-Process *)",
-      "Bash(MSYS_NO_PATHCONV=1 docker run *)"
+      "Bash(MSYS_NO_PATHCONV=1 docker run *)",
+      "PowerShell(Write-Output \"Testing...\"; try { $r = Invoke-WebRequest -Uri \"http://localhost:3000/\" -TimeoutSec 5 -UseBasicParsing; Write-Output \"Home: $\\($r.StatusCode\\)\" } catch { Write-Output \"Home failed: $_\" })"
     ]
   },
   "enableAllProjectMcpServers": true,

@@ -79,14 +79,20 @@ export default function GroupDetailPage() {
                 <Button variant="outline" onClick={handleLeave}>Leave Group</Button>
               )}
               {isMember && (
-                <Button variant="outline" asChild>
-                  <Link href={`/groups/${groupId}/vendors`}>Find Vendors</Link>
-                </Button>
+                <Link
+                  href={`/groups/${groupId}/vendors`}
+                  className="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground"
+                >
+                  Find Vendors
+                </Link>
               )}
               {isOwner && (
-                <Button variant="outline" asChild>
-                  <Link href={`/groups/${groupId}/vendors`}>Browse Vendors for Group</Link>
-                </Button>
+                <Link
+                  href={`/groups/${groupId}/vendors`}
+                  className="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground"
+                >
+                  Browse Vendors for Group
+                </Link>
               )}
             </div>
           </Card>

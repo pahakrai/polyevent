@@ -1,0 +1,21 @@
+> next build
+
+  [1m[38;2;173;127;168m▲ Next.js 14.2.35[39m[22m
+
+ [37m[1m [22m[39m Creating an optimized production build ...
+ [32m[1m✓[22m[39m Compiled successfully
+ [37m[1m [22m[39m Linting and checking validity of types ...
+[31mFailed to compile.
+[39m
+[36m./src/app/groups/[groupId]/page.tsx[39m:[33m82[39m:[33m43[39m
+[31m[1mType error[22m[39m: Type '{ children: Element; variant: "outline"; asChild: true; }' is not assignable to type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+  Property 'asChild' does not exist on type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'.
+
+[0m [90m 80 |[39m               )}[0m
+[0m [90m 81 |[39m               {isMember [33m&&[39m ([0m
+[0m[31m[1m>[22m[39m[90m 82 |[39m                 [33m<[39m[33mButton[39m variant[33m=[39m[32m"outline"[39m asChild[33m>[39m[0m
+[0m [90m    |[39m                                           [31m[1m^[22m[39m[0m
+[0m [90m 83 |[39m                   [33m<[39m[33mLink[39m href[33m=[39m{[32m`/groups/${groupId}/vendors`[39m}[33m>[39m[33mFind[39m [33mVendors[39m[33m<[39m[33m/[39m[33mLink[39m[33m>[39m[0m
+[0m [90m 84 |[39m                 [33m<[39m[33m/[39m[33mButton[39m[33m>[39m[0m
+[0m [90m 85 |[39m               )}[0m
+Next.js build worker exited with code: 1 and signal: null

@@ -1,21 +1,21 @@
 {
   "run": {
-    "command": "nx run vendor-service:serve:debug --verbose",
-    "startTime": "2026-04-28T15:09:23.134Z",
-    "endTime": "2026-04-28T15:09:27.419Z",
+    "command": "nx build frontend --skip-nx-cache",
+    "startTime": "2026-04-30T08:12:45.221Z",
+    "endTime": "2026-04-30T08:13:17.146Z",
     "inner": false
   },
   "tasks": [
     {
-      "taskId": "vendor-service:serve:debug",
-      "target": "serve:debug",
-      "projectName": "vendor-service",
-      "hash": "11355757650020782652",
-      "startTime": "2026-04-28T15:09:23.141Z",
-      "endTime": "2026-04-28T15:09:27.419Z",
+      "taskId": "frontend:build",
+      "target": "build",
+      "projectName": "frontend",
+      "hash": "9158441579166918469",
+      "startTime": "2026-04-30T08:12:45.238Z",
+      "endTime": "2026-04-30T08:13:17.146Z",
       "params": "",
       "cacheStatus": "cache-miss",
-      "status": 1
+      "status": 0
     }
   ]
 }

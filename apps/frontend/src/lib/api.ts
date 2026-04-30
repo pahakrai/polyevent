@@ -69,6 +69,40 @@ export async function getAllEvents(page = 1, limit = 20) {
   return data;
 }
 
+export async function createEvent(payload: {
+  title: string;
+  description: string;
+  category: string;
+  subCategory?: string;
+  startTime: string;
+  endTime: string;
+  location: {
+    venueName?: string;
+    name?: string;
+    address?: string;
+    city?: string;
+    country?: string;
+    latitude?: number;
+    longitude?: number;
+  };
+  price: {
+    price?: number;
+    minPrice?: number;
+    maxPrice?: number;
+    currency?: string;
+  };
+  maxAttendees?: number;
+  tags?: string[];
+  images?: string[];
+  ageRestriction?: number;
+  groupId?: string;
+  venueId?: string;
+  timeslotId?: string;
+}) {
+  const { data } = await api.post('/events', payload);
+  return data;
+}
+
 // ── Tracking (client-side → API Gateway → Kafka) ───────────────────────
 
 export async function trackActivity(params: {

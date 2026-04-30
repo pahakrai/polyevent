@@ -16,6 +16,7 @@ const NAV_LINKS = [
   { href: "/category/activities", label: "Activities" },
   { href: "/groups", label: "Groups" },
   { href: "/vendors", label: "Vendors" },
+  { href: "/events", label: "Events" },
 ];
 
 function UserMenu() {
@@ -117,12 +118,18 @@ export function DefaultLayout({ children }: { children: React.ReactNode }) {
               <UserMenu />
             ) : (
               <>
-                <Button variant="ghost" size="sm" asChild>
-                  <Link href="/login">Sign in</Link>
-                </Button>
-                <Button size="sm" asChild className="hidden sm:inline-flex">
-                  <Link href="/register">Register</Link>
-                </Button>
+                <Link
+                  href="/login"
+                  className="inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md px-3 text-xs font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+                >
+                  Sign in
+                </Link>
+                <Link
+                  href="/register"
+                  className="hidden h-9 items-center justify-center whitespace-nowrap rounded-md bg-primary px-3 text-xs font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 sm:inline-flex"
+                >
+                  Register
+                </Link>
               </>
             )}
           </div>

@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { api } from '@/lib/api';
 import { useAuthStore } from '@/stores/auth-store';
 import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function GroupsPage() {
@@ -28,9 +27,12 @@ export default function GroupsPage() {
           <p className="text-muted-foreground">Find groups that share your interests</p>
         </div>
         {isAuthenticated && (
-          <Button asChild>
-            <Link href="/groups/new">Create Group</Link>
-          </Button>
+          <Link
+            href="/groups/new"
+            className="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90"
+          >
+            Create Group
+          </Link>
         )}
       </div>
 

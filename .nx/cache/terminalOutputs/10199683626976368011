@@ -1,0 +1,45 @@
+> next build
+
+  [1m[38;2;173;127;168m▲ Next.js 14.2.35[39m[22m
+
+ [37m[1m [22m[39m Creating an optimized production build ...
+ [32m[1m✓[22m[39m Compiled successfully
+ [37m[1m [22m[39m Linting and checking validity of types ...
+ [37m[1m [22m[39m Collecting page data ...
+ [37m[1m [22m[39m Generating static pages (0/12) ...
+ [31m[1m⨯[22m[39m useSearchParams() should be wrapped in a suspense boundary at page "/events/new". Read more: https://nextjs.org/docs/messages/missing-suspense-with-csr-bailout
+    at a (C:\Users\user\repo\polydom\apps\frontend\.next\server\chunks\989.js:1:11447)
+    at c (C:\Users\user\repo\polydom\apps\frontend\.next\server\chunks\989.js:1:22390)
+    at m (C:\Users\user\repo\polydom\apps\frontend\.next\server\app\events\new\page.js:1:3017)
+    at nj (C:\Users\user\repo\polydom\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:46252)
+    at nM (C:\Users\user\repo\polydom\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:47572)
+    at nL (C:\Users\user\repo\polydom\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:64547)
+    at nI (C:\Users\user\repo\polydom\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:47011)
+    at nM (C:\Users\user\repo\polydom\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:47718)
+    at nM (C:\Users\user\repo\polydom\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:61547)
+    at nL (C:\Users\user\repo\polydom\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:64547)
+
+Error occurred prerendering page "/events/new". Read more: https://nextjs.org/docs/messages/prerender-error
+
+ [31m[1m⨯[22m[39m useSearchParams() should be wrapped in a suspense boundary at page "/events". Read more: https://nextjs.org/docs/messages/missing-suspense-with-csr-bailout
+    at a (C:\Users\user\repo\polydom\apps\frontend\.next\server\chunks\989.js:1:11447)
+    at c (C:\Users\user\repo\polydom\apps\frontend\.next\server\chunks\989.js:1:22390)
+    at x (C:\Users\user\repo\polydom\apps\frontend\.next\server\app\events\page.js:1:2856)
+    at nj (C:\Users\user\repo\polydom\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:46252)
+    at nM (C:\Users\user\repo\polydom\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:47572)
+    at nL (C:\Users\user\repo\polydom\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:64547)
+    at nI (C:\Users\user\repo\polydom\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:47011)
+    at nM (C:\Users\user\repo\polydom\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:47718)
+    at nM (C:\Users\user\repo\polydom\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:61547)
+    at nL (C:\Users\user\repo\polydom\node_modules\next\dist\compiled\next-server\app-page.runtime.prod.js:12:64547)
+
+Error occurred prerendering page "/events". Read more: https://nextjs.org/docs/messages/prerender-error
+
+ [37m[1m [22m[39m Generating static pages (3/12) 
+ [37m[1m [22m[39m Generating static pages (6/12) 
+ [37m[1m [22m[39m Generating static pages (9/12) 
+ [32m[1m✓[22m[39m Generating static pages (12/12)
+
+> Export encountered errors on following paths:
+	/events/new/page: /events/new
+	/events/page: /events

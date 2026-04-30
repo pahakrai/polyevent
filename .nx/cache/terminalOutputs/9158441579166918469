@@ -1,0 +1,43 @@
+> next build
+
+  [1m[38;2;173;127;168m▲ Next.js 14.2.35[39m[22m
+
+ [37m[1m [22m[39m Creating an optimized production build ...
+ [32m[1m✓[22m[39m Compiled successfully
+ [37m[1m [22m[39m Linting and checking validity of types ...
+ [37m[1m [22m[39m Collecting page data ...
+ [37m[1m [22m[39m Generating static pages (0/12) ...
+ [37m[1m [22m[39m Generating static pages (3/12) 
+ [37m[1m [22m[39m Generating static pages (6/12) 
+ [37m[1m [22m[39m Generating static pages (9/12) 
+ [32m[1m✓[22m[39m Generating static pages (12/12)
+ [37m[1m [22m[39m Finalizing page optimization ...
+ [37m[1m [22m[39m Collecting build traces ...
+
+[4mRoute (app)[24m                               [4mSize[24m     [4mFirst Load JS[24m
+┌ ○ /                                     2.38 kB         [37m[1m133 kB[22m[39m
+├ ○ /_not-found                           138 B          [37m[1m87.4 kB[22m[39m
+├ ƒ /book/[timeslotId]                    3.16 kB         [37m[1m122 kB[22m[39m
+├ ƒ /category/[category]                  969 B           [37m[1m131 kB[22m[39m
+├ ○ /events                               1.52 kB         [37m[1m134 kB[22m[39m
+├ ƒ /events/[id]                          2.19 kB         [37m[1m132 kB[22m[39m
+├ ○ /events/new                           4.95 kB         [37m[1m133 kB[22m[39m
+├ ○ /groups                               2.21 kB         [37m[1m130 kB[22m[39m
+├ ƒ /groups/[groupId]                     3.24 kB         [37m[1m131 kB[22m[39m
+├ ƒ /groups/[groupId]/vendors             2.06 kB         [37m[1m128 kB[22m[39m
+├ ○ /groups/new                           2.91 kB         [37m[1m120 kB[22m[39m
+├ ○ /login                                3.15 kB         [37m[1m131 kB[22m[39m
+├ ○ /register                             3.27 kB         [37m[1m131 kB[22m[39m
+├ ○ /search                               1.16 kB         [37m[1m131 kB[22m[39m
+├ ○ /vendors                              2.24 kB         [37m[1m128 kB[22m[39m
+├ ƒ /vendors/[vendorId]                   2.33 kB         [37m[1m128 kB[22m[39m
+└ ƒ /vendors/[vendorId]/venues/[venueId]  3.25 kB         [37m[1m131 kB[22m[39m
++ First Load JS shared by all             [37m[1m87.3 kB[22m[39m
+  ├ chunks/1dd3208c-f0fdd5bd9b9670e5.js   53.6 kB
+  ├ chunks/528-8aba66ad51c479de.js        31.7 kB
+  └ other shared chunks (total)           1.96 kB
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
