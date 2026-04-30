@@ -15,7 +15,7 @@ async function seed() {
   const seedUsers = [
     {
       email: 'pahakadmin@polydom.io',
-      password: '45187801pahak',
+      password: 'Three1288',
       firstName: 'Pahak',
       lastName: 'Admin',
       role: 'ADMIN' as const,
@@ -88,7 +88,7 @@ async function seed() {
   console.log(`\nAuth database seeded: ${created} created, ${skipped} skipped`);
   console.log('');
   console.log('Login credentials:');
-  console.log('  Superadmin:  pahakadmin@polydom.io / 45187801pahak');
+  console.log('  Superadmin:  pahakadmin@polydom.io / Three1288');
   console.log('  Admin:       admin@example.com      / admin123');
   console.log('  User:        user@example.com       / user123');
   console.log('  Vendor:      vendor@example.com     / vendor123');

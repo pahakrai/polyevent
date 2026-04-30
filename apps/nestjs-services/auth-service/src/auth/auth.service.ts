@@ -46,19 +46,27 @@ export class AuthService {
         firstName: dto.firstName,
         lastName: dto.lastName,
         phone: dto.phone,
+        role: dto.role || 'USER',
       })
       .returning();
 
     this.logger.log(`User registered: ${user.email}`);
 
+    const payload = { sub: user.id, email: user.email, role: user.role };
+    const token = this.jwtService.sign(payload);
+
     await this.trackUserActivity(user.id, 'register');
     await this.trackUserActivity(user.id, 'login'); // auto-login after register
 
     return {
-      id: user.id,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
+      accessToken: token,
+      user: {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.role,
+      },
     };
   }
 

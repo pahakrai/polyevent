@@ -15730,12 +15730,12 @@
       },
       {
         "source": "auth-service",
-        "target": "@polydom/database-client",
+        "target": "npm:bcryptjs",
         "type": "static"
       },
       {
         "source": "auth-service",
-        "target": "npm:bcryptjs",
+        "target": "@polydom/database-client",
         "type": "static"
       },
       {

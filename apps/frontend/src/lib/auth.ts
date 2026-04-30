@@ -16,6 +16,7 @@ interface RegisterDto {
   password: string;
   firstName: string;
   lastName: string;
+  role?: string;
 }
 
 export async function loginUser(email: string, password: string): Promise<LoginResponse> {
@@ -29,6 +30,7 @@ export async function registerUser(dto: RegisterDto): Promise<LoginResponse> {
     password: dto.password,
     firstName: dto.firstName,
     lastName: dto.lastName,
+    role: dto.role || 'USER',
   });
   return data;
 }

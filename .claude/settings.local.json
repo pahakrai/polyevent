@@ -136,7 +136,10 @@
       "Bash(tasklist /fi \"imagename eq skaffold.exe\")",
       "PowerShell(Stop-Process *)",
       "Bash(MSYS_NO_PATHCONV=1 docker run *)",
-      "PowerShell(Write-Output \"Testing...\"; try { $r = Invoke-WebRequest -Uri \"http://localhost:3000/\" -TimeoutSec 5 -UseBasicParsing; Write-Output \"Home: $\\($r.StatusCode\\)\" } catch { Write-Output \"Home failed: $_\" })"
+      "PowerShell(Write-Output \"Testing...\"; try { $r = Invoke-WebRequest -Uri \"http://localhost:3000/\" -TimeoutSec 5 -UseBasicParsing; Write-Output \"Home: $\\($r.StatusCode\\)\" } catch { Write-Output \"Home failed: $_\" })",
+      "Bash(USE_NEON=true npx drizzle-kit push --config=src/database/drizzle.config.ts)",
+      "Bash(USE_NEON=true npx drizzle-kit push --config=src/database/drizzle.config.ts --force)",
+      "mcp__neon__search"
     ]
   },
   "enableAllProjectMcpServers": true,
