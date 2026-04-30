@@ -49,6 +49,7 @@ data:
     CREATE DATABASE notification_db;
     CREATE DATABASE analytics_db;
     CREATE DATABASE admin_db;
+    CREATE DATABASE agent_db;
     GRANT ALL PRIVILEGES ON DATABASE gateway_db TO eventbooking;
     GRANT ALL PRIVILEGES ON DATABASE auth_db TO eventbooking;
     GRANT ALL PRIVILEGES ON DATABASE user_db TO eventbooking;
@@ -58,6 +59,7 @@ data:
     GRANT ALL PRIVILEGES ON DATABASE notification_db TO eventbooking;
     GRANT ALL PRIVILEGES ON DATABASE analytics_db TO eventbooking;
     GRANT ALL PRIVILEGES ON DATABASE admin_db TO eventbooking;
+    GRANT ALL PRIVILEGES ON DATABASE agent_db TO eventbooking;
 ---
 apiVersion: apps/v1
 kind: Deployment

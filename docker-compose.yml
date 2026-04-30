@@ -130,7 +130,7 @@ services:
     build:
       context: .
       dockerfile: ./apps/nestjs-services/api-gateway/Dockerfile
-      target: deps
+      target: development
     depends_on:
       postgres:
         condition: service_healthy
@@ -155,7 +155,7 @@ services:
     build:
       context: .
       dockerfile: ./apps/nestjs-services/auth-service/Dockerfile
-      target: deps
+      target: development
     depends_on:
       postgres:
         condition: service_healthy
@@ -179,7 +179,7 @@ services:
     build:
       context: .
       dockerfile: ./apps/nestjs-services/user-service/Dockerfile
-      target: deps
+      target: development
     depends_on:
       postgres:
         condition: service_healthy
@@ -203,7 +203,7 @@ services:
     build:
       context: .
       dockerfile: ./apps/nestjs-services/vendor-service/Dockerfile
-      target: deps
+      target: development
     depends_on:
       postgres:
         condition: service_healthy
@@ -225,7 +225,7 @@ services:
     build:
       context: .
       dockerfile: ./apps/nestjs-services/event-service/Dockerfile
-      target: deps
+      target: development
     depends_on:
       postgres:
         condition: service_healthy
@@ -246,6 +246,33 @@ services:
     command: npx nest start --watch
     working_dir: /app/apps/nestjs-services/event-service
 
+  agent-service:
+    build:
+      context: .
+      dockerfile: ./apps/nestjs-services/agent-service/Dockerfile
+      target: development
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: development
+      AGENT_DATABASE_URL: postgresql://eventbooking:eventbooking123@postgres:5432/agent_db
+      REDIS_URL: redis://:redispass123@redis:6379
+      LLM_PROVIDER: deepseek
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-sk-placeholder}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-sk-placeholder}
+      PORT: 3010
+    ports:
+      - "3010:3010"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/apps/nestjs-services/agent-service/node_modules
+    command: npx nest start --watch
+    working_dir: /app/apps/nestjs-services/agent-service
+
   frontend:
     build:
       context: .
@@ -262,6 +289,26 @@ services:
       - /app/apps/frontend/.next
     command: npx next dev
     working_dir: /app/apps/frontend
+
+  admin-frontend:
+    build:
+      context: .
+      dockerfile: ./apps/admin-frontend/Dockerfile
+      target: deps
+    depends_on:
+      - agent-service
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3000
+      NEXT_PUBLIC_AGENT_URL: http://localhost:3010
+    ports:
+      - "3004:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/apps/admin-frontend/node_modules
+      - /app/apps/admin-frontend/.next
+    command: npx next dev
+    working_dir: /app/apps/admin-frontend
 
   # =========================================================================
   # Python Workers

@@ -319,6 +319,8 @@ spec:
           value: "--max-old-space-size=480"
         - name: NEXT_PUBLIC_API_URL
           value: http://localhost:3000
+        - name: NEXT_PUBLIC_AGENT_URL
+          value: http://agent-service:3010
         resources:
           requests:
             memory: "128Mi"
@@ -629,3 +631,105 @@ spec:
   - port: 9233
     targetPort: 9233
     name: debug
+
+---
+# ============================================================
+# Agent Service
+# ============================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agent-service
+  namespace: polydom-dev
+  labels:
+    app: agent-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: agent-service
+  template:
+    metadata:
+      labels:
+        app: agent-service
+    spec:
+      serviceAccountName: app-sa
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: agent-service
+        image: polydom/agent-service:dev
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3010
+          name: http
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
+        env:
+        - name: NODE_ENV
+          value: development
+        - name: NODE_OPTIONS
+          value: "--max-old-space-size=480"
+        - name: AGENT_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database-secrets
+              key: agent-database-url
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: redis-secrets
+              key: redis-url
+        - name: LLM_PROVIDER
+          value: deepseek
+        - name: DEEPSEEK_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: llm-secrets
+              key: deepseek-api-key
+              optional: true
+        - name: ANTHROPIC_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: llm-secrets
+              key: anthropic-api-key
+              optional: true
+        - name: PORT
+          value: "3010"
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "768Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3010
+          initialDelaySeconds: 60
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3010
+          initialDelaySeconds: 45
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: agent-service
+  namespace: polydom-dev
+spec:
+  selector:
+    app: agent-service
+  ports:
+  - port: 3010
+    targetPort: 3010
+    name: http

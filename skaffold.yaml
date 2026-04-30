@@ -54,6 +54,11 @@ build:
       docker:
         dockerfile: apps/nestjs-services/event-service/Dockerfile
         target: development
+    - image: polydom/agent-service
+      context: .
+      docker:
+        dockerfile: apps/nestjs-services/agent-service/Dockerfile
+        target: development
     - image: polydom/frontend
       context: .
       docker:
@@ -152,3 +157,8 @@ portForward:
     namespace: polydom-dev
     port: 3000
     localPort: 3004
+  - resourceType: service
+    resourceName: agent-service
+    namespace: polydom-dev
+    port: 3010
+    localPort: 3050

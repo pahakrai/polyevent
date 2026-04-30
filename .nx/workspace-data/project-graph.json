@@ -246,6 +246,168 @@
         "implicitDependencies": []
       }
     },
+    "agent-service": {
+      "name": "agent-service",
+      "type": "lib",
+      "data": {
+        "root": "apps/nestjs-services/agent-service",
+        "sourceRoot": "apps/nestjs-services/agent-service",
+        "name": "agent-service",
+        "tags": [
+          "npm:private"
+        ],
+        "metadata": {
+          "targetGroups": {
+            "NPM Scripts": [
+              "start",
+              "start:dev",
+              "build",
+              "test",
+              "test:watch",
+              "test:cov",
+              "db:generate",
+              "db:migrate",
+              "db:push",
+              "db:seed"
+            ]
+          }
+        },
+        "targets": {
+          "start": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "start"
+            },
+            "metadata": {
+              "scriptContent": "node dist/main",
+              "runCommand": "npm run start"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "start:dev": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "start:dev"
+            },
+            "metadata": {
+              "scriptContent": "nest start --watch",
+              "runCommand": "npm run start:dev"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "build": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "build"
+            },
+            "metadata": {
+              "scriptContent": "nest build",
+              "runCommand": "npm run build"
+            },
+            "configurations": {},
+            "parallelism": true,
+            "dependsOn": [
+              "^build"
+            ],
+            "inputs": [
+              "production",
+              "^production"
+            ]
+          },
+          "test": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "test"
+            },
+            "metadata": {
+              "scriptContent": "jest",
+              "runCommand": "npm run test"
+            },
+            "configurations": {},
+            "parallelism": true,
+            "inputs": [
+              "default",
+              "^production"
+            ]
+          },
+          "test:watch": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "test:watch"
+            },
+            "metadata": {
+              "scriptContent": "jest --watch",
+              "runCommand": "npm run test:watch"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "test:cov": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "test:cov"
+            },
+            "metadata": {
+              "scriptContent": "jest --coverage",
+              "runCommand": "npm run test:cov"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "db:generate": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "db:generate"
+            },
+            "metadata": {
+              "scriptContent": "drizzle-kit generate --config src/database/drizzle.config.ts",
+              "runCommand": "npm run db:generate"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "db:migrate": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "db:migrate"
+            },
+            "metadata": {
+              "scriptContent": "drizzle-kit migrate --config=src/database/drizzle.config.ts",
+              "runCommand": "npm run db:migrate"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "db:push": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "db:push"
+            },
+            "metadata": {
+              "scriptContent": "drizzle-kit push --config=src/database/drizzle.config.ts",
+              "runCommand": "npm run db:push"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "db:seed": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "db:seed"
+            },
+            "metadata": {
+              "scriptContent": "tsx src/database/seed.ts",
+              "runCommand": "npm run db:seed"
+            },
+            "configurations": {},
+            "parallelism": true
+          }
+        },
+        "implicitDependencies": []
+      }
+    },
     "event-service": {
       "name": "event-service",
       "type": "app",
@@ -15442,6 +15604,108 @@
       {
         "source": "vendor-service",
         "target": "npm:webpack@5.97.1",
+        "type": "static"
+      }
+    ],
+    "agent-service": [
+      {
+        "source": "agent-service",
+        "target": "npm:@nestjs/schematics",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:@nestjs/testing",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:@types/node",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:typescript",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:jest",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:@types/jest",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:ts-jest",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:drizzle-kit",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:tsx",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:@nestjs/common",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:@nestjs/config",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:@nestjs/core",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:@nestjs/platform-express",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:class-validator",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:class-transformer",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:rxjs",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:drizzle-orm",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:pg",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:dotenv",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:uuid",
         "type": "static"
       }
     ],

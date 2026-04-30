@@ -10,6 +10,7 @@
     "vendor-service": "apps/nestjs-services/vendor-service",
     "event-service": "apps/nestjs-services/event-service",
     "booking-service": "apps/nestjs-services/booking-service",
+    "agent-service": "apps/nestjs-services/agent-service",
     "shared-types": "libs/shared-types",
     "kafka-client": "libs/kafka-client",
     "database-client": "libs/database-client",

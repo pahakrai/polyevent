@@ -25,6 +25,7 @@ data:
     CREATE DATABASE user_db;
     CREATE DATABASE vendor_db;
     CREATE DATABASE event_db;
+    CREATE DATABASE agent_db;
 ---
 apiVersion: apps/v1
 kind: Deployment

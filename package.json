@@ -76,7 +76,11 @@
     "db:push:neon:user": "cd apps/nestjs-services/user-service && cross-env USE_NEON=true npm run db:push",
     "db:push:neon:vendor": "cd apps/nestjs-services/vendor-service && cross-env USE_NEON=true npm run db:push",
     "db:push:neon:event": "cd apps/nestjs-services/event-service && cross-env USE_NEON=true npm run db:push",
-    "db:push:neon:all": "npm run db:push:neon:auth && npm run db:push:neon:user && npm run db:push:neon:vendor && npm run db:push:neon:event"
+    "db:push:neon:all": "npm run db:push:neon:auth && npm run db:push:neon:user && npm run db:push:neon:vendor && npm run db:push:neon:event",
+    "db:generate:agent": "cd apps/nestjs-services/agent-service && npm run db:generate",
+    "db:migrate:agent": "cd apps/nestjs-services/agent-service && npm run db:migrate",
+    "db:seed:agent": "cd apps/nestjs-services/agent-service && npm run db:seed",
+    "db:push:agent": "cd apps/nestjs-services/agent-service && npm run db:push"
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.9.0",

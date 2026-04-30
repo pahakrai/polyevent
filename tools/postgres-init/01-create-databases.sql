@@ -8,6 +8,7 @@ CREATE DATABASE booking_db;
 CREATE DATABASE notification_db;
 CREATE DATABASE analytics_db;
 CREATE DATABASE admin_db;
+CREATE DATABASE agent_db;
 
 -- Grant privileges to the eventbooking user
 GRANT ALL PRIVILEGES ON DATABASE gateway_db TO eventbooking;
@@ -19,3 +20,4 @@ GRANT ALL PRIVILEGES ON DATABASE booking_db TO eventbooking;
 GRANT ALL PRIVILEGES ON DATABASE notification_db TO eventbooking;
 GRANT ALL PRIVILEGES ON DATABASE analytics_db TO eventbooking;
 GRANT ALL PRIVILEGES ON DATABASE admin_db TO eventbooking;
+GRANT ALL PRIVILEGES ON DATABASE agent_db TO eventbooking;
