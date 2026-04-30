@@ -1,7 +1,13 @@
 # Production overlay — apply with:
 #   kubectl apply -k kubernetes/overlays/production
 #
-# Override image registries for your cloud:
+# Before deploying, configure:
+#   1. Image registry URL and tags (or set via CI/CD with kustomize edit)
+#   2. Secrets via SealedSecrets or External Secrets Operator
+#   3. Ingress hostnames and TLS certificates
+#   4. Resource limits based on expected load
+#
+# Example registry configurations:
 #   DigitalOcean:  registry.digitalocean.com/<project>/
 #   AWS ECR:       <account>.dkr.ecr.<region>.amazonaws.com/
 #   GCP GCR:       gcr.io/<project>/
@@ -13,8 +19,6 @@ namespace: production
 resources:
   - ../../base
 
-# Image registry — replace with your cloud registry before deploying.
-# The base images use generic names so they build/push to any registry.
 images:
   - name: polydom/api-gateway
     newTag: latest
@@ -29,9 +33,8 @@ images:
   - name: polydom/frontend
     newTag: latest
 
-# Production replica counts and resource tuning
 patches:
-  # API Gateway — scale up
+  # API Gateway — 3 replicas
   - patch: |-
       apiVersion: apps/v1
       kind: Deployment
@@ -102,10 +105,3 @@ patches:
     target:
       kind: Deployment
       name: frontend
-
-# For production secrets, use SealedSecrets (or External Secrets Operator).
-# Generate with:  kubeseal --format=yaml < secret.yaml > sealed-secret.yaml
-# Then add sealed secrets as additional resources:
-#   - secrets/sealed-database-secrets.yaml
-#   - secrets/sealed-jwt-secrets.yaml
-#   - secrets/sealed-redis-secrets.yaml

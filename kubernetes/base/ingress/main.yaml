@@ -1,12 +1,21 @@
+# Production / staging ingress with TLS and host-based routing.
+# All backend services are reached through the API Gateway.
+# Requires: nginx-ingress + cert-manager installed in the cluster.
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: main-ingress
-  namespace: production
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "Authorization, Content-Type"
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   tls:
   - hosts:
@@ -14,9 +23,17 @@ spec:
     - app.eventbooking.com
     secretName: eventbooking-tls
   rules:
+  # API Gateway — all backend microservices
   - host: api.eventbooking.com
     http:
       paths:
+      - path: /api(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: api-gateway
+            port:
+              number: 80
       - path: /
         pathType: Prefix
         backend:
@@ -24,6 +41,7 @@ spec:
             name: api-gateway
             port:
               number: 80
+  # Frontend
   - host: app.eventbooking.com
     http:
       paths:

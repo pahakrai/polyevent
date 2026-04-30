@@ -1,5 +1,7 @@
 # Staging overlay — apply with:
 #   kubectl apply -k kubernetes/overlays/staging
+#
+# Mirrors production but with fewer replicas and lighter resources.
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
@@ -22,9 +24,8 @@ images:
   - name: polydom/frontend
     newTag: latest
 
-# Staging runs fewer replicas with lower resource limits
 patches:
-  # API Gateway — 1 replica for staging
+  # All services — 1 replica each
   - patch: |-
       apiVersion: apps/v1
       kind: Deployment
@@ -91,7 +92,7 @@ patches:
       kind: Deployment
       name: frontend
 
-# Staging resource tuning — half production resources
+  # Staging resource tuning — lighter than production
   - patch: |-
       apiVersion: apps/v1
       kind: Deployment

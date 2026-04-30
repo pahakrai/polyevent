@@ -3,5 +3,4 @@ kind: Namespace
 metadata:
   name: production
   labels:
-    name: production
-    environment: production
+    app: polydom

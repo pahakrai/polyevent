@@ -1,0 +1,5 @@
+region             = "us-east-1"
+db_username        = "polydom_staging"
+db_password        = "<generate-random-password>"
+opensearch_user    = "polydom_staging"
+opensearch_password = "<generate-random-password>"

@@ -1,5 +1,5 @@
 # ============================================================
-# Skaffold configuration — polydom monorepo
+# Skaffold configuration — polydom monorepo (development only)
 #
 # NX-aware build pipeline:
 #   Dockerfiles use `nx build <project>` which resolves the full
@@ -8,18 +8,17 @@
 #
 # Development:
 #   Frontend (Next.js): file sync → hot reload on save, no rebuild.
-#   Backend (NestJS):  no sync, no watch. Restart manually via VS Code
-#     task or `kubectl rollout restart deployment/<name>` on code changes.
-#
-# Profiles:
-#   default   — local dev: all services + frontend, no push
-#   production — CI: gitCommit tags, push to registry
-#   staging   — CI: gitCommit tags, push to registry
+#   Backend (NestJS):  no sync, no watch. Restart manually via
+#     `kubectl rollout restart deployment/<name>` on code changes.
 #
 # Usage:
-#   skaffold dev --port-forward            # Dev mode: frontend HR, backend manual restart
-#   skaffold run --port-forward            # One-shot local deploy
-#   skaffold build --profile=production    # CI: build + tag + push
+#   skaffold dev --port-forward    Dev mode with hot reload + port-forward
+#   skaffold run --port-forward    One-shot local deploy
+#   skaffold build                 Build images only
+#
+# For production / staging, use Kustomize directly:
+#   kubectl apply -k kubernetes/overlays/production
+#   kubectl apply -k kubernetes/overlays/staging
 # ============================================================
 apiVersion: skaffold/v4beta5
 kind: Config
@@ -64,6 +63,17 @@ build:
         manual:
           - src: 'apps/frontend/**/*.{js,jsx,ts,tsx,css,scss}'
             dest: /app/apps/frontend/
+          - src: 'libs/**/src/**/*.{ts,tsx}'
+            dest: /app/libs/
+    - image: polydom/admin-frontend
+      context: .
+      docker:
+        dockerfile: apps/admin-frontend/Dockerfile
+        target: development
+      sync:
+        manual:
+          - src: 'apps/admin-frontend/**/*.{js,jsx,ts,tsx,css,scss}'
+            dest: /app/apps/admin-frontend/
           - src: 'libs/**/src/**/*.{ts,tsx}'
             dest: /app/libs/
   local:
@@ -137,27 +147,8 @@ portForward:
     namespace: polydom-dev
     port: 3000
     localPort: 3002
-
-# ---- Profiles ----
-profiles:
-  # Production: all services, git SHA tags, push to registry
-  - name: production
-    build:
-      tagPolicy:
-        gitCommit:
-          variant: Tags
-          prefix: ""
-          ignoreChanges: false
-      local:
-        push: true
-
-  # Staging: same as production (different K8s overlay applied separately)
-  - name: staging
-    build:
-      tagPolicy:
-        gitCommit:
-          variant: Tags
-          prefix: ""
-          ignoreChanges: false
-      local:
-        push: true
+  - resourceType: service
+    resourceName: admin-frontend
+    namespace: polydom-dev
+    port: 3000
+    localPort: 3004

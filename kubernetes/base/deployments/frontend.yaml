@@ -52,7 +52,7 @@ spec:
               name: app-config
               key: NODE_ENV
         - name: NEXT_PUBLIC_API_URL
-          value: "http://api-gateway.production.svc.cluster.local"
+          value: "/api"
         resources:
           requests:
             memory: "256Mi"

@@ -5,21 +5,18 @@ import {
   json,
   integer,
   boolean,
+  real,
   pgEnum,
-  uniqueIndex
+  uniqueIndex,
 } from 'drizzle-orm/pg-core';
 
-// Enums
+// Top-level category enum
 export const eventCategoryEnum = pgEnum('event_category', [
-  'CONCERT',
-  'WORKSHOP',
-  'JAM_SESSION',
-  'OPEN_MIC',
-  'FESTIVAL',
-  'PRIVATE_PARTY',
-  'CORPORATE_EVENT',
-  'CLASS',
-  'OTHER'
+  'MUSIC',
+  'ART',
+  'SPORTS',
+  'ACTIVITIES',
+  'OTHER',
 ]);
 
 export const eventStatusEnum = pgEnum('event_status', [
@@ -27,7 +24,14 @@ export const eventStatusEnum = pgEnum('event_status', [
   'PUBLISHED',
   'CANCELLED',
   'COMPLETED',
-  'POSTPONED'
+  'POSTPONED',
+]);
+
+export const pricingModelEnum = pgEnum('event_pricing_model', [
+  'FREE',
+  'PER_HOUR',
+  'CONTRACT',
+  'MIXED',
 ]);
 
 // Event table
@@ -43,6 +47,7 @@ export const events = pgTable('events', {
   endTime: timestamp('end_time').notNull(),
   location: json('location').notNull(),
   price: json('price').notNull(),
+  pricingModel: pricingModelEnum('pricing_model').notNull().default('FREE'),
   maxAttendees: integer('max_attendees'),
   currentBookings: integer('current_bookings').notNull().default(0),
   status: eventStatusEnum('status').notNull().default('DRAFT'),
@@ -51,13 +56,11 @@ export const events = pgTable('events', {
   ageRestriction: integer('age_restriction'),
   isRecurring: boolean('is_recurring').notNull().default(false),
   recurringRule: text('recurring_rule'),
+  timeSlotId: text('time_slot_id'),
+  groupId: text('group_id'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().$onUpdate(() => new Date()),
 });
-
-// Indexes
-export const eventsVendorIdIdx = uniqueIndex('events_vendor_id_idx').on(events.vendorId);
-export const eventsVenueIdIdx = uniqueIndex('events_venue_id_idx').on(events.venueId);
 
 // Export schema
 export const schema = {

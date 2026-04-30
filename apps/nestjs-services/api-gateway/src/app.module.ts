@@ -6,6 +6,9 @@ import { TrackingController } from './tracking/tracking.controller';
 import { TrackingService } from './tracking/tracking.service';
 import { AnalyticsInterceptor } from './analytics/analytics.interceptor';
 import { AuthProxyController } from './proxy/auth-proxy.controller';
+import { VendorProxyController } from './proxy/vendor-proxy.controller';
+import { UserProxyController } from './proxy/user-proxy.controller';
+import { EventProxyController } from './proxy/event-proxy.controller';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpModule } from '@nestjs/axios';
 
@@ -17,7 +20,7 @@ const imports: any[] = [
   HttpModule,
 ];
 
-const controllers: any[] = [HealthController, AuthProxyController];
+const controllers: any[] = [HealthController, AuthProxyController, VendorProxyController, UserProxyController, EventProxyController];
 
 const providers: any[] = [];
 

@@ -3,6 +3,7 @@
   "version": 2,
   "projects": {
     "frontend": "apps/frontend",
+    "admin-frontend": "apps/admin-frontend",
     "api-gateway": "apps/nestjs-services/api-gateway",
     "auth-service": "apps/nestjs-services/auth-service",
     "user-service": "apps/nestjs-services/user-service",

@@ -134,7 +134,8 @@
       "Bash(skaffold build *)",
       "Bash(netstat -ano)",
       "Bash(tasklist /fi \"imagename eq skaffold.exe\")",
-      "PowerShell(Stop-Process *)"
+      "PowerShell(Stop-Process *)",
+      "Bash(MSYS_NO_PATHCONV=1 docker run *)"
     ]
   },
   "enableAllProjectMcpServers": true,

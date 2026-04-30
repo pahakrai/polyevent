@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { QueryProvider } from "@/lib/query-client";
 import { DefaultLayout } from "@/components/layouts/DefaultLayout";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Polydom — Find Live Music Events",
+  title: "Polydom — Connect Through Shared Interests",
   description:
-    "Discover concerts, jam sessions, workshops, and more near you",
+    "Discover art, music, sports, and activities near you. Connect with groups and vendors.",
 };
 
 export default function RootLayout({
@@ -23,7 +24,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <DefaultLayout>{children}</DefaultLayout>
+          <QueryProvider>
+            <DefaultLayout>{children}</DefaultLayout>
+          </QueryProvider>
         </ThemeProvider>
       </body>
     </html>

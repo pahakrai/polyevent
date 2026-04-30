@@ -29,6 +29,10 @@ export interface SocialMedia {
 
 export type BusinessType = 'venue' | 'band' | 'instructor' | 'event_organizer' | 'music_school';
 
+export type VendorCategory = 'music' | 'art' | 'sports' | 'activities' | 'other';
+
+export type VendorPricingModel = 'free' | 'per_hour' | 'contract' | 'mixed';
+
 export type VerificationStatus = 'pending' | 'verified' | 'rejected' | 'suspended';
 
 export interface VendorDocument {

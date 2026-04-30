@@ -10,9 +10,12 @@ import { useState, useRef, useEffect } from "react";
 
 const NAV_LINKS = [
   { href: "/search", label: "Search" },
-  { href: "/category/CONCERT", label: "Concerts" },
-  { href: "/category/WORKSHOP", label: "Workshops" },
-  { href: "/category/JAM_SESSION", label: "Jam Sessions" },
+  { href: "/category/music", label: "Music" },
+  { href: "/category/art", label: "Art" },
+  { href: "/category/sports", label: "Sports" },
+  { href: "/category/activities", label: "Activities" },
+  { href: "/groups", label: "Groups" },
+  { href: "/vendors", label: "Vendors" },
 ];
 
 function UserMenu() {
@@ -133,11 +136,11 @@ export function DefaultLayout({ children }: { children: React.ReactNode }) {
       <footer className="border-t border-border bg-card">
         <div className="mx-auto flex max-w-6xl flex-col items-center gap-2 px-4 py-8 text-center sm:flex-row sm:justify-between">
           <p className="text-sm text-muted-foreground">
-            Polydom — Connecting musicians with live events
+            Polydom — Connecting people through shared interests
           </p>
           <div className="flex gap-4 text-sm text-muted-foreground">
             <Link href="/search" className="hover:text-foreground transition-colors">
-              Browse Events
+              Discover Activities
             </Link>
             <span>&middot;</span>
             <span>&copy; {new Date().getFullYear()} Polydom</span>

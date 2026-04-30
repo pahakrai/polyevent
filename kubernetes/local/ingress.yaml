@@ -1,20 +1,33 @@
-# Local ingress — no TLS, plain HTTP
+# Local dev ingress — plain HTTP, no TLS.
+# Assumes an nginx ingress controller is installed in the cluster.
+# When using skaffold dev --port-forward, the ingress is bypassed
+# (port-forward goes directly to services). This manifest serves
+# as the routing spec when running with a local ingress controller.
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: polydom-ingress
   namespace: polydom-dev
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "Authorization, Content-Type"
 spec:
+  ingressClassName: nginx
   rules:
   - http:
       paths:
-      - path: /api
-        pathType: Prefix
+      # API Gateway — all backend services exposed under /api
+      - path: /api(/|$)(.*)
+        pathType: ImplementationSpecific
         backend:
           service:
             name: api-gateway
             port:
               number: 3000
+      # Frontend — everything else
       - path: /
         pathType: Prefix
         backend:
