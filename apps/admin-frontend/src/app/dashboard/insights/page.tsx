@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { api } from '@/lib/api';
 import {
   startInvestigation,
@@ -30,6 +31,8 @@ export default function InsightsPage() {
   const [goal, setGoal] = useState('');
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const searchParams = useSearchParams();
+  const autoGoalRef = useRef<string | null>(null);
 
   // Load vendor profile on mount
   useEffect(() => {
@@ -47,6 +50,34 @@ export default function InsightsPage() {
       }
     })();
   }, []);
+
+  // Read goal from URL query param for one-click reports from dashboard
+  useEffect(() => {
+    const goalParam = searchParams.get('goal');
+    if (goalParam && !autoGoalRef.current) {
+      autoGoalRef.current = goalParam;
+      setGoal(goalParam);
+    }
+  }, [searchParams]);
+
+  // Auto-start investigation when goal param is present and vendor is ready
+  useEffect(() => {
+    if (autoGoalRef.current && state.phase === 'ready' && !loading) {
+      const goalText = autoGoalRef.current;
+      autoGoalRef.current = null;
+      setLoading(true);
+      (async () => {
+        try {
+          const session = await startInvestigation(goalText, (state as any).vendorId);
+          setState({ phase: 'investigating', session, redirectInput: '' });
+        } catch (err: any) {
+          setState({ phase: 'error', message: err?.message || 'Failed to start investigation.' });
+        } finally {
+          setLoading(false);
+        }
+      })();
+    }
+  }, [state.phase, loading]);
 
   // Auto-scroll to latest step
   useEffect(() => {

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { KafkaModule } from '@polydom/kafka-client';
+import { KafkaModule, BaseProducer } from '@polydom/kafka-client';
 import { HealthController } from './health.controller';
 import { TrackingController } from './tracking/tracking.controller';
 import { TrackingService } from './tracking/tracking.service';
@@ -20,9 +20,9 @@ const imports: any[] = [
   HttpModule,
 ];
 
-const controllers: any[] = [HealthController, AuthProxyController, VendorProxyController, UserProxyController, EventProxyController];
+const controllers: any[] = [HealthController, AuthProxyController, VendorProxyController, UserProxyController, EventProxyController, TrackingController];
 
-const providers: any[] = [];
+const providers: any[] = [TrackingService];
 
 const hasKafka = !!process.env.KAFKA_BROKERS;
 
@@ -34,11 +34,23 @@ if (hasKafka) {
       producer: true,
     }),
   );
-  controllers.push(TrackingController);
-  providers.push(TrackingService);
   providers.push({
     provide: APP_INTERCEPTOR,
     useClass: AnalyticsInterceptor,
+  });
+} else {
+  providers.push({
+    provide: BaseProducer,
+    useFactory: () => ({
+      send: async () => [],
+      sendBatch: async () => {},
+      sendToDeadLetter: async () => {},
+      isConnected: () => false,
+      onModuleInit: async () => {},
+      onModuleDestroy: async () => {},
+      connect: async () => {},
+      disconnect: async () => {},
+    }),
   });
 }
 

@@ -142,7 +142,15 @@
       "mcp__neon__search",
       "Bash(cat tailwind.config.ts)",
       "Bash(cat tailwind.config.js)",
-      "Skill(claude-api)"
+      "Skill(claude-api)",
+      "Bash(AUTH_DATABASE_URL=\"postgresql://postgres:postgres@localhost:5433/auth_db\" npx tsx *)",
+      "Bash(AUTH_DATABASE_URL=\"postgresql://postgres:postgres@localhost:5433/auth_db\" npx drizzle-kit push --config src/database/drizzle.config.ts 2>&1 <<< \"y\")",
+      "Bash(AUTH_DATABASE_URL=\"postgresql://postgres:postgres@localhost:5433/auth_db\" npx drizzle-kit push --config src/database/drizzle.config.ts)",
+      "Bash(AUTH_DATABASE_URL=\"postgresql://postgres:postgres@localhost:5433/auth_db\" yes)",
+      "Bash(AUTH_DATABASE_URL=\"postgresql://postgres:postgres@localhost:5433/auth_db\" npx drizzle-kit generate --config src/database/drizzle.config.ts)",
+      "Bash(psql *)",
+      "Bash(grep -v ':latest$')",
+      "Bash(xargs docker *)"
     ]
   },
   "enableAllProjectMcpServers": true,

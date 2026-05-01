@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAdminAuthStore } from '@/stores/admin-auth-store';
 import { useOnboardingStore } from '@/stores/onboarding-store';
@@ -15,10 +15,20 @@ export default function OnboardingLayout({ children }: { children: React.ReactNo
   const router = useRouter();
   const isAuthenticated = useAdminAuthStore((s) => s.isAuthenticated);
   const step = useOnboardingStore((s) => s.step);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (!isAuthenticated) router.replace('/login');
-  }, [isAuthenticated, router]);
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted && !localStorage.getItem('authToken')) {
+      router.replace('/login');
+    }
+  }, [mounted, router]);
+
+  if (!mounted) return null;
+  if (!isAuthenticated) return null;
 
   return (
     <div className="min-h-screen bg-muted/20">

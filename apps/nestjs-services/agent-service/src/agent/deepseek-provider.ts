@@ -59,7 +59,7 @@ export class DeepSeekProvider implements LlmProvider {
     });
 
     const response = await this.client.chat.completions.create({
-      model: 'deepseek-chat',
+      model: 'deepseek-flash',
       messages: typedMessages,
       tools: openaiTools,
       temperature: 0.3,

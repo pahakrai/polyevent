@@ -320,7 +320,7 @@ spec:
         - name: NEXT_PUBLIC_API_URL
           value: http://localhost:3000
         - name: NEXT_PUBLIC_AGENT_URL
-          value: http://agent-service:3010
+          value: http://localhost:3050
         resources:
           requests:
             memory: "128Mi"

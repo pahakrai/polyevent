@@ -92,6 +92,7 @@ export default function DashboardPage() {
             <a href="/dashboard/venues" className="block rounded-md border p-3 text-sm hover:bg-muted">Manage Venues</a>
             <a href="/dashboard/events" className="block rounded-md border p-3 text-sm hover:bg-muted">View Events</a>
             <a href="/dashboard/bookings" className="block rounded-md border p-3 text-sm hover:bg-muted">Recent Bookings</a>
+            <a href="/dashboard/insights" className="block rounded-md border p-3 text-sm hover:bg-muted font-medium text-primary">AI Business Insights</a>
           </div>
         </div>
 
@@ -115,6 +116,59 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
+
+      {vendor && (
+        <div className="mt-8">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-lg font-semibold">AI Business Reports</h3>
+            <span className="text-xs text-muted-foreground">Powered by agent analysis</span>
+          </div>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <a
+              href={`/dashboard/insights?goal=${encodeURIComponent('Analyze my revenue trends over the last 6 months')}`}
+              className="rounded-lg border bg-card p-4 hover:border-primary/50 hover:shadow-sm transition-colors group"
+            >
+              <p className="text-sm font-medium group-hover:text-primary">Revenue Trends</p>
+              <p className="mt-1 text-xs text-muted-foreground">Monthly revenue breakdown by category</p>
+            </a>
+            <a
+              href={`/dashboard/insights?goal=${encodeURIComponent('How are my monthly bookings trending and what patterns do you see?')}`}
+              className="rounded-lg border bg-card p-4 hover:border-primary/50 hover:shadow-sm transition-colors group"
+            >
+              <p className="text-sm font-medium group-hover:text-primary">Booking Analysis</p>
+              <p className="mt-1 text-xs text-muted-foreground">Trends, peaks, and category breakdown</p>
+            </a>
+            <a
+              href={`/dashboard/insights?goal=${encodeURIComponent('Compare my event performance against market averages')}`}
+              className="rounded-lg border bg-card p-4 hover:border-primary/50 hover:shadow-sm transition-colors group"
+            >
+              <p className="text-sm font-medium group-hover:text-primary">Market Comparison</p>
+              <p className="mt-1 text-xs text-muted-foreground">Benchmark fill rates and pricing vs market</p>
+            </a>
+            <a
+              href={`/dashboard/insights?goal=${encodeURIComponent('Which of my venues has the lowest utilization and why?')}`}
+              className="rounded-lg border bg-card p-4 hover:border-primary/50 hover:shadow-sm transition-colors group"
+            >
+              <p className="text-sm font-medium group-hover:text-primary">Venue Utilization</p>
+              <p className="mt-1 text-xs text-muted-foreground">Time slot usage and underperforming venues</p>
+            </a>
+            <a
+              href={`/dashboard/insights?goal=${encodeURIComponent('Which events perform best and worst by fill rate?')}`}
+              className="rounded-lg border bg-card p-4 hover:border-primary/50 hover:shadow-sm transition-colors group"
+            >
+              <p className="text-sm font-medium group-hover:text-primary">Event Performance</p>
+              <p className="mt-1 text-xs text-muted-foreground">Fill rates, bookings, and pricing analysis</p>
+            </a>
+            <a
+              href="/dashboard/insights"
+              className="rounded-lg border border-dashed bg-muted/20 p-4 hover:border-primary/50 hover:shadow-sm transition-colors group flex flex-col items-center justify-center text-center"
+            >
+              <p className="text-sm font-medium text-muted-foreground group-hover:text-primary">Custom Report</p>
+              <p className="mt-1 text-xs text-muted-foreground">Ask any business question</p>
+            </a>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

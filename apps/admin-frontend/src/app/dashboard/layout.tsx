@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useAdminAuthStore } from '@/stores/admin-auth-store';
@@ -18,11 +18,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const router = useRouter();
   const pathname = usePathname();
   const { isAuthenticated, isVendor, user, logout } = useAdminAuthStore();
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (!isAuthenticated) router.replace('/login');
-  }, [isAuthenticated, router]);
+    setMounted(true);
+  }, []);
 
+  useEffect(() => {
+    if (mounted && !localStorage.getItem('authToken')) {
+      router.replace('/login');
+    }
+  }, [mounted, router]);
+
+  if (!mounted) return null;
   if (!isAuthenticated) return null;
 
   return (
@@ -59,7 +67,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </aside>
 
       <main className="flex-1 overflow-auto">
-        <div className="mx-auto max-w-6xl p-6">{children}</div>
+        <div className="mx-auto max-w-6xl p-6">
+          <Suspense fallback={<div className="h-64 animate-pulse rounded-lg bg-muted" />}>
+            {children}
+          </Suspense>
+        </div>
       </main>
     </div>
   );

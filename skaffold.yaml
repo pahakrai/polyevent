@@ -27,7 +27,8 @@ metadata:
 
 build:
   tagPolicy:
-    sha256: {}
+    envTemplate:
+      template: "latest"
   artifacts:
     - image: polydom/api-gateway
       context: .
