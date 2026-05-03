@@ -97,6 +97,70 @@ manifests:
 deploy:
   kubectl: {}
 
+profiles:
+  - name: production
+    build:
+      artifacts:
+        - image: polydom/api-gateway
+          docker:
+            target: production
+        - image: polydom/auth-service
+          docker:
+            target: production
+        - image: polydom/user-service
+          docker:
+            target: production
+        - image: polydom/vendor-service
+          docker:
+            target: production
+        - image: polydom/event-service
+          docker:
+            target: production
+        - image: polydom/agent-service
+          docker:
+            target: production
+        - image: polydom/frontend
+          docker:
+            target: runner
+        - image: polydom/admin-frontend
+          docker:
+            target: runner
+      local:
+        push: true
+      tagPolicy:
+        gitCommit: {}
+  - name: staging
+    build:
+      artifacts:
+        - image: polydom/api-gateway
+          docker:
+            target: production
+        - image: polydom/auth-service
+          docker:
+            target: production
+        - image: polydom/user-service
+          docker:
+            target: production
+        - image: polydom/vendor-service
+          docker:
+            target: production
+        - image: polydom/event-service
+          docker:
+            target: production
+        - image: polydom/agent-service
+          docker:
+            target: production
+        - image: polydom/frontend
+          docker:
+            target: runner
+        - image: polydom/admin-frontend
+          docker:
+            target: runner
+      local:
+        push: true
+      tagPolicy:
+        gitCommit: {}
+
 portForward:
   - resourceType: service
     resourceName: api-gateway

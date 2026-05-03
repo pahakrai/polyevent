@@ -64,6 +64,12 @@ spec:
               key: redis-url
         - name: AUTH_SERVICE_URL
           value: http://auth-service:3000
+        - name: USER_SERVICE_URL
+          value: http://user-service:3000
+        - name: VENDOR_SERVICE_URL
+          value: http://vendor-service:3000
+        - name: EVENT_SERVICE_URL
+          value: http://event-service:3000
         resources:
           requests:
             memory: "128Mi"
@@ -716,7 +722,7 @@ spec:
           periodSeconds: 20
         readinessProbe:
           httpGet:
-            path: /health
+            path: /health/ready
             port: 3010
           initialDelaySeconds: 45
           periodSeconds: 10

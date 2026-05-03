@@ -10,4 +10,14 @@ export class HealthController {
       timestamp: new Date().toISOString(),
     };
   }
+
+  @Get('ready')
+  ready() {
+    return {
+      status: 'ready',
+      service: 'agent-service',
+      timestamp: new Date().toISOString(),
+      checks: { agent: 'up' },
+    };
+  }
 }
