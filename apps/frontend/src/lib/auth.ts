@@ -8,7 +8,22 @@ interface LoginResponse {
     firstName: string;
     lastName: string;
     role: string;
+    permissions?: string[];
+    vendorId?: string;
   };
+}
+
+interface VendorFields {
+  businessName: string;
+  category: string;
+  contactEmail: string;
+  contactPhone: string;
+  address: Record<string, any>;
+  location: Record<string, any>;
+  description?: string;
+  subCategory?: string;
+  website?: string;
+  coverImage?: string;
 }
 
 interface RegisterDto {
@@ -17,6 +32,7 @@ interface RegisterDto {
   firstName: string;
   lastName: string;
   role?: string;
+  vendor?: VendorFields;
 }
 
 export async function loginUser(email: string, password: string): Promise<LoginResponse> {
@@ -25,13 +41,7 @@ export async function loginUser(email: string, password: string): Promise<LoginR
 }
 
 export async function registerUser(dto: RegisterDto): Promise<LoginResponse> {
-  const { data } = await api.post<LoginResponse>('/auth/register', {
-    email: dto.email,
-    password: dto.password,
-    firstName: dto.firstName,
-    lastName: dto.lastName,
-    role: dto.role || 'USER',
-  });
+  const { data } = await api.post<LoginResponse>('/auth/register', dto);
   return data;
 }
 

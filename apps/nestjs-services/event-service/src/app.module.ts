@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { KafkaModule } from '@polydom/kafka-client';
+import { NatsModule } from '@polydom/nats-client';
 import { EventModule } from './event/event.module';
 import { HealthController } from './health.controller';
 
@@ -17,6 +18,15 @@ if (process.env.KAFKA_BROKERS) {
     KafkaModule.register({
       clientId: 'event-service',
       brokers: process.env.KAFKA_BROKERS.split(','),
+      producer: true,
+    }),
+  );
+}
+
+if (process.env.NATS_SERVERS) {
+  imports.push(
+    NatsModule.register({
+      servers: process.env.NATS_SERVERS.split(','),
       producer: true,
     }),
   );

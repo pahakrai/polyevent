@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsInt, IsArray, IsNumber, Min, IsBoolean } from 'class-validator';
+import { IsString, IsOptional, IsInt, IsArray, IsNumber, Min, IsBoolean, IsIn } from 'class-validator';
 
 export class UpdateVenueDto {
   @IsString()
@@ -11,6 +11,7 @@ export class UpdateVenueDto {
 
   @IsString()
   @IsOptional()
+  @IsIn(['INDOOR', 'OUTDOOR', 'STUDIO', 'GALLERY', 'FIELD', 'COURT', 'OTHER'])
   type?: string;
 
   @IsInt()
@@ -36,6 +37,7 @@ export class UpdateVenueDto {
 
   @IsString()
   @IsOptional()
+  @IsIn(['FREE', 'PER_HOUR', 'CONTRACT', 'MIXED'])
   pricingModel?: string;
 
   @IsNumber()

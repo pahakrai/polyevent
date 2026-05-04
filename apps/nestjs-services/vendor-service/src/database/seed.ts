@@ -16,7 +16,7 @@ async function seed() {
     userId: 'vendor-user-id-123', // This should match a user ID from auth service
     businessName: 'LA Music Hall',
     description: 'Premier music venue in Los Angeles',
-    category: 'MUSIC_VENUE',
+    category: 'MUSIC',
     contactEmail: 'info@lamusichall.com',
     contactPhone: '+1-555-123-4567',
     website: 'https://lamusichall.com',
@@ -33,7 +33,7 @@ async function seed() {
     vendorId: vendor.id,
     name: 'Main Concert Hall',
     description: 'Spacious concert hall with excellent acoustics',
-    type: 'CONCERT_HALL',
+    type: 'INDOOR',
     capacity: 500,
     address: { street: '123 Music Ave', city: 'Los Angeles', state: 'CA', zip: '90001' },
     location: { type: 'Point', coordinates: [-118.2437, 34.0522] },

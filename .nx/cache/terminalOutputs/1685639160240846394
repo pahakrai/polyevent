@@ -1,0 +1,36 @@
+> nest build --webpack
+
+[1m[31mERROR[39m[22m in [1m./src/app.module.ts[39m[22m [1m[32m12:22-53[39m[22m
+[1mModule [1m[31mnot found[39m[22m[1m: [1m[31mError[39m[22m[1m: Can't resolve '@polydom/nats-client' in 'C:\Users\user\repo\polydom\apps\nestjs-services\vendor-service\src'[39m[22m
+ @ ./src/main.ts 5:21-44
+
+[1m[31mERROR[39m[22m in [1m./src/vendor/vendor.service.ts[39m[22m [1m[32m22:22-53[39m[22m
+[1mModule [1m[31mnot found[39m[22m[1m: [1m[31mError[39m[22m[1m: Can't resolve '@polydom/nats-client' in 'C:\Users\user\repo\polydom\apps\nestjs-services\vendor-service\src\vendor'[39m[22m
+ @ ./src/vendor/vendor.module.ts 14:25-52
+ @ ./src/app.module.ts 14:24-57
+ @ ./src/main.ts 5:21-44
+
+[1m[31mERROR[39m[22m in [1m./src/app.module.ts:3:28[39m[22m
+[90mTS2307: [39mCannot find module '@polydom/nats-client' or its corresponding type declarations.
+  [0m [90m 1 |[39m [36mimport[39m { [33mModule[39m } [36mfrom[39m [32m'@nestjs/common'[39m[33m;[39m
+   [90m 2 |[39m [36mimport[39m { [33mConfigModule[39m } [36mfrom[39m [32m'@nestjs/config'[39m[33m;[39m
+  [31m[1m>[22m[39m[90m 3 |[39m [36mimport[39m { [33mNatsModule[39m } [36mfrom[39m [32m'@polydom/nats-client'[39m[33m;[39m
+   [90m   |[39m                            [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 4 |[39m [36mimport[39m { [33mHealthController[39m } [36mfrom[39m [32m'./health.controller'[39m[33m;[39m
+   [90m 5 |[39m [36mimport[39m { [33mVendorModule[39m } [36mfrom[39m [32m'./vendor/vendor.module'[39m[33m;[39m
+   [90m 6 |[39m [36mimport[39m { [33mVenueModule[39m } [36mfrom[39m [32m'./venue/venue.module'[39m[33m;[39m[0m
+
+[1m[31mERROR[39m[22m in [1m./src/vendor/vendor.service.ts:5:30[39m[22m
+[90mTS2307: [39mCannot find module '@polydom/nats-client' or its corresponding type declarations.
+  [0m [90m 3 |[39m [36mimport[39m { db } [36mfrom[39m [32m'../database/client'[39m[33m;[39m
+   [90m 4 |[39m [36mimport[39m { vendors[33m,[39m [33mVendor[39m[33m,[39m [33mNewVendor[39m } [36mfrom[39m [32m'../database/schema'[39m[33m;[39m
+  [31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m { [33mNatsProducer[39m } [36mfrom[39m [32m'@polydom/nats-client'[39m[33m;[39m
+   [90m   |[39m                              [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 6 |[39m [36mimport[39m { [33mCreateVendorDto[39m[33m,[39m [33mUpdateVendorDto[39m } [36mfrom[39m [32m'./dto'[39m[33m;[39m
+   [90m 7 |[39m
+   [90m 8 |[39m [33m@[39m[33mInjectable[39m()[0m
+
+[1m[33m2 errors have detailed information that is not shown.
+Use 'stats.errorDetails: true' resp. '--stats-error-details' to show it.[39m[22m
+
+webpack 5.97.1 compiled with [1m[31m4 errors[39m[22m in 12141 ms

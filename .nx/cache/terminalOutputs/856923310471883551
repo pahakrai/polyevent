@@ -1,0 +1,35 @@
+> next build
+
+  [1m[38;2;173;127;168m▲ Next.js 14.2.35[39m[22m
+
+ [37m[1m [22m[39m Creating an optimized production build ...
+ [33m[1m⚠[22m[39m Found lockfile missing swc dependencies, patching...
+ [31m[1m⨯[22m[39m Failed to patch lockfile, please try uninstalling and reinstalling next in this workspace
+TypeError: Cannot read properties of undefined (reading 'os')
+    at fetchPkgInfo (C:\Users\user\repo\polydom\node_modules\[4mnext[24m\dist\lib\patch-incorrect-lockfile.js:73:25)
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)[39m
+    at async Promise.all (index 0)
+    at async patchIncorrectLockfile (C:\Users\user\repo\polydom\node_modules\[4mnext[24m\dist\lib\patch-incorrect-lockfile.js:162:26)
+ [33m[1m⚠[22m[39m Found lockfile missing swc dependencies, patching...
+ [33m[1m⚠[22m[39m Found lockfile missing swc dependencies, patching...
+ [31m[1m⨯[22m[39m Failed to patch lockfile, please try uninstalling and reinstalling next in this workspace
+TypeError: Cannot read properties of undefined (reading 'os')
+    at fetchPkgInfo (C:\Users\user\repo\polydom\node_modules\[4mnext[24m\dist\lib\patch-incorrect-lockfile.js:73:25)
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)[39m
+    at async Promise.all (index 0)
+    at async patchIncorrectLockfile (C:\Users\user\repo\polydom\node_modules\[4mnext[24m\dist\lib\patch-incorrect-lockfile.js:162:26)
+ [32m[1m✓[22m[39m Compiled successfully
+ [37m[1m [22m[39m Linting and checking validity of types ...
+[31mFailed to compile.
+[39m
+[36m./src/app/register/page.tsx[39m:[33m192[39m:[33m21[39m
+[31m[1mType error[22m[39m: JSX elements cannot have multiple attributes with the same name.
+
+[0m [90m 190 |[39m                   [33m<[39m[33mInput[39m id[33m=[39m[32m"contactEmail"[39m type[33m=[39m[32m"email"[39m placeholder[33m=[39m[32m"contact@business.com"[39m value[33m=[39m{contactEmail}[0m
+[0m [90m 191 |[39m                     onChange[33m=[39m{(e) [33m=>[39m setContactEmail(e[33m.[39mtarget[33m.[39mvalue)}[0m
+[0m[31m[1m>[22m[39m[90m 192 |[39m                     placeholder[33m=[39m{email} [33m/[39m[33m>[39m[0m
+[0m [90m     |[39m                     [31m[1m^[22m[39m[0m
+[0m [90m 193 |[39m                 [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m[0m
+[0m [90m 194 |[39m[0m
+[0m [90m 195 |[39m                 [33m<[39m[33mdiv[39m className[33m=[39m[32m"space-y-2"[39m[33m>[39m[0m
+Next.js build worker exited with code: 1 and signal: null

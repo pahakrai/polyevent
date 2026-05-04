@@ -4581,15 +4581,6 @@
         "hash": "sha512-pc9LpGNKhJ0dXQhZ5QMmYxtARwwmWLpeocFmVG5Z0DzWq5Uf0izcI8tLc+qOpqxO1PWqZ5A7J1blrUIKrIFc7Q=="
       }
     },
-    "npm:@next/swc-win32-x64-msvc": {
-      "type": "npm",
-      "name": "npm:@next/swc-win32-x64-msvc",
-      "data": {
-        "version": "14.2.33",
-        "packageName": "@next/swc-win32-x64-msvc",
-        "hash": "sha512-nOjfZMy8B94MdisuzZo9/57xuFVLHJaDj5e/xrduJp9CV2/HrfxTRH2fbyLe+K9QT41WBLUd4iXX3R7jBp0EUg=="
-      }
-    },
     "npm:@noble/hashes": {
       "type": "npm",
       "name": "npm:@noble/hashes",
@@ -11295,6 +11286,15 @@
         "hash": "sha512-PHI5f1O0EP5xJ9gQmFGMS6IZcrVvTjpXjz7Na41gTE7eE2hK11lg04CECCYEEjdc17EV4DO+fkGEtt7TpTaTiQ=="
       }
     },
+    "npm:nats": {
+      "type": "npm",
+      "name": "npm:nats",
+      "data": {
+        "version": "2.29.3",
+        "packageName": "nats",
+        "hash": "sha512-tOQCRCwC74DgBTk4pWZ9V45sk4d7peoE2njVprMRCBXrhJ5q5cYM7i6W+Uvw2qUrcfOSnuisrX7bEx3b3Wx4QA=="
+      }
+    },
     "npm:natural-compare": {
       "type": "npm",
       "name": "npm:natural-compare",
@@ -11349,6 +11349,15 @@
         "hash": "sha512-CXdUiJembsNjuToQvxayPZF9Vqht7hewsvy2sOWafLvi2awflj9mOC6bHIg50orX8IJvWKY9wYQ/zB2kogPslQ=="
       }
     },
+    "npm:@next/swc-win32-x64-msvc@14.2.33": {
+      "type": "npm",
+      "name": "npm:@next/swc-win32-x64-msvc@14.2.33",
+      "data": {
+        "version": "14.2.33",
+        "packageName": "@next/swc-win32-x64-msvc",
+        "hash": "sha512-nOjfZMy8B94MdisuzZo9/57xuFVLHJaDj5e/xrduJp9CV2/HrfxTRH2fbyLe+K9QT41WBLUd4iXX3R7jBp0EUg=="
+      }
+    },
     "npm:postcss@8.4.31": {
       "type": "npm",
       "name": "npm:postcss@8.4.31",
@@ -11365,6 +11374,15 @@
         "version": "8.5.12",
         "packageName": "postcss",
         "hash": "sha512-W62t/Se6rA0Az3DfCL0AqJwXuKwBeYg6nOaIgzP+xZ7N5BFCI7DYi1qs6ygUYT6rvfi6t9k65UMLJC+PHZpDAA=="
+      }
+    },
+    "npm:nkeys.js": {
+      "type": "npm",
+      "name": "npm:nkeys.js",
+      "data": {
+        "version": "1.1.0",
+        "packageName": "nkeys.js",
+        "hash": "sha512-tB/a0shZL5UZWSwsoeyqfTszONTt4k2YS0tuQioMOD180+MbombYVgzDUYHlx+gejYK6rgf08n/2Df99WY0Sxg=="
       }
     },
     "npm:no-case": {
@@ -13750,6 +13768,15 @@
         "version": "4.10.0",
         "packageName": "tsyringe",
         "hash": "sha512-axr3IdNuVIxnaK5XGEUFTu3YmAQ6lllgrvqfEoR16g/HGnYY/6We4oWENtAnzK6/LpJ2ur9PAb80RBt7/U4ugw=="
+      }
+    },
+    "npm:tweetnacl": {
+      "type": "npm",
+      "name": "npm:tweetnacl",
+      "data": {
+        "version": "1.0.3",
+        "packageName": "tweetnacl",
+        "hash": "sha512-6rt+RN7aOi1nGMyC4Xa5DdYiukl2UWCbcJft7YhxReBGQD7OAM8Pbxw6YMo4r2diNEA8FEmu32YOn9rhaiE5yw=="
       }
     },
     "npm:type": {
@@ -23792,6 +23819,11 @@
     {
       "source": "npm:@nestjs/microservices",
       "target": "npm:kafkajs",
+      "type": "static"
+    },
+    {
+      "source": "npm:@nestjs/microservices",
+      "target": "npm:nats",
       "type": "static"
     },
     {
@@ -34245,6 +34277,11 @@
       "type": "static"
     },
     {
+      "source": "npm:nats",
+      "target": "npm:nkeys.js",
+      "type": "static"
+    },
+    {
       "source": "npm:needle",
       "target": "npm:iconv-lite",
       "type": "static"
@@ -34351,7 +34388,7 @@
     },
     {
       "source": "npm:next",
-      "target": "npm:@next/swc-win32-x64-msvc",
+      "target": "npm:@next/swc-win32-x64-msvc@14.2.33",
       "type": "static"
     },
     {
@@ -34377,6 +34414,11 @@
     {
       "source": "npm:postcss@8.4.31",
       "target": "npm:source-map-js",
+      "type": "static"
+    },
+    {
+      "source": "npm:nkeys.js",
+      "target": "npm:tweetnacl",
       "type": "static"
     },
     {

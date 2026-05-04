@@ -1,4 +1,4 @@
-# Lightweight dev infrastructure — Redis only
+# Lightweight dev infrastructure — Redis + NATS
 # (PostgreSQL is in postgres.yaml, Kafka/ES/Mongo/Prometheus/Grafana removed for dev)
 ---
 apiVersion: v1
@@ -58,3 +58,53 @@ spec:
   ports:
   - port: 6379
     targetPort: 6379
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nats
+  namespace: polydom-dev
+  labels:
+    app: nats
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nats
+  template:
+    metadata:
+      labels:
+        app: nats
+    spec:
+      containers:
+      - name: nats
+        image: nats:2.10-alpine
+        args: ["-js", "-m", "8222"]
+        ports:
+        - containerPort: 4222
+          name: client
+        - containerPort: 8222
+          name: monitoring
+        resources:
+          requests:
+            memory: "32Mi"
+            cpu: "25m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nats
+  namespace: polydom-dev
+spec:
+  selector:
+    app: nats
+  ports:
+  - name: client
+    port: 4222
+    targetPort: 4222
+  - name: monitoring
+    port: 8222
+    targetPort: 8222

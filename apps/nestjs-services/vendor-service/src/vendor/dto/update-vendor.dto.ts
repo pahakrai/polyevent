@@ -1,4 +1,4 @@
-import { IsString, IsOptional, MaxLength } from 'class-validator';
+import { IsString, IsOptional, IsIn, MaxLength } from 'class-validator';
 
 export class UpdateVendorDto {
   @IsString()
@@ -12,6 +12,7 @@ export class UpdateVendorDto {
 
   @IsString()
   @IsOptional()
+  @IsIn(['MUSIC', 'ART', 'SPORTS', 'ACTIVITIES', 'OTHER'])
   category?: string;
 
   @IsString()

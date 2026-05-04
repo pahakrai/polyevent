@@ -13,6 +13,7 @@
     "agent-service": "apps/nestjs-services/agent-service",
     "shared-types": "libs/shared-types",
     "kafka-client": "libs/kafka-client",
+    "nats-client": "libs/nats-client",
     "database-client": "libs/database-client",
     "elasticsearch-client": "libs/elasticsearch-client",
     "utils": "libs/utils"

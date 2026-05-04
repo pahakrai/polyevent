@@ -61,6 +61,11 @@ spec:
             secretKeyRef:
               name: redis-secrets
               key: redis-url
+        - name: NATS_SERVERS
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: NATS_SERVERS
         resources:
           requests:
             memory: "256Mi"

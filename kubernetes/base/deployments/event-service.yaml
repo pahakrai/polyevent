@@ -66,6 +66,11 @@ spec:
             configMapKeyRef:
               name: app-config
               key: KAFKA_BROKERS
+        - name: NATS_SERVERS
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: NATS_SERVERS
         resources:
           requests:
             memory: "256Mi"

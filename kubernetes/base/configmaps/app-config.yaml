@@ -11,3 +11,4 @@ data:
   USER_SERVICE_URL: "http://user-service:3000"
   VENDOR_SERVICE_URL: "http://vendor-service:3000"
   EVENT_SERVICE_URL: "http://event-service:3000"
+  NATS_SERVERS: "nats-service:4222"

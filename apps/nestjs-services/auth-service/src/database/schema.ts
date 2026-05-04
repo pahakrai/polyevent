@@ -1,10 +1,12 @@
+import crypto from 'crypto';
 import {
   pgTable,
   text,
   timestamp,
   json,
   pgEnum,
-  uniqueIndex
+  uniqueIndex,
+  index,
 } from 'drizzle-orm/pg-core';
 
 // Enums
@@ -21,7 +23,7 @@ export const activityTypeEnum = pgEnum('activity_type', [
 
 // User table (for authentication)
 export const users = pgTable('users', {
-  id: text('id').primaryKey().$defaultFn(() => 'gen_random_uuid()'),
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
   email: text('email').notNull().unique(),
   password: text('password').notNull(),
   firstName: text('first_name').notNull(),
@@ -31,12 +33,12 @@ export const users = pgTable('users', {
   location: json('location'),
   preferences: json('preferences'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
-  updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdate(() => new Date()),
+  updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdateFn(() => new Date()),
 });
 
 // UserActivity table (for login/logout tracking)
 export const userActivities = pgTable('user_activities', {
-  id: text('id').primaryKey().$defaultFn(() => 'gen_random_uuid()'),
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
   userId: text('user_id').notNull().references(() => users.id),
   eventType: activityTypeEnum('event_type').notNull(),
   metadata: json('metadata').notNull(),
@@ -47,7 +49,7 @@ export const userActivities = pgTable('user_activities', {
 
 // Indexes
 export const usersEmailIdx = uniqueIndex('users_email_idx').on(users.email);
-export const userActivitiesUserIdIdx = uniqueIndex('user_activities_user_id_idx').on(userActivities.userId);
+export const userActivitiesUserIdIdx = index('user_activities_user_id_idx').on(userActivities.userId);
 
 // Export schema
 export const schema = {

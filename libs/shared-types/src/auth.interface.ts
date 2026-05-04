@@ -52,9 +52,18 @@ export interface AuthUser {
   email: string;
   role: string;
   permissions: string[];
+  vendorId?: string;
 }
 
 export interface Permission {
   resource: string;
   action: 'create' | 'read' | 'update' | 'delete' | 'manage';
+}
+
+export interface JwtPayload {
+  sub: string;
+  email: string;
+  role: string;
+  permissions: string[];
+  vendorId?: string;
 }

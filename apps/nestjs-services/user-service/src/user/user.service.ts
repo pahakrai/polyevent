@@ -1,12 +1,15 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, Optional } from '@nestjs/common';
 import { eq } from 'drizzle-orm';
 import { db } from '../database/client';
 import { users, User } from '../database/schema';
+import { NatsProducer } from '@polydom/nats-client';
 import { UpdateProfileDto } from './dto';
 
 @Injectable()
 export class UserService {
   private readonly logger = new Logger(UserService.name);
+
+  constructor(@Optional() private readonly natsProducer?: NatsProducer) {}
 
   async getProfile(userId: string): Promise<User> {
     const [user] = await db.select().from(users).where(eq(users.id, userId)).limit(1);
@@ -40,6 +43,19 @@ export class UserService {
       .returning();
 
     this.logger.log(`User profile updated: ${userId}`);
+
+    try {
+      await this.natsProducer?.publish('user.updated', {
+        id: updated.id,
+        email: updated.email,
+        firstName: updated.firstName,
+        lastName: updated.lastName,
+        timestamp: new Date().toISOString(),
+      });
+    } catch (error) {
+      this.logger.warn(`NATS publish user.updated failed: ${(error as Error).message}`);
+    }
+
     return updated;
   }
 }

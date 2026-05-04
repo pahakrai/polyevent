@@ -1,0 +1,13 @@
+> nest build --webpack
+
+[1m[31mERROR[39m[22m in [1m./src/auth/jwt.strategy.ts:6:30[39m[22m
+[90mTS2307: [39mCannot find module '@polydom/auth' or its corresponding type declarations.
+  [0m [90m 4 |[39m [36mimport[39m { [33mConfigService[39m } [36mfrom[39m [32m'@nestjs/config'[39m[33m;[39m
+   [90m 5 |[39m [36mimport[39m type { [33mJwtPayload[39m } [36mfrom[39m [32m'@polydom/shared-types'[39m[33m;[39m
+  [31m[1m>[22m[39m[90m 6 |[39m [36mimport[39m type { [33mJwtUser[39m } [36mfrom[39m [32m'@polydom/auth'[39m[33m;[39m
+   [90m   |[39m                              [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 7 |[39m
+   [90m 8 |[39m [33m@[39m[33mInjectable[39m()
+   [90m 9 |[39m [36mexport[39m [36mclass[39m [33mJwtStrategy[39m [36mextends[39m [33mPassportStrategy[39m([33mStrategy[39m) {[0m
+
+webpack 5.97.1 compiled with [1m[31m1 error[39m[22m in 15976 ms

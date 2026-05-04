@@ -87,6 +87,7 @@
     "dotenv": "^16.3.0",
     "drizzle-kit": "^0.21.0",
     "drizzle-orm": "^0.30.0",
+    "nats": "^2.29.3",
     "pg": "^8.11.0"
   },
   "devDependencies": {

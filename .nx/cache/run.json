@@ -1,18 +1,18 @@
 {
   "run": {
-    "command": "nx build frontend --skip-nx-cache",
-    "startTime": "2026-04-30T10:10:30.040Z",
-    "endTime": "2026-04-30T10:11:00.001Z",
+    "command": "nx build auth-service --skip-nx-cache",
+    "startTime": "2026-05-04T13:48:27.455Z",
+    "endTime": "2026-05-04T13:48:33.179Z",
     "inner": false
   },
   "tasks": [
     {
-      "taskId": "frontend:build",
+      "taskId": "auth-service:build",
       "target": "build",
-      "projectName": "frontend",
-      "hash": "7960730729891039300",
-      "startTime": "2026-04-30T10:10:30.046Z",
-      "endTime": "2026-04-30T10:11:00.000Z",
+      "projectName": "auth-service",
+      "hash": "381844640788140163",
+      "startTime": "2026-05-04T13:48:27.463Z",
+      "endTime": "2026-05-04T13:48:33.179Z",
       "params": "",
       "cacheStatus": "cache-miss",
       "status": 0

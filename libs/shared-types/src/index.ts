@@ -4,7 +4,11 @@ export type { UserActivity, ActivityType } from './user.interface';
 export type { Event, EventStatus, EventType, EventLocation, EventSchedule, RecurrencePattern, Pricing, EventSearchFilters } from './event.interface';
 export type { Vendor, VendorCategory, VendorPricingModel } from './vendor.interface';
 export type { Booking, BookingStatus } from './booking.interface';
-export type { LoginRequest, LoginResponse, RegisterRequest, AuthUser } from './auth.interface';
+export type { LoginRequest, LoginResponse, RegisterRequest, AuthUser, JwtPayload } from './auth.interface';
+export type { VendorRegistrationFields } from './permissions.interface';
+export type { SagaStep, SagaContext } from './saga.interface';
+export { ROLE_PERMISSIONS } from './permissions.interface';
+export { SagaStepStatus } from './saga.interface';
 
 // New domain interfaces
 export type { Venue, VenueType, VenuePricingModel, VenueAddress, VenueCoordinates } from './venue.interface';

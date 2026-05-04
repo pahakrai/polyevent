@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import {
   pgTable,
   text,
@@ -36,7 +37,7 @@ export const pricingModelEnum = pgEnum('event_pricing_model', [
 
 // Event table
 export const events = pgTable('events', {
-  id: text('id').primaryKey().$defaultFn(() => 'gen_random_uuid()'),
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
   vendorId: text('vendor_id').notNull(), // Reference to vendor service vendor ID
   venueId: text('venue_id'), // Reference to vendor service venue ID
   title: text('title').notNull(),
@@ -59,7 +60,7 @@ export const events = pgTable('events', {
   timeSlotId: text('time_slot_id'),
   groupId: text('group_id'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
-  updatedAt: timestamp('updated_at').notNull().$onUpdate(() => new Date()),
+  updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdateFn(() => new Date()),
 });
 
 // Export schema

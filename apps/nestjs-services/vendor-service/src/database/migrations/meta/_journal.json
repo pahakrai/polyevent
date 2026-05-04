@@ -1,12 +1,12 @@
 {
-  "version": "6",
-  "dialect": "postgresql",
+  "version": "5",
+  "dialect": "pg",
   "entries": [
     {
       "idx": 0,
       "version": "6",
-      "when": 1777033301289,
-      "tag": "0000_fuzzy_nico_minoru",
+      "when": 1777885916863,
+      "tag": "0000_skinny_talkback",
       "breakpoints": true
     }
   ]

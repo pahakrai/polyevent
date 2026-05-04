@@ -12,6 +12,7 @@ resources:
   - stateful/postgres.yaml
   - stateful/redis.yaml
   - stateful/kafka.yaml
+  - stateful/nats.yaml
   - stateful/elasticsearch.yaml
   - deployments/api-gateway.yaml
   - deployments/auth-service.yaml
@@ -24,6 +25,7 @@ resources:
   - network-policies/deny-all.yaml
   - network-policies/allow-api-gateway.yaml
   - network-policies/allow-backend.yaml
+  - network-policies/allow-nats.yaml
   - pod-disruption-budgets/api-gateway-pdb.yaml
   - pod-disruption-budgets/backend-pdb.yaml
   - ingress/main.yaml

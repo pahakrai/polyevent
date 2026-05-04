@@ -12,7 +12,7 @@ export const investigationSessions = pgTable('investigation_sessions', {
   steps: jsonb('steps').notNull().default([]),
   error: text('error'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
-  updatedAt: timestamp('updated_at').notNull().$onUpdate(() => new Date()),
+  updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdateFn(() => new Date()),
 });
 
 export const schema = {

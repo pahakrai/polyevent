@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsNotEmpty, MaxLength } from 'class-validator';
+import { IsString, IsOptional, IsNotEmpty, IsIn, MaxLength } from 'class-validator';
 
 export class CreateVendorDto {
   @IsString()
@@ -16,6 +16,7 @@ export class CreateVendorDto {
 
   @IsString()
   @IsNotEmpty()
+  @IsIn(['MUSIC', 'ART', 'SPORTS', 'ACTIVITIES', 'OTHER'])
   category: string;
 
   @IsString()
@@ -34,10 +35,10 @@ export class CreateVendorDto {
   @IsOptional()
   website?: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   address: Record<string, any>;
 
-  @IsOptional()
+  @IsNotEmpty()
   location: Record<string, any>;
 
   @IsString()

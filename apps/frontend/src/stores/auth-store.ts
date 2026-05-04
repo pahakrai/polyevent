@@ -7,6 +7,8 @@ export interface AuthUser {
   firstName: string;
   lastName: string;
   role: string;
+  permissions?: string[];
+  vendorId?: string;
 }
 
 interface AuthState {
@@ -25,10 +27,12 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
       login: (token, user) => {
         localStorage.setItem('authToken', token);
+        localStorage.setItem('userId', user.id);
         set({ token, user, isAuthenticated: true });
       },
       logout: () => {
         localStorage.removeItem('authToken');
+        localStorage.removeItem('userId');
         set({ token: null, user: null, isAuthenticated: false });
       },
     }),

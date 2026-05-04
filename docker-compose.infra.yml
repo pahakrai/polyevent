@@ -68,6 +68,19 @@ services:
       timeout: 10s
       retries: 3
 
+  # NATS message broker
+  nats:
+    image: nats:2.10-alpine
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+    command: ["-js", "-m", "8222"]
+    healthcheck:
+      test: ["CMD", "nats", "server", "check", "connection", "--server", "nats://localhost:4222"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   # Search
   elasticsearch:
     image: elasticsearch:8.11.0

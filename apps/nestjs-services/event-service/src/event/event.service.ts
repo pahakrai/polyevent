@@ -3,6 +3,7 @@ import { eq, and, sql, like, or, inArray } from 'drizzle-orm';
 import { db } from '../database/client';
 import { events, Event, NewEvent } from '../database/schema';
 import { BaseProducer } from '@polydom/kafka-client';
+import { NatsProducer } from '@polydom/nats-client';
 import {
   EVENT_LIFECYCLE_TOPIC,
   EventLifecycleType,
@@ -14,7 +15,10 @@ import { CreateEventDto, UpdateEventDto, EventSearchDto } from './dto';
 export class EventService {
   private readonly logger = new Logger(EventService.name);
 
-  constructor(@Optional() private readonly kafkaProducer?: BaseProducer) {}
+  constructor(
+    @Optional() private readonly kafkaProducer?: BaseProducer,
+    @Optional() private readonly natsProducer?: NatsProducer,
+  ) {}
 
   // ── CRUD ────────────────────────────────────────────────────────────
 
@@ -267,56 +271,68 @@ export class EventService {
     type: EventLifecycleType,
     changedFields?: string[],
   ): Promise<void> {
-    if (!this.kafkaProducer) return;
-    try {
-      const location = event.location as Record<string, any>;
-      const price = event.price as Record<string, any>;
+    const location = event.location as Record<string, any>;
+    const price = event.price as Record<string, any>;
 
-      const message: EventLifecycleMessage = {
-        eventId: event.id,
-        vendorId: event.vendorId,
-        type,
-        timestamp: new Date().toISOString(),
-        event: {
-          title: event.title,
-          description: event.description,
-          category: event.category,
-          subCategory: event.subCategory ?? undefined,
-          genres: event.tags || [],
-          tags: event.tags || [],
-          location: {
-            venueName: location?.venueName || location?.name || '',
-            address: location?.address || '',
-            city: location?.city || '',
-            country: location?.country || '',
-            latitude: location?.latitude || location?.lat || 0,
-            longitude: location?.longitude || location?.lon || location?.lng || 0,
-          },
-          schedule: {
-            startDate: event.startTime.toISOString(),
-            endDate: event.endTime.toISOString(),
-            timezone: 'UTC',
-            recurrence: event.recurringRule
-              ? { frequency: 'weekly' as const, interval: 1 }
-              : undefined,
-          },
-          pricing: {
-            minPrice: price?.minPrice || price?.price || 0,
-            maxPrice: price?.maxPrice || price?.price || 0,
-            currency: price?.currency || 'USD',
-          },
-          capacity: event.maxAttendees || 0,
-          ageRestriction: event.ageRestriction?.toString(),
-          images: event.images || [],
+    const message: EventLifecycleMessage = {
+      eventId: event.id,
+      vendorId: event.vendorId,
+      type,
+      timestamp: new Date().toISOString(),
+      event: {
+        title: event.title,
+        description: event.description,
+        category: event.category,
+        subCategory: event.subCategory ?? undefined,
+        genres: event.tags || [],
+        tags: event.tags || [],
+        location: {
+          venueName: location?.venueName || location?.name || '',
+          address: location?.address || '',
+          city: location?.city || '',
+          country: location?.country || '',
+          latitude: location?.latitude || location?.lat || 0,
+          longitude: location?.longitude || location?.lon || location?.lng || 0,
         },
-        changedFields,
-      };
+        schedule: {
+          startDate: event.startTime.toISOString(),
+          endDate: event.endTime.toISOString(),
+          timezone: 'UTC',
+          recurrence: event.recurringRule
+            ? { frequency: 'weekly' as const, interval: 1 }
+            : undefined,
+        },
+        pricing: {
+          minPrice: price?.minPrice || price?.price || 0,
+          maxPrice: price?.maxPrice || price?.price || 0,
+          currency: price?.currency || 'USD',
+        },
+        capacity: event.maxAttendees || 0,
+        ageRestriction: event.ageRestriction?.toString(),
+        images: event.images || [],
+      },
+      changedFields,
+    };
 
-      await this.kafkaProducer.send(EVENT_LIFECYCLE_TOPIC, message, event.id);
-      this.logger.debug(`Produced ${type} to ${EVENT_LIFECYCLE_TOPIC} for event ${event.id}`);
-    } catch (error) {
-      this.logger.error(`Failed to produce lifecycle event: ${(error as Error).message}`);
-      // Non-blocking: event CRUD succeeds even if Kafka is down
+    // Publish to Kafka
+    if (this.kafkaProducer) {
+      try {
+        await this.kafkaProducer.send(EVENT_LIFECYCLE_TOPIC, message, event.id);
+        this.logger.debug(`Produced ${type} to ${EVENT_LIFECYCLE_TOPIC} for event ${event.id}`);
+      } catch (error) {
+        this.logger.error(`Failed to produce lifecycle event to Kafka: ${(error as Error).message}`);
+      }
+    }
+
+    // Publish to NATS
+    if (this.natsProducer) {
+      try {
+        const natsSubject = `event.${type.replace('event_', '')}`;
+        await this.natsProducer.publish(natsSubject, message);
+        this.logger.debug(`Produced ${type} to NATS ${natsSubject} for event ${event.id}`);
+      } catch (error) {
+        this.logger.warn(`Failed to publish lifecycle event to NATS: ${(error as Error).message}`);
+      }
     }
   }
 }

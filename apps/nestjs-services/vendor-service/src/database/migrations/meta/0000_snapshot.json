@@ -1,9 +1,98 @@
 {
-  "id": "d40ede6a-87f8-4829-a6da-d70d8ca3a935",
+  "id": "7cb7dcbd-2bbf-4a67-96a8-d09f998ba8c3",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "6",
   "dialect": "postgresql",
   "tables": {
+    "public.time_slots": {
+      "name": "time_slots",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "venue_id": {
+          "name": "venue_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "start_time": {
+          "name": "start_time",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "end_time": {
+          "name": "end_time",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "time_slot_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'AVAILABLE'"
+        },
+        "recurrence_rule": {
+          "name": "recurrence_rule",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "price_override": {
+          "name": "price_override",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "max_bookings": {
+          "name": "max_bookings",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "time_slots_venue_id_venues_id_fk": {
+          "name": "time_slots_venue_id_venues_id_fk",
+          "tableFrom": "time_slots",
+          "tableTo": "venues",
+          "columnsFrom": [
+            "venue_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "public.vendors": {
       "name": "vendors",
       "schema": "",
@@ -39,6 +128,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "sub_category": {
+          "name": "sub_category",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "contact_email": {
           "name": "contact_email",
           "type": "text",
@@ -68,6 +163,12 @@
           "type": "json",
           "primaryKey": false,
           "notNull": true
+        },
+        "cover_image": {
+          "name": "cover_image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "verification_status": {
           "name": "verification_status",
@@ -108,7 +209,8 @@
           "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
@@ -191,6 +293,14 @@
           "notNull": true,
           "default": []
         },
+        "pricing_model": {
+          "name": "pricing_model",
+          "type": "pricing_model",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'PER_HOUR'"
+        },
         "hourly_rate": {
           "name": "hourly_rate",
           "type": "real",
@@ -233,16 +343,34 @@
     }
   },
   "enums": {
+    "public.pricing_model": {
+      "name": "pricing_model",
+      "schema": "public",
+      "values": [
+        "FREE",
+        "PER_HOUR",
+        "CONTRACT",
+        "MIXED"
+      ]
+    },
+    "public.time_slot_status": {
+      "name": "time_slot_status",
+      "schema": "public",
+      "values": [
+        "AVAILABLE",
+        "BOOKED",
+        "BLOCKED",
+        "MAINTENANCE"
+      ]
+    },
     "public.vendor_category": {
       "name": "vendor_category",
       "schema": "public",
       "values": [
-        "MUSIC_VENUE",
-        "EVENT_PLANNER",
-        "CATERING",
-        "PHOTOGRAPHY",
-        "SECURITY",
-        "EQUIPMENT_RENTAL",
+        "MUSIC",
+        "ART",
+        "SPORTS",
+        "ACTIVITIES",
         "OTHER"
       ]
     },
@@ -250,14 +378,13 @@
       "name": "venue_type",
       "schema": "public",
       "values": [
-        "BAR",
-        "CLUB",
-        "THEATER",
-        "CONCERT_HALL",
-        "STUDIO",
+        "INDOOR",
         "OUTDOOR",
-        "COMMUNITY_CENTER",
-        "PRIVATE_RESIDENCE"
+        "STUDIO",
+        "GALLERY",
+        "FIELD",
+        "COURT",
+        "OTHER"
       ]
     }
   },

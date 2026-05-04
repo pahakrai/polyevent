@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsInt, IsDateString, IsObject, Min } from 'class-validator';
+import { IsString, IsOptional, IsInt, IsDateString, IsObject, Min, IsIn } from 'class-validator';
 
 export class UpdateTimeslotDto {
   @IsDateString()
@@ -11,6 +11,7 @@ export class UpdateTimeslotDto {
 
   @IsString()
   @IsOptional()
+  @IsIn(['AVAILABLE', 'BOOKED', 'BLOCKED', 'MAINTENANCE'])
   status?: string;
 
   @IsString()

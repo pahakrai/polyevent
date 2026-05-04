@@ -1,14 +1,24 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, Optional } from '@nestjs/common';
 import { eq, sql } from 'drizzle-orm';
 import { db } from '../database/client';
 import { vendors, Vendor, NewVendor } from '../database/schema';
+import { NatsProducer } from '@polydom/nats-client';
 import { CreateVendorDto, UpdateVendorDto } from './dto';
 
 @Injectable()
 export class VendorService {
   private readonly logger = new Logger(VendorService.name);
 
+  constructor(@Optional() private readonly natsProducer?: NatsProducer) {}
+
   async create(dto: CreateVendorDto): Promise<Vendor> {
+    // Idempotency: if userId already has a vendor, return the existing one
+    const existing = await this.findByUserId(dto.userId);
+    if (existing) {
+      this.logger.log(`Vendor already exists for userId ${dto.userId}, returning existing`);
+      return existing;
+    }
+
     const [vendor] = await db
       .insert(vendors)
       .values({
@@ -27,7 +37,34 @@ export class VendorService {
       .returning();
 
     this.logger.log(`Vendor created: ${vendor.id} — "${vendor.businessName}"`);
+
+    try {
+      await this.natsProducer?.publish('vendor.created', {
+        id: vendor.id,
+        userId: vendor.userId,
+        businessName: vendor.businessName,
+        category: vendor.category,
+        timestamp: new Date().toISOString(),
+      });
+    } catch (error) {
+      this.logger.warn(`NATS publish vendor.created failed: ${(error as Error).message}`);
+    }
+
     return vendor;
+  }
+
+  async deleteById(id: string): Promise<void> {
+    await db.delete(vendors).where(eq(vendors.id, id));
+    this.logger.log(`Vendor deleted: ${id}`);
+
+    try {
+      await this.natsProducer?.publish('vendor.deleted', {
+        id,
+        timestamp: new Date().toISOString(),
+      });
+    } catch (error) {
+      this.logger.warn(`NATS publish vendor.deleted failed: ${(error as Error).message}`);
+    }
   }
 
   async findAll(page = 1, limit = 20, category?: string) {
@@ -76,6 +113,19 @@ export class VendorService {
       .returning();
 
     this.logger.log(`Vendor updated: ${id}`);
+
+    try {
+      await this.natsProducer?.publish('vendor.updated', {
+        id: updated.id,
+        userId: updated.userId,
+        businessName: updated.businessName,
+        category: updated.category,
+        timestamp: new Date().toISOString(),
+      });
+    } catch (error) {
+      this.logger.warn(`NATS publish vendor.updated failed: ${(error as Error).message}`);
+    }
+
     return updated;
   }
 

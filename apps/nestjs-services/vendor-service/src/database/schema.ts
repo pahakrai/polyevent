@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import {
   pgTable,
   text,
@@ -8,6 +9,7 @@ import {
   real,
   pgEnum,
   uniqueIndex,
+  index,
 } from 'drizzle-orm/pg-core';
 
 // Enums
@@ -45,7 +47,7 @@ export const timeSlotStatusEnum = pgEnum('time_slot_status', [
 
 // Vendor table
 export const vendors = pgTable('vendors', {
-  id: text('id').primaryKey().$defaultFn(() => 'gen_random_uuid()'),
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
   userId: text('user_id').notNull().unique(), // Reference to auth service user ID
   businessName: text('business_name').notNull(),
   description: text('description'),
@@ -62,12 +64,11 @@ export const vendors = pgTable('vendors', {
   totalReviews: integer('total_reviews').notNull().default(0),
   isActive: boolean('is_active').notNull().default(true),
   createdAt: timestamp('created_at').notNull().defaultNow(),
-  updatedAt: timestamp('updated_at').notNull().$onUpdate(() => new Date()),
+  updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdateFn(() => new Date()),
 });
-
 // Venue table
 export const venues = pgTable('venues', {
-  id: text('id').primaryKey().$defaultFn(() => 'gen_random_uuid()'),
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
   vendorId: text('vendor_id').notNull().references(() => vendors.id),
   name: text('name').notNull(),
   description: text('description'),
@@ -85,7 +86,7 @@ export const venues = pgTable('venues', {
 
 // Time Slot table
 export const timeSlots = pgTable('time_slots', {
-  id: text('id').primaryKey().$defaultFn(() => 'gen_random_uuid()'),
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
   venueId: text('venue_id').notNull().references(() => venues.id, { onDelete: 'cascade' }),
   startTime: timestamp('start_time').notNull(),
   endTime: timestamp('end_time').notNull(),
@@ -94,13 +95,12 @@ export const timeSlots = pgTable('time_slots', {
   priceOverride: json('price_override'),
   maxBookings: integer('max_bookings').notNull().default(1),
   createdAt: timestamp('created_at').notNull().defaultNow(),
-  updatedAt: timestamp('updated_at').notNull().$onUpdate(() => new Date()),
+  updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdateFn(() => new Date()),
 });
-
 // Indexes
 export const vendorsUserIdIdx = uniqueIndex('vendors_user_id_idx').on(vendors.userId);
-export const venuesVendorIdIdx = uniqueIndex('venues_vendor_id_idx').on(venues.vendorId);
-export const timeSlotsVenueIdIdx = uniqueIndex('time_slots_venue_id_idx').on(timeSlots.venueId);
+export const venuesVendorIdIdx = index('venues_vendor_id_idx').on(venues.vendorId);
+export const timeSlotsVenueIdIdx = index('time_slots_venue_id_idx').on(timeSlots.venueId);
 
 // Export schema
 export const schema = {
