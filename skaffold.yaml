@@ -8,8 +8,9 @@
 #
 # Development:
 #   Frontend (Next.js): file sync → hot reload on save, no rebuild.
-#   Backend (NestJS):  no sync, no watch. Restart manually via
-#     `kubectl rollout restart deployment/<name>` on code changes.
+#   Backend (NestJS):  file sync → webpack watch rebuild inside container.
+#     No pod restart needed on source changes. For new dependencies or
+#     config changes, rebuild the image with `skaffold build`.
 #
 # Usage:
 #   skaffold dev --port-forward    Dev mode with hot reload + port-forward
@@ -35,31 +36,67 @@ build:
       docker:
         dockerfile: apps/nestjs-services/api-gateway/Dockerfile
         target: development
+      sync:
+        manual:
+          - src: 'apps/nestjs-services/api-gateway/src/**/*.ts'
+            dest: /app/apps/nestjs-services/api-gateway/src/
+          - src: 'libs/**/src/**/*.ts'
+            dest: /app/libs/
     - image: polydom/auth-service
       context: .
       docker:
         dockerfile: apps/nestjs-services/auth-service/Dockerfile
         target: development
+      sync:
+        manual:
+          - src: 'apps/nestjs-services/auth-service/src/**/*.ts'
+            dest: /app/apps/nestjs-services/auth-service/src/
+          - src: 'libs/**/src/**/*.ts'
+            dest: /app/libs/
     - image: polydom/user-service
       context: .
       docker:
         dockerfile: apps/nestjs-services/user-service/Dockerfile
         target: development
+      sync:
+        manual:
+          - src: 'apps/nestjs-services/user-service/src/**/*.ts'
+            dest: /app/apps/nestjs-services/user-service/src/
+          - src: 'libs/**/src/**/*.ts'
+            dest: /app/libs/
     - image: polydom/vendor-service
       context: .
       docker:
         dockerfile: apps/nestjs-services/vendor-service/Dockerfile
         target: development
+      sync:
+        manual:
+          - src: 'apps/nestjs-services/vendor-service/src/**/*.ts'
+            dest: /app/apps/nestjs-services/vendor-service/src/
+          - src: 'libs/**/src/**/*.ts'
+            dest: /app/libs/
     - image: polydom/event-service
       context: .
       docker:
         dockerfile: apps/nestjs-services/event-service/Dockerfile
         target: development
+      sync:
+        manual:
+          - src: 'apps/nestjs-services/event-service/src/**/*.ts'
+            dest: /app/apps/nestjs-services/event-service/src/
+          - src: 'libs/**/src/**/*.ts'
+            dest: /app/libs/
     - image: polydom/agent-service
       context: .
       docker:
         dockerfile: apps/nestjs-services/agent-service/Dockerfile
         target: development
+      sync:
+        manual:
+          - src: 'apps/nestjs-services/agent-service/src/**/*.ts'
+            dest: /app/apps/nestjs-services/agent-service/src/
+          - src: 'libs/**/src/**/*.ts'
+            dest: /app/libs/
     - image: polydom/frontend
       context: .
       docker:
@@ -227,3 +264,8 @@ portForward:
     namespace: polydom-dev
     port: 3010
     localPort: 3050
+  - resourceType: service
+    resourceName: agent-service
+    namespace: polydom-dev
+    port: 9234
+    localPort: 9234

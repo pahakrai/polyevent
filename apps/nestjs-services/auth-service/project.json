@@ -32,21 +32,12 @@
         },
         "development": {
           "buildTarget": "auth-service:build:development"
+        },
+        "debug": {
+          "inspect": true,
+          "host": "0.0.0.0",
+          "port": 9230
         }
-      }
-    },
-    "dev": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "nest start --watch --webpack --debug 0.0.0.0:9230",
-        "cwd": "apps/nestjs-services/auth-service"
-      }
-    },
-    "serve:debug": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "nest start --webpack --debug 0.0.0.0:9230",
-        "cwd": "apps/nestjs-services/auth-service"
       }
     },
     "lint": {

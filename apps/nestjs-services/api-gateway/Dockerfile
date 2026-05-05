@@ -15,6 +15,8 @@ RUN npx nx build api-gateway
 FROM node:20-alpine AS development
 WORKDIR /app
 
+RUN apk add --no-cache postgresql-libs
+
 RUN addgroup -g 1001 -S appgroup && \
     adduser -u 1001 -S appuser -G appgroup
 
@@ -28,8 +30,9 @@ COPY --chown=appuser:appgroup apps/nestjs-services/api-gateway/ apps/nestjs-serv
 
 USER appuser
 ENV NODE_ENV=development
+ENV NODE_OPTIONS="--max-old-space-size=480"
 EXPOSE 3000 9229
-CMD ["npx", "nx", "run", "api-gateway:serve:debug"]
+CMD ["npx", "nx", "serve", "api-gateway", "--configuration=debug"]
 
 FROM node:20-alpine AS production
 RUN addgroup -g 1001 -S appgroup && \

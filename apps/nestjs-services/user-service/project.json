@@ -32,21 +32,12 @@
         },
         "development": {
           "buildTarget": "user-service:build:development"
+        },
+        "debug": {
+          "inspect": true,
+          "host": "0.0.0.0",
+          "port": 9231
         }
-      }
-    },
-    "dev": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "nest start --watch --webpack --debug 0.0.0.0:9231",
-        "cwd": "apps/nestjs-services/user-service"
-      }
-    },
-    "serve:debug": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "nest start --webpack --debug 0.0.0.0:9231",
-        "cwd": "apps/nestjs-services/user-service"
       }
     },
     "lint": {

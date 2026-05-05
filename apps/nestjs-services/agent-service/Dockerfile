@@ -15,6 +15,8 @@ RUN npx nx build agent-service
 FROM node:20-alpine AS development
 WORKDIR /app
 
+RUN apk add --no-cache postgresql-libs
+
 RUN addgroup -g 1001 -S appgroup && \
     adduser -u 1001 -S appuser -G appgroup
 
@@ -28,8 +30,9 @@ COPY --chown=appuser:appgroup apps/nestjs-services/agent-service/ apps/nestjs-se
 
 USER appuser
 ENV NODE_ENV=development
-EXPOSE 3010
-CMD ["npx", "nx", "run", "agent-service:serve"]
+ENV NODE_OPTIONS="--max-old-space-size=480"
+EXPOSE 3010 9234
+CMD ["npx", "nx", "serve", "agent-service", "--configuration=debug"]
 
 FROM node:20-alpine AS production
 RUN addgroup -g 1001 -S appgroup && \

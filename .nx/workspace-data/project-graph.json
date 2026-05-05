@@ -122,26 +122,13 @@
               },
               "development": {
                 "buildTarget": "vendor-service:build:development"
+              },
+              "debug": {
+                "inspect": true,
+                "host": "0.0.0.0",
+                "port": 9232
               }
             },
-            "parallelism": true
-          },
-          "dev": {
-            "executor": "nx:run-commands",
-            "options": {
-              "command": "nest start --watch --webpack --debug 0.0.0.0:9232",
-              "cwd": "apps/nestjs-services/vendor-service"
-            },
-            "configurations": {},
-            "parallelism": true
-          },
-          "serve:debug": {
-            "executor": "nx:run-commands",
-            "options": {
-              "command": "nest start --webpack --debug 0.0.0.0:9232",
-              "cwd": "apps/nestjs-services/vendor-service"
-            },
-            "configurations": {},
             "parallelism": true
           },
           "lint": {
@@ -585,26 +572,13 @@
               },
               "development": {
                 "buildTarget": "event-service:build:development"
+              },
+              "debug": {
+                "inspect": true,
+                "host": "0.0.0.0",
+                "port": 9233
               }
             },
-            "parallelism": true
-          },
-          "dev": {
-            "executor": "nx:run-commands",
-            "options": {
-              "command": "nest start --watch --webpack --debug 0.0.0.0:9233",
-              "cwd": "apps/nestjs-services/event-service"
-            },
-            "configurations": {},
-            "parallelism": true
-          },
-          "serve:debug": {
-            "executor": "nx:run-commands",
-            "options": {
-              "command": "nest start --webpack --debug 0.0.0.0:9233",
-              "cwd": "apps/nestjs-services/event-service"
-            },
-            "configurations": {},
             "parallelism": true
           },
           "lint": {
@@ -883,26 +857,13 @@
               },
               "development": {
                 "buildTarget": "auth-service:build:development"
+              },
+              "debug": {
+                "inspect": true,
+                "host": "0.0.0.0",
+                "port": 9230
               }
             },
-            "parallelism": true
-          },
-          "dev": {
-            "executor": "nx:run-commands",
-            "options": {
-              "command": "nest start --watch --webpack --debug 0.0.0.0:9230",
-              "cwd": "apps/nestjs-services/auth-service"
-            },
-            "configurations": {},
-            "parallelism": true
-          },
-          "serve:debug": {
-            "executor": "nx:run-commands",
-            "options": {
-              "command": "nest start --webpack --debug 0.0.0.0:9230",
-              "cwd": "apps/nestjs-services/auth-service"
-            },
-            "configurations": {},
             "parallelism": true
           },
           "lint": {
@@ -1093,26 +1054,13 @@
               },
               "development": {
                 "buildTarget": "user-service:build:development"
+              },
+              "debug": {
+                "inspect": true,
+                "host": "0.0.0.0",
+                "port": 9231
               }
             },
-            "parallelism": true
-          },
-          "dev": {
-            "executor": "nx:run-commands",
-            "options": {
-              "command": "nest start --watch --webpack --debug 0.0.0.0:9231",
-              "cwd": "apps/nestjs-services/user-service"
-            },
-            "configurations": {},
-            "parallelism": true
-          },
-          "serve:debug": {
-            "executor": "nx:run-commands",
-            "options": {
-              "command": "nest start --webpack --debug 0.0.0.0:9231",
-              "cwd": "apps/nestjs-services/user-service"
-            },
-            "configurations": {},
             "parallelism": true
           },
           "lint": {
@@ -1326,26 +1274,13 @@
               },
               "development": {
                 "buildTarget": "api-gateway:build:development"
+              },
+              "debug": {
+                "inspect": true,
+                "host": "0.0.0.0",
+                "port": 9229
               }
             },
-            "parallelism": true
-          },
-          "dev": {
-            "executor": "nx:run-commands",
-            "options": {
-              "command": "nest start --watch --webpack --debug 0.0.0.0:9229",
-              "cwd": "apps/nestjs-services/api-gateway"
-            },
-            "configurations": {},
-            "parallelism": true
-          },
-          "serve:debug": {
-            "executor": "nx:run-commands",
-            "options": {
-              "command": "nest start --webpack --debug 0.0.0.0:9229",
-              "cwd": "apps/nestjs-services/api-gateway"
-            },
-            "configurations": {},
             "parallelism": true
           },
           "lint": {

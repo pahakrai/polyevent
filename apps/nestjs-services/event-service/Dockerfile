@@ -15,6 +15,8 @@ RUN npx nx build event-service
 FROM node:20-alpine AS development
 WORKDIR /app
 
+RUN apk add --no-cache postgresql-libs
+
 RUN addgroup -g 1001 -S appgroup && \
     adduser -u 1001 -S appuser -G appgroup
 
@@ -28,8 +30,9 @@ COPY --chown=appuser:appgroup apps/nestjs-services/event-service/ apps/nestjs-se
 
 USER appuser
 ENV NODE_ENV=development
+ENV NODE_OPTIONS="--max-old-space-size=480"
 EXPOSE 3000 9233
-CMD ["npx", "nx", "run", "event-service:serve:debug"]
+CMD ["npx", "nx", "serve", "event-service", "--configuration=debug"]
 
 FROM node:20-alpine AS production
 RUN addgroup -g 1001 -S appgroup && \

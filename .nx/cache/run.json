@@ -1,21 +1,21 @@
 {
   "run": {
-    "command": "nx build auth-service --skip-nx-cache",
-    "startTime": "2026-05-04T13:48:27.455Z",
-    "endTime": "2026-05-04T13:48:33.179Z",
+    "command": "nx serve auth-service --host=0.0.0.0 --port=9230",
+    "startTime": "2026-05-04T17:27:46.615Z",
+    "endTime": "2026-05-04T17:28:15.778Z",
     "inner": false
   },
   "tasks": [
     {
-      "taskId": "auth-service:build",
-      "target": "build",
+      "taskId": "auth-service:serve",
+      "target": "serve",
       "projectName": "auth-service",
-      "hash": "381844640788140163",
-      "startTime": "2026-05-04T13:48:27.463Z",
-      "endTime": "2026-05-04T13:48:33.179Z",
+      "hash": "11806946494000579011",
+      "startTime": "2026-05-04T17:27:46.622Z",
+      "endTime": "2026-05-04T17:28:15.777Z",
       "params": "",
       "cacheStatus": "cache-miss",
-      "status": 0
+      "status": 1
     }
   ]
 }

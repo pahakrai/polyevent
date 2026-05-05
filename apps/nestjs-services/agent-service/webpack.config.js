@@ -1,9 +1,21 @@
+const path = require('path');
 const nodeExternals = require('webpack-node-externals');
 const webpack = require('webpack');
 
 module.exports = function (options) {
   return {
     ...options,
+    devtool: 'source-map',
+    output: {
+      ...options.output,
+      devtoolModuleFilenameTemplate: (info) => {
+        const rel = path.relative(
+          path.join(__dirname, '..', '..', '..'),
+          info.absoluteResourcePath
+        );
+        return `webpack:///${rel.replace(/\\/g, '/')}`;
+      },
+    },
     externals: [
       nodeExternals({
         allowlist: [/^@polydom\//],

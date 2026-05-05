@@ -50,8 +50,6 @@ spec:
         env:
         - name: NODE_ENV
           value: development
-        - name: NODE_OPTIONS
-          value: "--max-old-space-size=480"
         - name: GATEWAY_DATABASE_URL
           valueFrom:
             secretKeyRef:
@@ -150,8 +148,6 @@ spec:
         env:
         - name: NODE_ENV
           value: development
-        - name: NODE_OPTIONS
-          value: "--max-old-space-size=480"
         - name: AUTH_DATABASE_URL
           valueFrom:
             secretKeyRef:
@@ -245,8 +241,6 @@ spec:
         env:
         - name: NODE_ENV
           value: development
-        - name: NODE_OPTIONS
-          value: "--max-old-space-size=480"
         - name: NEXT_PUBLIC_API_URL
           value: http://localhost:3000
         resources:
@@ -321,8 +315,6 @@ spec:
         env:
         - name: NODE_ENV
           value: development
-        - name: NODE_OPTIONS
-          value: "--max-old-space-size=480"
         - name: NEXT_PUBLIC_API_URL
           value: http://localhost:3000
         - name: NEXT_PUBLIC_AGENT_URL
@@ -402,8 +394,6 @@ spec:
         env:
         - name: NODE_ENV
           value: development
-        - name: NODE_OPTIONS
-          value: "--max-old-space-size=480"
         - name: USER_DATABASE_URL
           valueFrom:
             secretKeyRef:
@@ -495,8 +485,6 @@ spec:
         env:
         - name: NODE_ENV
           value: development
-        - name: NODE_OPTIONS
-          value: "--max-old-space-size=480"
         - name: VENDOR_DATABASE_URL
           valueFrom:
             secretKeyRef:
@@ -588,8 +576,6 @@ spec:
         env:
         - name: NODE_ENV
           value: development
-        - name: NODE_OPTIONS
-          value: "--max-old-space-size=480"
         - name: EVENT_DATABASE_URL
           valueFrom:
             secretKeyRef:
@@ -672,6 +658,8 @@ spec:
         ports:
         - containerPort: 3010
           name: http
+        - containerPort: 9234
+          name: debug
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -679,8 +667,6 @@ spec:
         env:
         - name: NODE_ENV
           value: development
-        - name: NODE_OPTIONS
-          value: "--max-old-space-size=480"
         - name: AGENT_DATABASE_URL
           valueFrom:
             secretKeyRef:
@@ -739,3 +725,6 @@ spec:
   - port: 3010
     targetPort: 3010
     name: http
+  - port: 9234
+    targetPort: 9234
+    name: debug

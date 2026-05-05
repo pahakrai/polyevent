@@ -32,21 +32,12 @@
         },
         "development": {
           "buildTarget": "api-gateway:build:development"
+        },
+        "debug": {
+          "inspect": true,
+          "host": "0.0.0.0",
+          "port": 9229
         }
-      }
-    },
-    "dev": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "nest start --watch --webpack --debug 0.0.0.0:9229",
-        "cwd": "apps/nestjs-services/api-gateway"
-      }
-    },
-    "serve:debug": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "nest start --webpack --debug 0.0.0.0:9229",
-        "cwd": "apps/nestjs-services/api-gateway"
       }
     },
     "lint": {
