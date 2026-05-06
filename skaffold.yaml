@@ -6,16 +6,18 @@
 #   dependency graph, uses NX computation caching, and only rebuilds
 #   what changed. Skaffold handles image tagging + K8s deploy.
 #
-# Development:
+# Development (hybrid workflow — minimal memory/network):
 #   Frontend (Next.js): file sync → hot reload on save, no rebuild.
-#   Backend (NestJS):  file sync → webpack watch rebuild inside container.
-#     No pod restart needed on source changes. For new dependencies or
-#     config changes, rebuild the image with `skaffold build`.
+#   Backend (NestJS):  --trigger=manual → build only on Enter press.
+#     Change 10 files, press Enter once — Skaffold rebuilds only
+#     the images that actually changed.
+#   Tags: sha256 content-addressable (no registry push needed).
+#   Prune: enabled (--no-prune=false) to keep local disk usage low.
 #
 # Usage:
-#   skaffold dev --port-forward    Dev mode with hot reload + port-forward
-#   skaffold run --port-forward    One-shot local deploy
-#   skaffold build                 Build images only
+#   npm run skaffold:dev           Dev mode: manual trigger + port-forward
+#   npm run skaffold:run           One-shot local deploy
+#   npm run skaffold:build         Build images only
 #
 # For production / staging, use Kustomize directly:
 #   kubectl apply -k kubernetes/overlays/production
@@ -28,75 +30,38 @@ metadata:
 
 build:
   tagPolicy:
-    envTemplate:
-      template: "latest"
+    sha256: {}
   artifacts:
     - image: polydom/api-gateway
       context: .
       docker:
         dockerfile: apps/nestjs-services/api-gateway/Dockerfile
         target: development
-      sync:
-        manual:
-          - src: 'apps/nestjs-services/api-gateway/src/**/*.ts'
-            dest: /app/apps/nestjs-services/api-gateway/src/
-          - src: 'libs/**/src/**/*.ts'
-            dest: /app/libs/
     - image: polydom/auth-service
       context: .
       docker:
         dockerfile: apps/nestjs-services/auth-service/Dockerfile
         target: development
-      sync:
-        manual:
-          - src: 'apps/nestjs-services/auth-service/src/**/*.ts'
-            dest: /app/apps/nestjs-services/auth-service/src/
-          - src: 'libs/**/src/**/*.ts'
-            dest: /app/libs/
     - image: polydom/user-service
       context: .
       docker:
         dockerfile: apps/nestjs-services/user-service/Dockerfile
         target: development
-      sync:
-        manual:
-          - src: 'apps/nestjs-services/user-service/src/**/*.ts'
-            dest: /app/apps/nestjs-services/user-service/src/
-          - src: 'libs/**/src/**/*.ts'
-            dest: /app/libs/
     - image: polydom/vendor-service
       context: .
       docker:
         dockerfile: apps/nestjs-services/vendor-service/Dockerfile
         target: development
-      sync:
-        manual:
-          - src: 'apps/nestjs-services/vendor-service/src/**/*.ts'
-            dest: /app/apps/nestjs-services/vendor-service/src/
-          - src: 'libs/**/src/**/*.ts'
-            dest: /app/libs/
     - image: polydom/event-service
       context: .
       docker:
         dockerfile: apps/nestjs-services/event-service/Dockerfile
         target: development
-      sync:
-        manual:
-          - src: 'apps/nestjs-services/event-service/src/**/*.ts'
-            dest: /app/apps/nestjs-services/event-service/src/
-          - src: 'libs/**/src/**/*.ts'
-            dest: /app/libs/
     - image: polydom/agent-service
       context: .
       docker:
         dockerfile: apps/nestjs-services/agent-service/Dockerfile
         target: development
-      sync:
-        manual:
-          - src: 'apps/nestjs-services/agent-service/src/**/*.ts'
-            dest: /app/apps/nestjs-services/agent-service/src/
-          - src: 'libs/**/src/**/*.ts'
-            dest: /app/libs/
     - image: polydom/frontend
       context: .
       docker:
@@ -127,77 +92,12 @@ manifests:
     - kubernetes/local/namespace.yaml
     - kubernetes/local/secrets.yaml
     - kubernetes/local/postgres.yaml
-    - kubernetes/local/pgadmin.yaml
     - kubernetes/local/infrastructure.yaml
     - kubernetes/local/services.yaml
     - kubernetes/local/ingress.yaml
 
 deploy:
   kubectl: {}
-
-profiles:
-  - name: production
-    build:
-      artifacts:
-        - image: polydom/api-gateway
-          docker:
-            target: production
-        - image: polydom/auth-service
-          docker:
-            target: production
-        - image: polydom/user-service
-          docker:
-            target: production
-        - image: polydom/vendor-service
-          docker:
-            target: production
-        - image: polydom/event-service
-          docker:
-            target: production
-        - image: polydom/agent-service
-          docker:
-            target: production
-        - image: polydom/frontend
-          docker:
-            target: runner
-        - image: polydom/admin-frontend
-          docker:
-            target: runner
-      local:
-        push: true
-      tagPolicy:
-        gitCommit: {}
-  - name: staging
-    build:
-      artifacts:
-        - image: polydom/api-gateway
-          docker:
-            target: production
-        - image: polydom/auth-service
-          docker:
-            target: production
-        - image: polydom/user-service
-          docker:
-            target: production
-        - image: polydom/vendor-service
-          docker:
-            target: production
-        - image: polydom/event-service
-          docker:
-            target: production
-        - image: polydom/agent-service
-          docker:
-            target: production
-        - image: polydom/frontend
-          docker:
-            target: runner
-        - image: polydom/admin-frontend
-          docker:
-            target: runner
-      local:
-        push: true
-      tagPolicy:
-        gitCommit: {}
 
 portForward:
   - resourceType: service
@@ -265,18 +165,3 @@ portForward:
     namespace: polydom-dev
     port: 3010
     localPort: 3050
-  - resourceType: service
-    resourceName: agent-service
-    namespace: polydom-dev
-    port: 9234
-    localPort: 9234
-  - resourceType: service
-    resourceName: pgadmin
-    namespace: polydom-dev
-    port: 80
-    localPort: 5050
-  - resourceType: service
-    resourceName: postgres-mcp
-    namespace: polydom-dev
-    port: 8099
-    localPort: 3001
