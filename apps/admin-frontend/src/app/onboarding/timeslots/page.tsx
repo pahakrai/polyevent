@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useOnboardingStore } from '@/stores/onboarding-store';
 import { api } from '@/lib/api';
@@ -17,13 +17,20 @@ const DAYS = [
 
 export default function OnboardingTimeslots() {
   const router = useRouter();
-  const { vendorId, setStep } = useOnboardingStore();
+  const { venueId, setStep } = useOnboardingStore();
   const [selectedDays, setSelectedDays] = useState<number[]>([]);
   const [daysActive, setDaysActive] = useState(false);
   const [startTime, setStartTime] = useState('09:00');
   const [endTime, setEndTime] = useState('17:00');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (!venueId) {
+      setStep(2);
+      router.push('/onboarding/venues');
+    }
+  }, [venueId, router, setStep]);
 
   const toggleDay = (day: number) => {
     setSelectedDays((prev) =>
@@ -35,8 +42,8 @@ export default function OnboardingTimeslots() {
     setLoading(true);
     setError('');
     try {
-      await api.post(`/venues/${vendorId}/timeslots/bulk`, {
-        venueId: vendorId,
+      await api.post(`/venues/${venueId}/timeslots/bulk`, {
+        venueId,
         startDate: new Date().toISOString().split('T')[0],
         endDate: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         daysOfWeek: selectedDays,

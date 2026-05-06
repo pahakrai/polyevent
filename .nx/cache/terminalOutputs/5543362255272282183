@@ -1,0 +1,13 @@
+> nest build --webpack
+
+[1m[31mERROR[39m[22m in [1m./src/agent/deepseek-provider.ts:107:15[39m[22m
+[90mTS2353: [39mObject literal may only specify known properties, and 'result' does not exist in type 'ToolResultPart'.
+  [0m [90m 105 |[39m               toolCallId[33m:[39m m[33m.[39mtool_call_id[33m![39m[33m,[39m
+   [90m 106 |[39m               toolName[33m:[39m [32m''[39m[33m,[39m
+  [31m[1m>[22m[39m[90m 107 |[39m               result[33m:[39m m[33m.[39mcontent[33m,[39m
+   [90m     |[39m               [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 108 |[39m             }[33m,[39m
+   [90m 109 |[39m           ][33m,[39m
+   [90m 110 |[39m         }[33m;[39m[0m
+
+webpack 5.97.1 compiled with [1m[31m1 error[39m[22m in 3656 ms

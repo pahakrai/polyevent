@@ -74,7 +74,7 @@ export default function RegisterPage() {
       }
 
       const result = await registerUser(payload);
-      login(result.accessToken, result.user);
+      login(result.accessToken, result.refreshToken, result.user);
       router.push('/');
     } catch (err: unknown) {
       const msg =

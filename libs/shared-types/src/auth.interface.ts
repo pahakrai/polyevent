@@ -30,7 +30,12 @@ export interface RefreshTokenRequest {
 
 export interface RefreshTokenResponse {
   accessToken: string;
+  refreshToken: string;
   expiresIn: number;
+}
+
+export interface LogoutRequest {
+  refreshToken: string;
 }
 
 export interface ForgotPasswordRequest {

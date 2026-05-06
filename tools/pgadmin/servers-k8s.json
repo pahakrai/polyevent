@@ -1,0 +1,15 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Polydom PostgreSQL (K8s)",
+      "Group": "Kubernetes",
+      "Host": "postgres.polydom-dev.svc.cluster.local",
+      "Port": 5432,
+      "Username": "postgres",
+      "Password": "postgres",
+      "SSLMode": "prefer",
+      "MaintenanceDB": "postgres",
+      "Comment": "Kubernetes local dev PostgreSQL — gateway_db, auth_db, user_db, vendor_db, event_db, agent_db"
+    }
+  }
+}

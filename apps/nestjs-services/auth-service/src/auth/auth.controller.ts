@@ -11,6 +11,7 @@ import {
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 
@@ -20,14 +21,12 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() dto: RegisterDto) {
-    console.log("regiser should be running");
     return this.authService.register(dto);
   }
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(@Body() dto: LoginDto) {
-    console.log("hello world test", dto);
     return this.authService.login(dto);
   }
 
@@ -35,5 +34,18 @@ export class AuthController {
   @UseGuards(AuthGuard('jwt'))
   async profile(@Req() req: Request) {
     return this.authService.getProfile((req as any).user.sub);
+  }
+
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  async refresh(@Body() dto: RefreshTokenDto) {
+    return this.authService.refreshToken(dto.refreshToken);
+  }
+
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard('jwt'))
+  async logout(@Body() dto: RefreshTokenDto, @Req() req: Request) {
+    return this.authService.logout(dto.refreshToken, (req as any).user.sub);
   }
 }

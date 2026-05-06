@@ -2,6 +2,8 @@ import { api } from './api';
 
 interface LoginResponse {
   accessToken: string;
+  refreshToken: string;
+  expiresIn: string;
   user: {
     id: string;
     email: string;
@@ -42,6 +44,11 @@ export async function loginUser(email: string, password: string): Promise<LoginR
 
 export async function registerUser(dto: RegisterDto): Promise<LoginResponse> {
   const { data } = await api.post<LoginResponse>('/auth/register', dto);
+  return data;
+}
+
+export async function refreshAccessToken(refreshToken: string): Promise<{ accessToken: string; refreshToken: string }> {
+  const { data } = await api.post<{ accessToken: string; refreshToken: string }>('/auth/refresh', { refreshToken });
   return data;
 }
 

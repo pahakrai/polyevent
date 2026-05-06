@@ -1,0 +1,15 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Polydom PostgreSQL",
+      "Group": "Local",
+      "Host": "postgres",
+      "Port": 5432,
+      "Username": "eventbooking",
+      "Password": "eventbooking123",
+      "SSLMode": "prefer",
+      "MaintenanceDB": "eventbooking",
+      "Comment": "All microservice databases — gateway_db, auth_db, user_db, vendor_db, event_db, booking_db, notification_db, analytics_db, admin_db, agent_db"
+    }
+  }
+}

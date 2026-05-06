@@ -28,7 +28,7 @@
     "k8s:apply:staging": "kubectl apply -k kubernetes/overlays/staging",
     "k8s:delete:staging": "kubectl delete -k kubernetes/overlays/staging",
     "skaffold:dev": "skaffold dev --no-prune=false --port-forward",
-    "skaffold:dev:debug": "skaffold dev --no-prune=false --port-forward",
+    "skaffold:dev:debug": "skaffold dev --no-prune=false --port-forward --build-concurrency=0",
     "skaffold:build": "skaffold build",
     "skaffold:run": "skaffold run --no-prune=false --port-forward",
     "skaffold:build:production": "skaffold build --profile=production",

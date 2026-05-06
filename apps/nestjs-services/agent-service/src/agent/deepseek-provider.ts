@@ -1,92 +1,113 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import OpenAI from 'openai';
+import { createDeepSeek } from '@ai-sdk/deepseek';
+import { generateText, tool, jsonSchema } from 'ai';
+import type { ModelMessage } from 'ai';
 import type { LlmMessage, LlmProvider, LlmResponse, LlmToolCall } from './llm-provider.interface';
 import type { ToolDefinition } from './tools';
 
 @Injectable()
 export class DeepSeekProvider implements LlmProvider {
   private readonly logger = new Logger(DeepSeekProvider.name);
-  private readonly client: OpenAI;
+  private readonly model: ReturnType<ReturnType<typeof createDeepSeek>>;
 
   constructor(configService: ConfigService) {
-    this.client = new OpenAI({
-      apiKey: configService.get<string>('DEEPSEEK_API_KEY') || 'sk-placeholder',
+    const apiKey =
+      configService.get<string>('DEEPSEEK_API_KEY') ||
+      configService.get<string>('LLM_API_KEY') ||
+      'sk-placeholder';
+
+    const deepseek = createDeepSeek({
+      apiKey,
       baseURL: 'https://api.deepseek.com',
     });
+
+    this.model = deepseek('deepseek-chat');
+    this.logger.log('DeepSeek provider initialized with @ai-sdk/deepseek');
   }
 
   async chat(messages: LlmMessage[], tools: ToolDefinition[]): Promise<LlmResponse> {
-    const openaiTools = tools.map((t) => ({
-      type: 'function' as const,
-      function: {
-        name: t.name,
+    const aiTools: Record<string, ReturnType<typeof tool>> = {};
+    for (const t of tools) {
+      aiTools[t.name] = tool({
         description: t.description,
-        parameters: t.input_schema,
-      },
-    }));
+        inputSchema: jsonSchema(t.input_schema as Record<string, unknown>),
+      });
+    }
 
-    const typedMessages = messages.map((m) => {
-      switch (m.role) {
-        case 'system':
-          return { role: 'system' as const, content: m.content };
-        case 'user':
-          return { role: 'user' as const, content: m.content };
-        case 'assistant':
+    const aiMessages = messages.map((m) => this.convertMessage(m));
+
+    try {
+      const result = await generateText({
+        model: this.model,
+        messages: aiMessages,
+        tools: Object.keys(aiTools).length > 0 ? aiTools : undefined,
+        temperature: 0.3,
+      });
+
+      const toolCalls: LlmToolCall[] = (result.toolCalls || []).map((tc) => ({
+        id: tc.toolCallId,
+        name: tc.toolName,
+        arguments: tc.input as Record<string, unknown>,
+      }));
+
+      this.logger.log(
+        `DeepSeek: finish=${result.finishReason}, tools=${toolCalls.length}, ` +
+        `usage=${JSON.stringify(result.usage)}`,
+      );
+
+      return {
+        text: result.text || '',
+        toolCalls,
+        stopReason:
+          toolCalls.length > 0 ? 'tool_use' :
+          result.finishReason === 'stop' ? 'end_turn' :
+          'max_tokens',
+      };
+    } catch (error) {
+      this.logger.error('DeepSeek API call failed', error as Error);
+      throw error;
+    }
+  }
+
+  private convertMessage(m: LlmMessage): ModelMessage {
+    switch (m.role) {
+      case 'system':
+        return { role: 'system', content: m.content };
+
+      case 'user':
+        return { role: 'user', content: m.content };
+
+      case 'assistant': {
+        if (m.tool_calls && m.tool_calls.length > 0) {
           return {
-            role: 'assistant' as const,
-            content: m.content || null,
-            ...(m.tool_calls
-              ? {
-                  tool_calls: m.tool_calls.map((tc) => ({
-                    id: tc.id,
-                    type: 'function' as const,
-                    function: {
-                      name: tc.name,
-                      arguments: JSON.stringify(tc.arguments),
-                    },
-                  })),
-                }
-              : {}),
+            role: 'assistant',
+            content: [
+              ...(m.content ? [{ type: 'text' as const, text: m.content }] : []),
+              ...m.tool_calls.map((tc) => ({
+                type: 'tool-call' as const,
+                toolCallId: tc.id,
+                toolName: tc.name,
+                input: tc.arguments,
+              })),
+            ],
           };
-        case 'tool':
-          return {
-            role: 'tool' as const,
-            content: m.content,
-            tool_call_id: m.tool_call_id!,
-          };
+        }
+        return { role: 'assistant', content: m.content };
       }
-    });
 
-    const response = await this.client.chat.completions.create({
-      model: 'deepseek-flash',
-      messages: typedMessages,
-      tools: openaiTools,
-      temperature: 0.3,
-    });
-
-    const choice = response.choices[0];
-    const msg = choice.message;
-
-    const toolCalls: LlmToolCall[] = (msg.tool_calls || []).map((tc) => ({
-      id: tc.id,
-      name: tc.function.name,
-      arguments: JSON.parse(tc.function.arguments),
-    }));
-
-    this.logger.log(
-      `DeepSeek: stop=${choice.finish_reason}, tools=${toolCalls.length}, tokens=${response.usage?.total_tokens}`,
-    );
-
-    return {
-      text: msg.content || '',
-      toolCalls,
-      stopReason:
-        choice.finish_reason === 'tool_calls'
-          ? 'tool_use'
-          : choice.finish_reason === 'stop'
-            ? 'end_turn'
-            : 'max_tokens',
-    };
+      case 'tool':
+        return {
+          role: 'tool',
+          content: [
+            {
+              type: 'tool-result' as const,
+              toolCallId: m.tool_call_id!,
+              toolName: '',
+              output: { type: 'text' as const, value: m.content },
+            },
+          ],
+        };
+    }
   }
 }

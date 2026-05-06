@@ -1,0 +1,56 @@
+> nest build --webpack
+
+[1m[31mERROR[39m[22m in [1m./src/agent/deepseek-provider.ts:5:15[39m[22m
+[90mTS2305: [39mModule '"ai"' has no exported member 'CoreMessage'.
+  [0m [90m 3 |[39m [36mimport[39m { createDeepSeek } [36mfrom[39m [32m'@ai-sdk/deepseek'[39m[33m;[39m
+   [90m 4 |[39m [36mimport[39m { generateText[33m,[39m tool[33m,[39m jsonSchema } [36mfrom[39m [32m'ai'[39m[33m;[39m
+  [31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m type { [33mCoreMessage[39m[33m,[39m [33mCoreTool[39m } [36mfrom[39m [32m'ai'[39m[33m;[39m
+   [90m   |[39m               [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 6 |[39m [36mimport[39m type { [33mLlmMessage[39m[33m,[39m [33mLlmProvider[39m[33m,[39m [33mLlmResponse[39m[33m,[39m [33mLlmToolCall[39m } [36mfrom[39m [32m'./llm-provider.interface'[39m[33m;[39m
+   [90m 7 |[39m [36mimport[39m type { [33mToolDefinition[39m } [36mfrom[39m [32m'./tools'[39m[33m;[39m
+   [90m 8 |[39m[0m
+
+[1m[31mERROR[39m[22m in [1m./src/agent/deepseek-provider.ts:5:28[39m[22m
+[90mTS2305: [39mModule '"ai"' has no exported member 'CoreTool'.
+  [0m [90m 3 |[39m [36mimport[39m { createDeepSeek } [36mfrom[39m [32m'@ai-sdk/deepseek'[39m[33m;[39m
+   [90m 4 |[39m [36mimport[39m { generateText[33m,[39m tool[33m,[39m jsonSchema } [36mfrom[39m [32m'ai'[39m[33m;[39m
+  [31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m type { [33mCoreMessage[39m[33m,[39m [33mCoreTool[39m } [36mfrom[39m [32m'ai'[39m[33m;[39m
+   [90m   |[39m                            [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 6 |[39m [36mimport[39m type { [33mLlmMessage[39m[33m,[39m [33mLlmProvider[39m[33m,[39m [33mLlmResponse[39m[33m,[39m [33mLlmToolCall[39m } [36mfrom[39m [32m'./llm-provider.interface'[39m[33m;[39m
+   [90m 7 |[39m [36mimport[39m type { [33mToolDefinition[39m } [36mfrom[39m [32m'./tools'[39m[33m;[39m
+   [90m 8 |[39m[0m
+
+[1m[31mERROR[39m[22m in [1m./src/agent/deepseek-provider.ts:35:9[39m[22m
+[90mTS2769: [39mNo overload matches this call.
+  The last overload gave the following error.
+    Type '() => Promise<string>' is not assignable to type 'undefined'.
+  [0m [90m 33 |[39m         description[33m:[39m t[33m.[39mdescription[33m,[39m
+   [90m 34 |[39m         parameters[33m:[39m jsonSchema(t[33m.[39minput_schema [36mas[39m [33mRecord[39m[33m<[39m[33mstring[39m[33m,[39m unknown[33m>[39m)[33m,[39m
+  [31m[1m>[22m[39m[90m 35 |[39m         execute[33m:[39m [36masync[39m () [33m=>[39m [32m'__PENDING__'[39m[33m,[39m
+   [90m    |[39m         [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 36 |[39m       })[33m;[39m
+   [90m 37 |[39m     }
+   [90m 38 |[39m[0m
+
+[1m[31mERROR[39m[22m in [1m./src/agent/deepseek-provider.ts:46:9[39m[22m
+[90mTS2353: [39mObject literal may only specify known properties, and 'maxSteps' does not exist in type 'CallSettings & { system?: string | SystemModelMessage | SystemModelMessage[] | undefined; allowSystemInMessages?: boolean | undefined; } & { ...; } & { ...; }'.
+  [0m [90m 44 |[39m         messages[33m:[39m aiMessages[33m,[39m
+   [90m 45 |[39m         tools[33m:[39m [33mObject[39m[33m.[39mkeys(aiTools)[33m.[39mlength [33m>[39m [35m0[39m [33m?[39m aiTools [33m:[39m undefined[33m,[39m
+  [31m[1m>[22m[39m[90m 46 |[39m         maxSteps[33m:[39m [35m1[39m[33m,[39m
+   [90m    |[39m         [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 47 |[39m         temperature[33m:[39m [35m0.3[39m[33m,[39m
+   [90m 48 |[39m       })[33m;[39m
+   [90m 49 |[39m[0m
+
+[1m[31mERROR[39m[22m in [1m./src/agent/deepseek-provider.ts:53:23[39m[22m
+[90mTS2339: [39mProperty 'args' does not exist on type 'TypedToolCall<Record<string, CoreTool>>'.
+  Property 'args' does not exist on type 'DynamicToolCall'.
+  [0m [90m 51 |[39m         id[33m:[39m tc[33m.[39mtoolCallId[33m,[39m
+   [90m 52 |[39m         name[33m:[39m tc[33m.[39mtoolName[33m,[39m
+  [31m[1m>[22m[39m[90m 53 |[39m         arguments[33m:[39m tc[33m.[39margs [36mas[39m [33mRecord[39m[33m<[39m[33mstring[39m[33m,[39m unknown[33m>[39m[33m,[39m
+   [90m    |[39m                       [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 54 |[39m       }))[33m;[39m
+   [90m 55 |[39m
+   [90m 56 |[39m       [36mthis[39m[33m.[39mlogger[33m.[39mlog([0m
+
+webpack 5.97.1 compiled with [1m[31m5 errors[39m[22m in 23752 ms

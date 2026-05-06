@@ -121,11 +121,17 @@ cd apps/frontend && npm run dev
 nx run-many --target=serve --projects=frontend,api-gateway,auth-service
 ```
 
+**pgAdmin** is included in both Docker Compose setups. Login at http://localhost:5050 with:
+- Email: `admin@polydom.com`
+- Password: `admin`
+- The PostgreSQL server is pre-configured — just click on it in the left sidebar to browse all databases.
+
 | Service | URL |
 |---------|-----|
 | Frontend | http://localhost:3002 |
 | API Gateway | http://localhost:3000 |
 | PostgreSQL | localhost:5432 |
+| pgAdmin | http://localhost:5050 |
 | Redis | localhost:6379 |
 | Kafka | localhost:9092 |
 | Elasticsearch | http://localhost:9200 |

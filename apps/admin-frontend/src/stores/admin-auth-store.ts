@@ -19,7 +19,7 @@ interface AuthState {
   isVendor: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (dto: { email: string; password: string; firstName: string; lastName: string }) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 
 export const useAdminAuthStore = create<AuthState>()(
@@ -32,19 +32,21 @@ export const useAdminAuthStore = create<AuthState>()(
 
       login: async (email, password) => {
         const { data } = await api.post('/auth/login', { email, password });
-        const user = data.user || { id: '', email, firstName: '', lastName: '', role: 'vendor' };
+        const user = data.user || { id: '', email, firstName: '', lastName: '', role: 'VENDOR' };
         localStorage.setItem('authToken', data.accessToken);
+        localStorage.setItem('refreshToken', data.refreshToken);
         set({
           token: data.accessToken,
           user,
           isAuthenticated: true,
-          isVendor: user.role === 'vendor' || user.role === 'admin',
+          isVendor: user.role === 'VENDOR' || user.role === 'ADMIN',
         });
       },
 
       register: async (dto) => {
-        const { data } = await api.post('/auth/register', { ...dto, role: 'vendor' });
+        const { data } = await api.post('/auth/register', { ...dto, role: 'VENDOR' });
         localStorage.setItem('authToken', data.accessToken);
+        localStorage.setItem('refreshToken', data.refreshToken);
         set({
           token: data.accessToken,
           user: data.user,
@@ -53,8 +55,18 @@ export const useAdminAuthStore = create<AuthState>()(
         });
       },
 
-      logout: () => {
+      logout: async () => {
+        const refreshToken = localStorage.getItem('refreshToken');
+        if (refreshToken) {
+          try {
+            await api.post('/auth/logout', { refreshToken });
+          } catch {
+            // Server may be unreachable — clear local state anyway
+          }
+        }
         localStorage.removeItem('authToken');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('polydom-admin-auth');
         set({ token: null, user: null, isAuthenticated: false, isVendor: false });
       },
     }),

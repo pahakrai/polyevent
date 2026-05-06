@@ -1,0 +1,95 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - link "Polydom" [ref=e5] [cursor=pointer]:
+          - /url: /
+        - navigation [ref=e6]:
+          - link "Search" [ref=e7] [cursor=pointer]:
+            - /url: /search
+          - link "Music" [ref=e8] [cursor=pointer]:
+            - /url: /category/music
+          - link "Art" [ref=e9] [cursor=pointer]:
+            - /url: /category/art
+          - link "Sports" [ref=e10] [cursor=pointer]:
+            - /url: /category/sports
+          - link "Activities" [ref=e11] [cursor=pointer]:
+            - /url: /category/activities
+          - link "Groups" [ref=e12] [cursor=pointer]:
+            - /url: /groups
+          - link "Vendors" [ref=e13] [cursor=pointer]:
+            - /url: /vendors
+          - link "Events" [ref=e14] [cursor=pointer]:
+            - /url: /events
+    - main [ref=e17]:
+      - generic [ref=e18]:
+        - generic [ref=e21]:
+          - heading "Find Live Music Events Near You" [level=1] [ref=e22]
+          - paragraph [ref=e23]: Discover concerts, jam sessions, workshops, and more
+          - generic [ref=e26]:
+            - generic [ref=e27]:
+              - img [ref=e28]
+              - textbox "Search events, genres, artists..." [ref=e31]
+            - button "Search" [ref=e32] [cursor=pointer]
+        - generic [ref=e33]:
+          - heading "Browse by Category" [level=2] [ref=e34]
+          - generic [ref=e35]:
+            - link "🎵 Concerts" [ref=e36] [cursor=pointer]:
+              - /url: /category/concert
+              - generic [ref=e37]:
+                - generic [ref=e38]: 🎵
+                - text: Concerts
+            - link "🎸 Workshops" [ref=e39] [cursor=pointer]:
+              - /url: /category/workshop
+              - generic [ref=e40]:
+                - generic [ref=e41]: 🎸
+                - text: Workshops
+            - link "🎷 Jam Sessions" [ref=e42] [cursor=pointer]:
+              - /url: /category/jam_session
+              - generic [ref=e43]:
+                - generic [ref=e44]: 🎷
+                - text: Jam Sessions
+            - link "🎤 Open Mic" [ref=e45] [cursor=pointer]:
+              - /url: /category/open_mic
+              - generic [ref=e46]:
+                - generic [ref=e47]: 🎤
+                - text: Open Mic
+            - link "🎉 Festivals" [ref=e48] [cursor=pointer]:
+              - /url: /category/festival
+              - generic [ref=e49]:
+                - generic [ref=e50]: 🎉
+                - text: Festivals
+            - link "🎫 Classes" [ref=e51] [cursor=pointer]:
+              - /url: /category/class
+              - generic [ref=e52]:
+                - generic [ref=e53]: 🎫
+                - text: Classes
+            - link "🎉 Private Parties" [ref=e54] [cursor=pointer]:
+              - /url: /category/private_party
+              - generic [ref=e55]:
+                - generic [ref=e56]: 🎉
+                - text: Private Parties
+            - link "🏢 Corporate" [ref=e57] [cursor=pointer]:
+              - /url: /category/corporate_event
+              - generic [ref=e58]:
+                - generic [ref=e59]: 🏢
+                - text: Corporate
+        - generic [ref=e61]:
+          - heading "Upcoming Events" [level=2] [ref=e62]
+          - link "View all →" [ref=e63] [cursor=pointer]:
+            - /url: /search
+        - generic [ref=e97]:
+          - heading "Find Events Near You" [level=2] [ref=e98]
+          - paragraph [ref=e99]: Allow location access to see events in your area
+          - button "Use My Location" [ref=e100] [cursor=pointer]:
+            - img [ref=e101]
+            - text: Use My Location
+    - contentinfo [ref=e104]:
+      - generic [ref=e105]:
+        - paragraph [ref=e106]: Polydom — Connecting people through shared interests
+        - generic [ref=e107]:
+          - link "Discover Activities" [ref=e108] [cursor=pointer]:
+            - /url: /search
+          - generic [ref=e109]: ·
+          - generic [ref=e110]: © 2026 Polydom
+  - alert [ref=e111]

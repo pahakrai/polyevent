@@ -258,6 +258,14 @@ export class InvestigationService {
       this.logger.error(`Step failed for session ${session.id}`, error);
       session.status = 'error';
       session.error = (error as Error).message;
+      const errorStep: InvestigationStep = {
+        id: uuid(),
+        stepNumber: session.steps.length + 1,
+        type: 'final_report',
+        content: `Investigation failed: ${(error as Error).message}`,
+        timestamp: new Date().toISOString(),
+      };
+      session.steps.push(errorStep);
     }
   }
 

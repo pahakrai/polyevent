@@ -15,6 +15,13 @@
       "when": 1777303123032,
       "tag": "0001_open_iron_patriot",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1777970283414,
+      "tag": "0002_lame_mockingbird",
+      "breakpoints": true
     }
   ]
 }

@@ -24,6 +24,7 @@
       "@polydom/kafka-client": ["../../../libs/kafka-client/src/index.ts"],
       "@polydom/database-client": ["../../../libs/database-client/src/index.ts"],
       "@polydom/elasticsearch-client": ["../../../libs/elasticsearch-client/src/index.ts"],
+      "@polydom/auth": ["../../../libs/auth/src/index.ts"],
       "@polydom/utils": ["../../../libs/utils/src/index.ts"]
     }
   },

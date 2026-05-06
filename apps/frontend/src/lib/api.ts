@@ -8,7 +8,8 @@ export const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-// Attach user context and auth token to every request
+// ── Request interceptor ────────────────────────────────────────────────
+
 api.interceptors.request.use((config) => {
   if (typeof window !== 'undefined') {
     const userId = localStorage.getItem('userId') || 'anonymous';
@@ -29,6 +30,104 @@ function generateSessionId(): string {
   sessionStorage.setItem('sessionId', id);
   return id;
 }
+
+// ── Token refresh ──────────────────────────────────────────────────────
+
+let isRefreshing = false;
+let failedQueue: Array<{ resolve: (token: string) => void; reject: (err: unknown) => void }> = [];
+
+function processQueue(error: unknown, token: string | null) {
+  failedQueue.forEach((p) => {
+    if (error || !token) {
+      p.reject(error);
+    } else {
+      p.resolve(token);
+    }
+  });
+  failedQueue = [];
+}
+
+async function tryRefreshToken(): Promise<string | null> {
+  const refreshToken = localStorage.getItem('refreshToken');
+  if (!refreshToken) return null;
+
+  try {
+    const { data } = await axios.post(`${API_BASE}/auth/refresh`, { refreshToken });
+    const newAccessToken = data.accessToken;
+    const newRefreshToken = data.refreshToken;
+
+    localStorage.setItem('authToken', newAccessToken);
+    localStorage.setItem('refreshToken', newRefreshToken);
+
+    // Update Zustand store (imported dynamically to avoid circular refs)
+    try {
+      const { useAuthStore } = await import('@/stores/auth-store');
+      useAuthStore.getState().setTokens(newAccessToken, newRefreshToken);
+    } catch {
+      // Store import may fail during SSR — tokens are already in localStorage
+    }
+
+    return newAccessToken;
+  } catch {
+    return null;
+  }
+}
+
+// ── Response interceptor ───────────────────────────────────────────────
+
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    // Don't intercept refresh requests themselves (avoid loops)
+    if (originalRequest?.url === '/auth/refresh') {
+      return Promise.reject(error);
+    }
+
+    if (error?.response?.status === 401 && !originalRequest._retry) {
+      if (isRefreshing) {
+        // Another request is already refreshing — queue this one
+        return new Promise((resolve, reject) => {
+          failedQueue.push({
+            resolve: (token: string) => {
+              originalRequest.headers['Authorization'] = `Bearer ${token}`;
+              resolve(api(originalRequest));
+            },
+            reject,
+          });
+        });
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      const newToken = await tryRefreshToken();
+
+      if (newToken) {
+        processQueue(null, newToken);
+        isRefreshing = false;
+        originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
+        return api(originalRequest);
+      }
+
+      // Refresh failed — hard logout
+      processQueue(new Error('Refresh failed'), null);
+      isRefreshing = false;
+
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('userId');
+        window.location.href = '/login';
+      }
+
+      return Promise.reject(error);
+    }
+
+    return Promise.reject(error);
+  },
+);
 
 // ── API methods ────────────────────────────────────────────────────────
 

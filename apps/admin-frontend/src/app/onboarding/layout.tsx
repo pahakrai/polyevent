@@ -35,7 +35,20 @@ export default function OnboardingLayout({ children }: { children: React.ReactNo
       <header className="border-b bg-card">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-4">
           <h1 className="text-lg font-bold">Vendor Onboarding</h1>
-          <span className="text-sm text-muted-foreground">Step {step} of 3</span>
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-muted-foreground">Step {step} of 3</span>
+            <button
+              onClick={async () => {
+                const { logout } = useAdminAuthStore.getState();
+                await logout();
+                useOnboardingStore.getState().reset();
+                router.push('/login');
+              }}
+              className="rounded-md border border-muted-foreground/30 px-3 py-1 text-xs text-muted-foreground hover:bg-muted hover:text-foreground"
+            >
+              Sign out
+            </button>
+          </div>
         </div>
       </header>
 

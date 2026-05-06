@@ -1,0 +1,89 @@
+# pgAdmin 4 — web-based PostgreSQL GUI for local Kubernetes dev
+# Access at http://localhost:5050 after port-forward
+# Login: admin@polydom.com / admin
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pgadmin-config
+  namespace: polydom-dev
+data:
+  servers.json: |
+    {
+      "Servers": {
+        "1": {
+          "Name": "Polydom PostgreSQL",
+          "Group": "Kubernetes",
+          "Host": "postgres.polydom-dev.svc.cluster.local",
+          "Port": 5432,
+          "Username": "postgres",
+          "Password": "postgres",
+          "SSLMode": "prefer",
+          "MaintenanceDB": "postgres",
+          "Comment": "All microservice databases: gateway_db, auth_db, user_db, vendor_db, event_db, agent_db"
+        }
+      }
+    }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pgadmin
+  namespace: polydom-dev
+  labels:
+    app: pgadmin
+spec:
+  selector:
+    app: pgadmin
+  ports:
+  - port: 80
+    targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pgadmin
+  namespace: polydom-dev
+  labels:
+    app: pgadmin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pgadmin
+  template:
+    metadata:
+      labels:
+        app: pgadmin
+    spec:
+      containers:
+      - name: pgadmin
+        image: dpage/pgadmin4:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: PGADMIN_DEFAULT_EMAIL
+          value: admin@polydom.com
+        - name: PGADMIN_DEFAULT_PASSWORD
+          value: admin
+        - name: PGADMIN_CONFIG_SERVER_MODE
+          value: "False"
+        volumeMounts:
+        - name: servers-config
+          mountPath: /pgadmin4/servers.json
+          subPath: servers.json
+        - name: pgadmin-data
+          mountPath: /var/lib/pgadmin
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+      volumes:
+      - name: servers-config
+        configMap:
+          name: pgadmin-config
+      - name: pgadmin-data
+        emptyDir: {}

@@ -116,6 +116,22 @@ services:
       - ./tools/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
 
+  # PostgreSQL web GUI — pre-configured to connect to postgres service
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@polydom.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    ports:
+      - "5050:80"
+    volumes:
+      - ./tools/pgadmin/servers.json:/pgadmin4/servers.json:ro
+      - pgadmin_data:/var/lib/pgadmin
+
   grafana:
     image: grafana/grafana:latest
     depends_on:
@@ -133,3 +149,4 @@ volumes:
   elasticsearch_data:
   prometheus_data:
   grafana_data:
+  pgadmin_data:

@@ -1,0 +1,65 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - link "Polydom" [ref=e5] [cursor=pointer]:
+        - /url: /
+      - navigation [ref=e6]:
+        - link "Search" [ref=e7] [cursor=pointer]:
+          - /url: /search
+        - link "Music" [ref=e8] [cursor=pointer]:
+          - /url: /category/music
+        - link "Art" [ref=e9] [cursor=pointer]:
+          - /url: /category/art
+        - link "Sports" [ref=e10] [cursor=pointer]:
+          - /url: /category/sports
+        - link "Activities" [ref=e11] [cursor=pointer]:
+          - /url: /category/activities
+        - link "Groups" [ref=e12] [cursor=pointer]:
+          - /url: /groups
+        - link "Vendors" [ref=e13] [cursor=pointer]:
+          - /url: /vendors
+        - link "Events" [ref=e14] [cursor=pointer]:
+          - /url: /events
+  - main [ref=e17]:
+    - generic [ref=e19]:
+      - generic [ref=e20]:
+        - heading "Create an account" [level=3] [ref=e21]
+        - paragraph [ref=e22]: Join Polydom and discover live music
+      - generic [ref=e23]:
+        - generic [ref=e24]:
+          - generic [ref=e25]:
+            - text: I want to
+            - generic [ref=e26]:
+              - button "Discover events" [ref=e27] [cursor=pointer]
+              - button "Host & earn" [ref=e28] [cursor=pointer]
+          - generic [ref=e29]:
+            - generic [ref=e30]:
+              - text: First name
+              - textbox "First name" [ref=e31]:
+                - /placeholder: John
+            - generic [ref=e32]:
+              - text: Last name
+              - textbox "Last name" [ref=e33]:
+                - /placeholder: Doe
+          - generic [ref=e34]:
+            - text: Email
+            - textbox "Email" [ref=e35]:
+              - /placeholder: you@example.com
+          - generic [ref=e36]:
+            - text: Password
+            - textbox "Password" [ref=e37]:
+              - /placeholder: Choose a password
+        - generic [ref=e38]:
+          - button "Create account" [ref=e39] [cursor=pointer]
+          - paragraph [ref=e40]:
+            - text: Already have an account?
+            - link "Sign in" [ref=e41] [cursor=pointer]:
+              - /url: /login
+  - contentinfo [ref=e42]:
+    - generic [ref=e43]:
+      - paragraph [ref=e44]: Polydom — Connecting people through shared interests
+      - generic [ref=e45]:
+        - link "Discover Activities" [ref=e46] [cursor=pointer]:
+          - /url: /search
+        - generic [ref=e47]: ·
+        - generic [ref=e48]: © 2026 Polydom

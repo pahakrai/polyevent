@@ -9,10 +9,9 @@ import { IntrospectionSkill } from './skills/introspection.skill';
 import { ValidationSkill } from './skills/validation.skill';
 import { BusinessAnalystSkill } from './skills/business-analyst.skill';
 import { SkillRegistryService } from './skills/skill-registry.service';
-import { McpModule } from '../mcp/mcp.module';
 
 @Module({
-  imports: [ConfigModule, McpModule],
+  imports: [ConfigModule],
   controllers: [AgentController],
   providers: [
     // Core

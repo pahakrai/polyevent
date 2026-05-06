@@ -25,7 +25,7 @@ export default function LoginPage() {
 
     try {
       const result = await loginUser(email, password);
-      login(result.accessToken, result.user);
+      login(result.accessToken, result.refreshToken, result.user);
       router.push('/');
     } catch (err: unknown) {
       const msg =

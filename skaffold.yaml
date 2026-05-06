@@ -127,6 +127,7 @@ manifests:
     - kubernetes/local/namespace.yaml
     - kubernetes/local/secrets.yaml
     - kubernetes/local/postgres.yaml
+    - kubernetes/local/pgadmin.yaml
     - kubernetes/local/infrastructure.yaml
     - kubernetes/local/services.yaml
     - kubernetes/local/ingress.yaml
@@ -269,3 +270,8 @@ portForward:
     namespace: polydom-dev
     port: 9234
     localPort: 9234
+  - resourceType: service
+    resourceName: pgadmin
+    namespace: polydom-dev
+    port: 80
+    localPort: 5050

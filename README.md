@@ -429,6 +429,7 @@ First run takes a few minutes (installs dependencies). Subsequent runs use Docke
 | Event Service | 3004 | http://localhost:3004 |
 | Frontend | 3005 | http://localhost:3005 |
 | Grafana | 3001 | http://localhost:3001 (admin/admin) |
+| pgAdmin | 5050 | http://localhost:5050 (admin@polydom.com / admin) |
 | Kibana | 5601 | http://localhost:5601 |
 | Prometheus | 9090 | http://localhost:9090 |
 
@@ -512,6 +513,7 @@ Both paths use the same infrastructure services. Default ports:
 | Service | Port | Credentials |
 |---|---|---|
 | PostgreSQL | 5432 | `eventbooking` / `eventbooking123` |
+| pgAdmin | 5050 | `admin@polydom.com` / `admin` |
 | MongoDB | 27017 | `root` / `mongopass123` |
 | Redis | 6379 | password: `redispass123` |
 | Kafka | 9092 | — |

@@ -24,7 +24,7 @@ const PRICING_MODELS = [
 
 export default function OnboardingVenues() {
   const router = useRouter();
-  const { vendorId, setStep } = useOnboardingStore();
+  const { vendorId, setStep, setVenueId } = useOnboardingStore();
   const [form, setForm] = useState({
     name: '',
     description: '',
@@ -43,7 +43,7 @@ export default function OnboardingVenues() {
     setLoading(true);
     setError('');
     try {
-      await api.post(`/vendors/${vendorId}/venues`, {
+      const { data: venue } = await api.post(`/vendors/${vendorId}/venues`, {
         vendorId,
         name: form.name,
         description: form.description,
@@ -54,6 +54,7 @@ export default function OnboardingVenues() {
         address: JSON.parse(form.address),
         location: JSON.parse(form.location),
       });
+      setVenueId(venue.id);
       setStep(3);
       router.push('/onboarding/timeslots');
     } catch (err: any) {

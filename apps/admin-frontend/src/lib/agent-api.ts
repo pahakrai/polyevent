@@ -1,11 +1,4 @@
-import axios from 'axios';
-
-const AGENT_URL = process.env.NEXT_PUBLIC_AGENT_URL || 'http://localhost:3010';
-
-export const agentApi = axios.create({
-  baseURL: AGENT_URL,
-  headers: { 'Content-Type': 'application/json' },
-});
+import { api } from './api';
 
 export interface InvestigationStep {
   id: string;
@@ -27,21 +20,21 @@ export interface InvestigationSession {
 }
 
 export async function startInvestigation(goal: string, vendorId: string): Promise<InvestigationSession> {
-  const { data } = await agentApi.post('/agent/investigate', { goal, vendorId });
+  const { data } = await api.post('/agent/investigate', { goal, vendorId });
   return data;
 }
 
 export async function continueInvestigation(sessionId: string): Promise<InvestigationSession> {
-  const { data } = await agentApi.post(`/agent/investigate/${sessionId}/continue`);
+  const { data } = await api.post(`/agent/investigate/${sessionId}/continue`);
   return data;
 }
 
 export async function redirectInvestigation(sessionId: string, instruction: string): Promise<InvestigationSession> {
-  const { data } = await agentApi.post(`/agent/investigate/${sessionId}/redirect`, { instruction });
+  const { data } = await api.post(`/agent/investigate/${sessionId}/redirect`, { instruction });
   return data;
 }
 
 export async function getSession(sessionId: string): Promise<InvestigationSession> {
-  const { data } = await agentApi.get(`/agent/investigate/${sessionId}`);
+  const { data } = await api.get(`/agent/investigate/${sessionId}`);
   return data;
 }

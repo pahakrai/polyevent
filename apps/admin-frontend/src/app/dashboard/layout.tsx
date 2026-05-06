@@ -4,6 +4,7 @@ import { useEffect, useState, Suspense } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useAdminAuthStore } from '@/stores/admin-auth-store';
+import { useOnboardingStore } from '@/stores/onboarding-store';
 
 const NAV_ITEMS = [
   { href: '/dashboard', label: 'Overview', icon: 'G' },
@@ -30,18 +31,24 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }
   }, [mounted, router]);
 
+  const handleLogout = async () => {
+    await logout();
+    useOnboardingStore.getState().reset();
+    router.push('/login');
+  };
+
   if (!mounted) return null;
   if (!isAuthenticated) return null;
 
   return (
     <div className="flex min-h-screen">
-      <aside className="w-64 border-r bg-card">
+      <aside className="flex w-64 flex-col border-r bg-card">
         <div className="border-b px-6 py-4">
           <h1 className="text-lg font-bold">Polydom</h1>
           <p className="text-xs text-muted-foreground">{isVendor ? 'Vendor' : 'Admin'} Dashboard</p>
         </div>
 
-        <nav className="space-y-1 p-3">
+        <nav className="flex-1 space-y-1 p-3">
           {NAV_ITEMS.map((item) => (
             <Link
               key={item.href}
@@ -56,11 +63,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           ))}
         </nav>
 
-        <div className="absolute bottom-0 w-64 border-t p-4">
-          <div className="mb-2 text-sm font-medium">
+        <div className="border-t p-4">
+          <div className="mb-1 text-sm font-medium">
             {user?.firstName} {user?.lastName}
           </div>
-          <button onClick={() => { logout(); router.push('/login'); }} className="text-xs text-muted-foreground hover:text-foreground">
+          <button onClick={handleLogout} className="rounded-md px-2 py-1 text-xs text-muted-foreground hover:bg-muted hover:text-foreground">
             Sign out
           </button>
         </div>

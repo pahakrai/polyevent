@@ -9,9 +9,14 @@ export class AnthropicProvider implements LlmProvider {
   private readonly logger = new Logger(AnthropicProvider.name);
   private readonly client: Anthropic;
 
+  private readonly model: string;
+
   constructor(configService: ConfigService) {
+    const baseURL = configService.get<string>('LLM_API_URL') || undefined;
+    this.model = configService.get<string>('LLM_MODEL') || 'claude-opus-4-7';
     this.client = new Anthropic({
-      apiKey: configService.get<string>('ANTHROPIC_API_KEY') || 'sk-placeholder',
+      apiKey: configService.get<string>('LLM_API_KEY') || configService.get<string>('ANTHROPIC_API_KEY') || 'sk-placeholder',
+      ...(baseURL ? { baseURL } : {}),
     });
   }
 
@@ -57,7 +62,7 @@ export class AnthropicProvider implements LlmProvider {
 
     try {
       const stream = this.client.messages.stream({
-        model: 'claude-opus-4-7',
+        model: this.model,
         max_tokens: 64000,
         thinking: { type: 'adaptive', display: 'summarized' },
         // xhigh is valid at runtime on Opus 4.7; SDK types haven't caught up

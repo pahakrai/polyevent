@@ -60,6 +60,13 @@ spec:
             secretKeyRef:
               name: redis-secrets
               key: redis-url
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: jwt-secrets
+              key: jwt-secret
+        - name: JWT_EXPIRES_IN
+          value: "15m"
         - name: AUTH_SERVICE_URL
           value: http://auth-service:3000
         - name: USER_SERVICE_URL
@@ -404,6 +411,11 @@ spec:
             secretKeyRef:
               name: redis-secrets
               key: redis-url
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: jwt-secrets
+              key: jwt-secret
         - name: PORT
           value: "3000"
         resources:
@@ -495,6 +507,11 @@ spec:
             secretKeyRef:
               name: redis-secrets
               key: redis-url
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: jwt-secrets
+              key: jwt-secret
         - name: PORT
           value: "3000"
         resources:
@@ -586,6 +603,11 @@ spec:
             secretKeyRef:
               name: redis-secrets
               key: redis-url
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: jwt-secrets
+              key: jwt-secret
         - name: PORT
           value: "3000"
         resources:
@@ -678,7 +700,16 @@ spec:
               name: redis-secrets
               key: redis-url
         - name: LLM_PROVIDER
-          value: deepseek
+          value: anthropic
+        - name: LLM_MODEL
+          value: deepseek-v4-pro
+        - name: LLM_API_URL
+          value: https://api.deepseek.com/anthropic
+        - name: LLM_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: llm-secrets
+              key: api-key
         - name: DEEPSEEK_API_KEY
           valueFrom:
             secretKeyRef:
