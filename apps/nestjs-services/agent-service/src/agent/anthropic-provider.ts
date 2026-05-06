@@ -8,16 +8,24 @@ import type { ToolDefinition } from './tools';
 export class AnthropicProvider implements LlmProvider {
   private readonly logger = new Logger(AnthropicProvider.name);
   private readonly client: Anthropic;
-
   private readonly model: string;
+  private readonly isDeepSeek: boolean;
 
   constructor(configService: ConfigService) {
     const baseURL = configService.get<string>('LLM_API_URL') || undefined;
+    this.isDeepSeek = baseURL ? baseURL.includes('deepseek') : false;
     this.model = configService.get<string>('LLM_MODEL') || 'claude-opus-4-7';
     this.client = new Anthropic({
-      apiKey: configService.get<string>('LLM_API_KEY') || configService.get<string>('ANTHROPIC_API_KEY') || 'sk-placeholder',
+      apiKey:
+        configService.get<string>('LLM_API_KEY') ||
+        configService.get<string>('ANTHROPIC_API_KEY') ||
+        'sk-placeholder',
       ...(baseURL ? { baseURL } : {}),
     });
+    this.logger.log(
+      `AnthropicProvider: model=${this.model}, deepseek=${this.isDeepSeek}, ` +
+      `baseURL=${baseURL || 'default'}`,
+    );
   }
 
   async chat(messages: LlmMessage[], tools: ToolDefinition[]): Promise<LlmResponse> {
@@ -30,44 +38,60 @@ export class AnthropicProvider implements LlmProvider {
       input_schema: t.input_schema,
     }));
 
-    const anthropicMessages: Anthropic.MessageParam[] = otherMsgs.map((m) => {
-      if (m.role === 'tool') {
-        return {
+    const anthropicMessages: Anthropic.MessageParam[] = [];
+    const toolResultBlocks: Anthropic.ToolResultBlockParam[] = [];
+
+    const flushToolResults = () => {
+      if (toolResultBlocks.length > 0) {
+        anthropicMessages.push({
           role: 'user',
-          content: [
-            {
-              type: 'tool_result' as const,
-              tool_use_id: m.tool_call_id!,
-              content: m.content,
-            },
-          ],
-        };
+          content: [...toolResultBlocks],
+        });
+        toolResultBlocks.length = 0;
       }
-      if (m.role === 'assistant' && m.tool_calls) {
-        return {
-          role: 'assistant',
-          content: m.tool_calls.map((tc) => ({
-            type: 'tool_use' as const,
+    };
+
+    for (const m of otherMsgs) {
+      if (m.role === 'tool') {
+        toolResultBlocks.push({
+          type: 'tool_result' as const,
+          tool_use_id: m.tool_call_id!,
+          content: m.content,
+        });
+      } else {
+        flushToolResults();
+        if (m.role === 'assistant' && m.tool_calls) {
+          const blocks: Anthropic.ContentBlock[] = m.tool_calls.map((tc) => ({
+            type: 'tool_use',
             id: tc.id,
             name: tc.name,
             input: tc.arguments,
-          })),
-        };
+          })) as Anthropic.ContentBlock[];
+          if (m.thinking) {
+            blocks.unshift({ type: 'thinking', thinking: m.thinking } as Anthropic.ContentBlock);
+          }
+          anthropicMessages.push({ role: 'assistant', content: blocks });
+        } else {
+          anthropicMessages.push({
+            role: m.role as 'user' | 'assistant',
+            content: m.content,
+          });
+        }
       }
-      return {
-        role: m.role as 'user' | 'assistant',
-        content: m.content,
-      };
-    });
+    }
+    flushToolResults();
 
     try {
       const stream = this.client.messages.stream({
         model: this.model,
         max_tokens: 64000,
-        thinking: { type: 'adaptive', display: 'summarized' },
-        // xhigh is valid at runtime on Opus 4.7; SDK types haven't caught up
-        output_config: { effort: 'xhigh' as 'high' | 'max' },
-        cache_control: { type: 'ephemeral' },
+        ...(this.isDeepSeek
+          ? { thinking: { type: 'disabled' as const } }
+          : {
+              thinking: { type: 'adaptive' as const, display: 'summarized' as const },
+              output_config: { effort: 'xhigh' as 'high' | 'max' },
+              cache_control: { type: 'ephemeral' as const },
+            }),
         system: systemMsg?.content,
         messages: anthropicMessages,
         tools: anthropicTools.length > 0 ? anthropicTools : undefined,
@@ -77,6 +101,7 @@ export class AnthropicProvider implements LlmProvider {
 
       const toolCalls: LlmToolCall[] = [];
       let text = '';
+      let thinking = '';
 
       for (const block of response.content) {
         if (block.type === 'text') {
@@ -89,6 +114,7 @@ export class AnthropicProvider implements LlmProvider {
           });
         } else if (block.type === 'thinking') {
           if (block.thinking) {
+            thinking += block.thinking;
             this.logger.debug(`Claude thinking: ${block.thinking.slice(0, 200)}...`);
           }
         }
@@ -108,7 +134,7 @@ export class AnthropicProvider implements LlmProvider {
         `cache_write=${response.usage.cache_creation_input_tokens ?? 0}`,
       );
 
-      return { text, toolCalls, stopReason };
+      return { text, toolCalls, stopReason, ...(thinking ? { thinking } : {}) };
     } catch (error) {
       if (error instanceof Anthropic.RateLimitError) {
         this.logger.error('Anthropic rate limited — retry after backoff');

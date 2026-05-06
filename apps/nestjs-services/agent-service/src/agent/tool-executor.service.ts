@@ -1,122 +1,178 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { Pool } from 'pg';
+import { McpClientService } from '../mcp/mcp-client.service';
+import { SqlGuardUtils } from './sql-guard.utils';
+
+export interface ToolContext {
+  vendorId: string;
+  isSuperadmin: boolean;
+}
 
 /**
- * Executes tool calls against PostgreSQL.
+ * Central tool executor — the single choke point for all tool execution.
  *
- * Uses two connection pools because data is split across databases:
- *   - vendor_db: vendors, venues, time_slots
- *   - event_db:   events
+ * Architecture:
+ *   Agent (LLM) → calls tools → ToolExecutorService → SqlGuardUtils → McpClientService → MCP Server
  *
- * Security: every query injects `app.current_vendor_id` for RLS.
- * Market queries hit pre-aggregated views that bypass RLS but contain
- * only anonymized GROUP BY aggregates (no individual vendor rows).
+ * Defense in depth:
+ *   Layer 1 (Guidance):   System prompt tells Agent to scope queries by vendor
+ *   Layer 2 (Enforcement): SqlGuardUtils AST-injects vendor_id into every query
+ *   Layer 3 (Database):   PostgreSQL RLS in the MCP container
  *
- * For production with cross-database joins, set up a read replica
- * with PostgreSQL Foreign Data Wrappers federating vendor_db + event_db.
+ * Skills are text (the "Textbook") injected into the system prompt.
+ * Tools are execution (the "Calculator") routed through this service.
+ * They never touch each other — the Agent is always the middleman.
  */
 @Injectable()
 export class ToolExecutorService {
   private readonly logger = new Logger(ToolExecutorService.name);
-  private readonly vendorPool: Pool;
-  private readonly eventPool: Pool;
 
-  constructor(configService: ConfigService) {
-    const baseUrl =
-      configService.get<string>('AGENT_DATABASE_URL') ||
-      'postgresql://eventbooking:eventbooking123@localhost:5432';
+  constructor(private readonly mcpClient: McpClientService) {}
 
-    // Parse base URL to substitute database names
-    const url = new URL(baseUrl);
-    const credentials = `${url.username}:${url.password}@${url.hostname}:${url.port}`;
-
-    this.vendorPool = new Pool({
-      connectionString: `postgresql://${credentials}/vendor_db`,
-      max: 5,
-    });
-
-    this.eventPool = new Pool({
-      connectionString: `postgresql://${credentials}/event_db`,
-      max: 5,
-    });
-  }
-
-  private async setVendorContext(client: import('pg').PoolClient, vendorId: string) {
-    await client.query('SELECT set_config($1, $2, false)', [
-      'app.current_vendor_id',
-      vendorId,
-    ]);
-  }
-
-  /** Query vendor_db */
-  private async queryVendor(vendorId: string, sql: string, params: unknown[] = []) {
-    const client = await this.vendorPool.connect();
-    try {
-      await this.setVendorContext(client, vendorId);
-      return (await client.query(sql, params)).rows;
-    } finally {
-      client.release();
-    }
-  }
-
-  /** Query event_db */
-  private async queryEvent(vendorId: string, sql: string, params: unknown[] = []) {
-    const client = await this.eventPool.connect();
-    try {
-      await this.setVendorContext(client, vendorId);
-      return (await client.query(sql, params)).rows;
-    } finally {
-      client.release();
-    }
-  }
-
+  /** Single entry point — routes any tool name to the right backend. */
   async execute(
     toolName: string,
     args: Record<string, unknown>,
-    vendorId: string,
+    ctx: ToolContext,
   ): Promise<string> {
-    this.logger.log(`Executing ${toolName} for vendor ${vendorId}`);
+    this.logger.log(
+      `Executing ${toolName} for vendor ${ctx.vendorId}` +
+      `${ctx.isSuperadmin ? ' [superadmin]' : ''}`,
+    );
+
+    switch (toolName) {
+      // ── Introspection ──────────────────────────────────────────
+      case 'list_tables':
+        return this.listTables(ctx.vendorId);
+
+      case 'describe_table':
+        return this.describeTable(args.table_name as string, ctx.vendorId);
+
+      // ── Validation ─────────────────────────────────────────────
+      case 'explain_tool':
+        return this.explainTool(
+          args.tool_name as string,
+          (args.tool_args as Record<string, unknown>) || {},
+          ctx,
+        );
+
+      // ── Business Analysis ──────────────────────────────────────
+      case 'get_booking_trends':
+      case 'get_event_performance':
+      case 'get_venue_utilization':
+      case 'get_market_comparison':
+      case 'get_revenue_summary':
+      case 'get_event_timeline':
+        return this.runBusinessQuery(toolName, args, ctx);
+
+      default:
+        return JSON.stringify({
+          error: `Unknown tool: ${toolName}`,
+          available: [
+            'list_tables', 'describe_table', 'explain_tool',
+            'get_booking_trends', 'get_event_performance', 'get_venue_utilization',
+            'get_market_comparison', 'get_revenue_summary', 'get_event_timeline',
+          ],
+        });
+    }
+  }
+
+  // ── Introspection ──────────────────────────────────────────────────
+
+  private async listTables(vendorId: string): Promise<string> {
+    try {
+      return await this.mcpClient.callTool('db_list_tables', { vendor_id: vendorId });
+    } catch (error) {
+      return JSON.stringify({ error: `list_tables failed: ${(error as Error).message}` });
+    }
+  }
+
+  private async describeTable(tableName: string, vendorId: string): Promise<string> {
+    if (!tableName) {
+      return JSON.stringify({ error: 'table_name is required' });
+    }
+    try {
+      return await this.mcpClient.callTool('db_describe_table', {
+        table_name: tableName,
+        vendor_id: vendorId,
+      });
+    } catch (error) {
+      return JSON.stringify({ error: `describe_table failed: ${(error as Error).message}` });
+    }
+  }
+
+  // ── Validation ─────────────────────────────────────────────────────
+
+  private async explainTool(
+    targetTool: string,
+    toolArgs: Record<string, unknown>,
+    ctx: ToolContext,
+  ): Promise<string> {
+    const validTools = [
+      'get_booking_trends', 'get_event_performance', 'get_venue_utilization',
+      'get_market_comparison', 'get_revenue_summary', 'get_event_timeline',
+    ];
+
+    if (!validTools.includes(targetTool)) {
+      return JSON.stringify({
+        error: `Cannot explain unknown tool: ${targetTool}`,
+        available_tools: validTools,
+        note: 'explain_tool only works with pre-built business analysis tools for security.',
+      });
+    }
+
+    const params = this.buildQueryParams(targetTool, toolArgs);
+    if ('error' in params) {
+      return JSON.stringify(params);
+    }
+
+    // EXPLAIN is read-only — scoping not required but applied for consistency
+    const securedSql = SqlGuardUtils.injectVendorScope(
+      params.sql,
+      ctx.vendorId,
+      targetTool,
+      ctx.isSuperadmin,
+    );
+    const explainSql = `EXPLAIN (ANALYZE false, FORMAT json) ${securedSql}`;
 
     try {
-      let rows: unknown[];
-
-      switch (toolName) {
-        case 'get_booking_trends':
-          rows = await this.getBookingTrends(vendorId, args);
-          break;
-        case 'get_event_performance':
-          rows = await this.getEventPerformance(vendorId, args);
-          break;
-        case 'get_venue_utilization':
-          rows = await this.getVenueUtilization(vendorId, args);
-          break;
-        case 'get_market_comparison':
-          rows = await this.getMarketComparison(vendorId, args);
-          break;
-        case 'get_revenue_summary':
-          rows = await this.getRevenueSummary(vendorId, args);
-          break;
-        case 'get_event_timeline':
-          rows = await this.getEventTimeline(vendorId, args);
-          break;
-        default:
-          return JSON.stringify({
-            error: `Unknown tool: ${toolName}`,
-            available: [
-              'get_booking_trends',
-              'get_event_performance',
-              'get_venue_utilization',
-              'get_market_comparison',
-              'get_revenue_summary',
-              'get_event_timeline',
-            ],
-          });
-      }
-
-      return JSON.stringify({ rows, row_count: rows.length });
+      return await this.mcpClient.callTool('db_run_select_query', {
+        sql: explainSql,
+        vendor_id: ctx.vendorId,
+        database: params.database,
+      });
     } catch (error) {
-      this.logger.error(`Tool ${toolName} failed`, error);
+      return JSON.stringify({ error: `EXPLAIN failed: ${(error as Error).message}` });
+    }
+  }
+
+  // ── Business Analysis ──────────────────────────────────────────────
+
+  private async runBusinessQuery(
+    toolName: string,
+    args: Record<string, unknown>,
+    ctx: ToolContext,
+  ): Promise<string> {
+    const params = this.buildQueryParams(toolName, args);
+    if ('error' in params) {
+      return JSON.stringify(params);
+    }
+
+    // 🛡️ LAYER 2 — THE TRUE GUARD: AST-inject vendor scope before MCP execution
+    const securedSql = SqlGuardUtils.injectVendorScope(
+      params.sql,
+      ctx.vendorId,
+      toolName,
+      ctx.isSuperadmin,
+    );
+
+    try {
+      return await this.mcpClient.callTool('db_run_select_query', {
+        sql: securedSql,
+        vendor_id: ctx.vendorId,
+        database: params.database,
+      });
+    } catch (error) {
+      this.logger.error(`Tool ${toolName} failed`, error as Error);
       return JSON.stringify({
         error: `Query failed: ${(error as Error).message}`,
         tool: toolName,
@@ -124,220 +180,68 @@ export class ToolExecutorService {
     }
   }
 
-  // ── Event queries (event_db) ────────────────────────────────────────
+  // ── SQL builders ───────────────────────────────────────────────────
 
-  private async getBookingTrends(vendorId: string, args: Record<string, unknown>) {
-    const months = (args.months as number) || 3;
-    const category = args.category as string | undefined;
-
-    return this.queryEvent(
-      vendorId,
-      `SELECT
-         DATE_TRUNC('month', start_time) AS month,
-         category,
-         COUNT(*) AS event_count,
-         SUM(current_bookings) AS total_bookings,
-         ROUND(AVG(current_bookings * 100.0 / NULLIF(max_attendees, 0)), 1) AS avg_fill_pct
-       FROM events
-       WHERE start_time >= NOW() - ($1 || ' months')::INTERVAL
-         AND ($2::text IS NULL OR category = $2::event_category)
-       GROUP BY DATE_TRUNC('month', start_time), category
-       ORDER BY month DESC, category`,
-      [months, category],
-    );
-  }
-
-  private async getEventPerformance(vendorId: string, args: Record<string, unknown>) {
-    const category = args.category as string | undefined;
-    const status = args.status as string | undefined;
-    const orderBy = (args.order_by as string) || 'fill_rate';
-
-    const orderMap: Record<string, string> = {
-      fill_rate: 'fill_pct ASC',
-      bookings: 'current_bookings DESC',
-      created_at: 'created_at DESC',
-    };
-
-    return this.queryEvent(
-      vendorId,
-      `SELECT
-         id, title, category, status,
-         current_bookings, max_attendees,
-         ROUND(current_bookings * 100.0 / NULLIF(max_attendees, 0), 1) AS fill_pct,
-         price->>'base' AS price,
-         start_time, created_at
-       FROM events
-       WHERE ($1::text IS NULL OR category = $1::event_category)
-         AND ($2::text IS NULL OR status = $2::event_status)
-       ORDER BY ${orderMap[orderBy] || orderMap.fill_rate}`,
-      [category, status],
-    );
-  }
-
-  private async getRevenueSummary(vendorId: string, args: Record<string, unknown>) {
-    const months = (args.months as number) || 6;
-
-    return this.queryEvent(
-      vendorId,
-      `SELECT
-         DATE_TRUNC('month', start_time) AS month,
-         category,
-         COUNT(*) AS event_count,
-         SUM(current_bookings) AS total_bookings,
-         SUM(current_bookings * COALESCE((price->>'base')::numeric, 0)) AS estimated_revenue,
-         ROUND(AVG(current_bookings * COALESCE((price->>'base')::numeric, 0)), 2) AS avg_revenue_per_event
-       FROM events
-       WHERE start_time >= NOW() - ($1 || ' months')::INTERVAL
-       GROUP BY DATE_TRUNC('month', start_time), category
-       ORDER BY month DESC, estimated_revenue DESC`,
-      [months],
-    );
-  }
-
-  private async getEventTimeline(vendorId: string, args: Record<string, unknown>) {
-    const months = (args.months as number) || 6;
-
-    return this.queryEvent(
-      vendorId,
-      `SELECT
-         id, title, category, status,
-         start_time, created_at, updated_at,
-         EXTRACT(DAY FROM (start_time - created_at)) AS lead_time_days,
-         CASE WHEN status = 'CANCELLED' THEN true ELSE false END AS was_cancelled
-       FROM events
-       WHERE created_at >= NOW() - ($1 || ' months')::INTERVAL
-       ORDER BY created_at DESC`,
-      [months],
-    );
-  }
-
-  // ── Vendor queries (vendor_db) ──────────────────────────────────────
-
-  private async getVenueUtilization(vendorId: string, args: Record<string, unknown>) {
-    const venueId = args.venue_id as string | undefined;
-
-    return this.queryVendor(
-      vendorId,
-      `SELECT
-         v.id AS venue_id,
-         v.name AS venue_name,
-         v.type AS venue_type,
-         COUNT(ts.id) AS total_slots,
-         COUNT(ts.id) FILTER (WHERE ts.status = 'AVAILABLE') AS available_slots,
-         COUNT(ts.id) FILTER (WHERE ts.status = 'BOOKED') AS booked_slots,
-         COUNT(ts.id) FILTER (WHERE ts.status = 'BLOCKED') AS blocked_slots,
-         COUNT(ts.id) FILTER (WHERE ts.status = 'MAINTENANCE') AS maintenance_slots,
-         ROUND(
-           COUNT(ts.id) FILTER (WHERE ts.status = 'BOOKED') * 100.0
-           / NULLIF(COUNT(ts.id), 0), 1
-         ) AS utilization_pct
-       FROM venues v
-       LEFT JOIN time_slots ts ON ts.venue_id = v.id
-       WHERE ($1::text IS NULL OR v.id = $1)
-       GROUP BY v.id, v.name, v.type
-       ORDER BY utilization_pct DESC`,
-      [venueId],
-    );
-  }
-
-  /**
-   * Run EXPLAIN on a known business tool's query without executing it.
-   * Returns the PostgreSQL query plan for performance validation.
-   */
-  async explain(
+  private buildQueryParams(
     toolName: string,
     args: Record<string, unknown>,
-    vendorId: string,
-  ): Promise<string> {
+  ): { sql: string; database: string } | { error: string } {
     const months = (args.months as number) || 3;
     const category = args.category as string | undefined;
-    const orderBy = (args.order_by as string) || 'fill_rate';
-
-    // Reconstruct the same SQL the tool would run
-    let sql: string;
-    let params: unknown[];
-    let db: 'vendor' | 'event';
 
     switch (toolName) {
       case 'get_booking_trends':
-        db = 'event';
-        sql = `EXPLAIN (ANALYZE false, FORMAT json) SELECT DATE_TRUNC('month', start_time) AS month, category, COUNT(*) AS event_count, SUM(current_bookings) AS total_bookings, ROUND(AVG(current_bookings * 100.0 / NULLIF(max_attendees, 0)), 1) AS avg_fill_pct FROM events WHERE start_time >= NOW() - ($1 || ' months')::INTERVAL AND ($2::text IS NULL OR category = $2::event_category) GROUP BY DATE_TRUNC('month', start_time), category ORDER BY month DESC, category`;
-        params = [months, category];
-        break;
-      case 'get_event_performance':
-        db = 'event';
+        return {
+          sql: `SELECT DATE_TRUNC('month', start_time) AS month, category, COUNT(*) AS event_count, SUM(current_bookings) AS total_bookings, ROUND(AVG(current_bookings * 100.0 / NULLIF(max_attendees, 0)), 1) AS avg_fill_pct FROM events WHERE start_time >= NOW() - ('${months} months')::INTERVAL ${category ? `AND category = '${category}'::event_category` : ''} GROUP BY DATE_TRUNC('month', start_time), category ORDER BY month DESC, category`,
+          database: 'event_db',
+        };
+
+      case 'get_event_performance': {
+        const status = args.status as string | undefined;
+        const orderBy = (args.order_by as string) || 'fill_rate';
         const orderMap: Record<string, string> = {
           fill_rate: 'fill_pct ASC',
           bookings: 'current_bookings DESC',
           created_at: 'created_at DESC',
         };
-        sql = `EXPLAIN (ANALYZE false, FORMAT json) SELECT id, title, category, status, current_bookings, max_attendees, ROUND(current_bookings * 100.0 / NULLIF(max_attendees, 0), 1) AS fill_pct, price->>'base' AS price, start_time, created_at FROM events WHERE ($1::text IS NULL OR category = $1::event_category) AND ($2::text IS NULL OR status = $2::event_status) ORDER BY ${orderMap[orderBy] || orderMap.fill_rate}`;
-        params = [category, args.status as string | undefined];
-        break;
-      case 'get_venue_utilization':
-        db = 'vendor';
-        sql = `EXPLAIN (ANALYZE false, FORMAT json) SELECT v.id AS venue_id, v.name AS venue_name, v.type AS venue_type, COUNT(ts.id) AS total_slots, COUNT(ts.id) FILTER (WHERE ts.status = 'AVAILABLE') AS available_slots, COUNT(ts.id) FILTER (WHERE ts.status = 'BOOKED') AS booked_slots, COUNT(ts.id) FILTER (WHERE ts.status = 'BLOCKED') AS blocked_slots, COUNT(ts.id) FILTER (WHERE ts.status = 'MAINTENANCE') AS maintenance_slots, ROUND(COUNT(ts.id) FILTER (WHERE ts.status = 'BOOKED') * 100.0 / NULLIF(COUNT(ts.id), 0), 1) AS utilization_pct FROM venues v LEFT JOIN time_slots ts ON ts.venue_id = v.id WHERE ($1::text IS NULL OR v.id = $1) GROUP BY v.id, v.name, v.type ORDER BY utilization_pct DESC`;
-        params = [args.venue_id as string | undefined];
-        break;
-      case 'get_market_comparison':
-        db = 'event';
-        sql = `EXPLAIN (ANALYZE false, FORMAT json) SELECT category, location->>'city' AS city, COUNT(*) AS total_events, ROUND(AVG(current_bookings * 100.0 / NULLIF(max_attendees, 0)), 1) AS avg_fill_rate, COUNT(DISTINCT vendor_id) AS vendor_count FROM events WHERE status = 'PUBLISHED' AND ($1::text IS NULL OR category = $1::event_category) AND ($2::text IS NULL OR location->>'city' ILIKE $2) GROUP BY category, location->>'city' HAVING COUNT(*) >= 5 ORDER BY total_events DESC`;
-        params = [category, args.city as string | undefined];
-        break;
-      case 'get_revenue_summary':
-        db = 'event';
-        sql = `EXPLAIN (ANALYZE false, FORMAT json) SELECT DATE_TRUNC('month', start_time) AS month, category, COUNT(*) AS event_count, SUM(current_bookings) AS total_bookings, SUM(current_bookings * COALESCE((price->>'base')::numeric, 0)) AS estimated_revenue, ROUND(AVG(current_bookings * COALESCE((price->>'base')::numeric, 0)), 2) AS avg_revenue_per_event FROM events WHERE start_time >= NOW() - ($1 || ' months')::INTERVAL GROUP BY DATE_TRUNC('month', start_time), category ORDER BY month DESC, estimated_revenue DESC`;
-        params = [months];
-        break;
-      case 'get_event_timeline':
-        db = 'event';
-        sql = `EXPLAIN (ANALYZE false, FORMAT json) SELECT id, title, category, status, start_time, created_at, updated_at, EXTRACT(DAY FROM (start_time - created_at)) AS lead_time_days, CASE WHEN status = 'CANCELLED' THEN true ELSE false END AS was_cancelled FROM events WHERE created_at >= NOW() - ($1 || ' months')::INTERVAL ORDER BY created_at DESC`;
-        params = [months];
-        break;
-      default:
-        return JSON.stringify({ error: `Cannot explain unknown tool: ${toolName}` });
-    }
-
-    try {
-      const pool = db === 'vendor' ? this.vendorPool : this.eventPool;
-      const client = await pool.connect();
-      try {
-        await this.setVendorContext(client, vendorId);
-        const result = await client.query(sql, params);
-        const plan = result.rows[0]?.['QUERY PLAN'] || result.rows;
-        return JSON.stringify({ tool: toolName, plan, note: 'EXPLAIN (ANALYZE false) — query was NOT executed.' });
-      } finally {
-        client.release();
+        return {
+          sql: `SELECT id, title, category, status, current_bookings, max_attendees, ROUND(current_bookings * 100.0 / NULLIF(max_attendees, 0), 1) AS fill_pct, price->>'base' AS price, start_time, created_at FROM events WHERE 1=1 ${category ? `AND category = '${category}'::event_category` : ''} ${status ? `AND status = '${status}'::event_status` : ''} ORDER BY ${orderMap[orderBy] || orderMap.fill_rate}`,
+          database: 'event_db',
+        };
       }
-    } catch (error) {
-      return JSON.stringify({ error: `EXPLAIN failed: ${(error as Error).message}` });
+
+      case 'get_venue_utilization': {
+        const venueId = args.venue_id as string | undefined;
+        return {
+          sql: `SELECT v.id AS venue_id, v.name AS venue_name, v.type AS venue_type, COUNT(ts.id) AS total_slots, COUNT(ts.id) FILTER (WHERE ts.status = 'AVAILABLE') AS available_slots, COUNT(ts.id) FILTER (WHERE ts.status = 'BOOKED') AS booked_slots, COUNT(ts.id) FILTER (WHERE ts.status = 'BLOCKED') AS blocked_slots, COUNT(ts.id) FILTER (WHERE ts.status = 'MAINTENANCE') AS maintenance_slots, ROUND(COUNT(ts.id) FILTER (WHERE ts.status = 'BOOKED') * 100.0 / NULLIF(COUNT(ts.id), 0), 1) AS utilization_pct FROM venues v LEFT JOIN time_slots ts ON ts.venue_id = v.id ${venueId ? `WHERE v.id = '${venueId}'` : ''} GROUP BY v.id, v.name, v.type ORDER BY utilization_pct DESC`,
+          database: 'vendor_db',
+        };
+      }
+
+      case 'get_market_comparison': {
+        const city = args.city as string | undefined;
+        return {
+          sql: `SELECT category, location->>'city' AS city, COUNT(*) AS total_events, ROUND(AVG(current_bookings * 100.0 / NULLIF(max_attendees, 0)), 1) AS avg_fill_rate, COUNT(DISTINCT vendor_id) AS vendor_count FROM events WHERE status = 'PUBLISHED' ${category ? `AND category = '${category}'::event_category` : ''} ${city ? `AND location->>'city' ILIKE '${city}'` : ''} GROUP BY category, location->>'city' HAVING COUNT(*) >= 5 ORDER BY total_events DESC`,
+          database: 'event_db',
+        };
+      }
+
+      case 'get_revenue_summary':
+        return {
+          sql: `SELECT DATE_TRUNC('month', start_time) AS month, category, COUNT(*) AS event_count, SUM(current_bookings) AS total_bookings, SUM(current_bookings * COALESCE((price->>'base')::numeric, 0)) AS estimated_revenue, ROUND(AVG(current_bookings * COALESCE((price->>'base')::numeric, 0)), 2) AS avg_revenue_per_event FROM events WHERE start_time >= NOW() - ('${months} months')::INTERVAL GROUP BY DATE_TRUNC('month', start_time), category ORDER BY month DESC, estimated_revenue DESC`,
+          database: 'event_db',
+        };
+
+      case 'get_event_timeline':
+        return {
+          sql: `SELECT id, title, category, status, start_time, created_at, updated_at, EXTRACT(DAY FROM (start_time - created_at)) AS lead_time_days, CASE WHEN status = 'CANCELLED' THEN true ELSE false END AS was_cancelled FROM events WHERE created_at >= NOW() - ('${months} months')::INTERVAL ORDER BY created_at DESC`,
+          database: 'event_db',
+        };
+
+      default:
+        return {
+          error: `Unknown tool: ${toolName}. Available: get_booking_trends, get_event_performance, get_venue_utilization, get_market_comparison, get_revenue_summary, get_event_timeline`,
+        };
     }
-  }
-
-  // ── Market query (event_db, no RLS — pre-aggregated view) ───────────
-
-  private async getMarketComparison(_vendorId: string, args: Record<string, unknown>) {
-    const category = args.category as string | undefined;
-    const city = args.city as string | undefined;
-
-    // market_stats view must exist in event_db (created via rls-setup.sql)
-    // Falls back to inline aggregation if the view doesn't exist yet
-    return this.queryEvent(
-      _vendorId,
-      `SELECT
-         category,
-         location->>'city' AS city,
-         COUNT(*) AS total_events,
-         ROUND(AVG(current_bookings * 100.0 / NULLIF(max_attendees, 0)), 1) AS avg_fill_rate,
-         COUNT(DISTINCT vendor_id) AS vendor_count
-       FROM events
-       WHERE status = 'PUBLISHED'
-         AND ($1::text IS NULL OR category = $1::event_category)
-         AND ($2::text IS NULL OR location->>'city' ILIKE $2)
-       GROUP BY category, location->>'city'
-       HAVING COUNT(*) >= 5
-       ORDER BY total_events DESC`,
-      [category, city],
-    );
   }
 }

@@ -5,6 +5,7 @@ export interface LlmMessage {
   content: string;
   tool_call_id?: string;
   tool_calls?: LlmToolCall[];
+  thinking?: string;
 }
 
 export interface LlmToolCall {
@@ -17,6 +18,7 @@ export interface LlmResponse {
   text: string;
   toolCalls: LlmToolCall[];
   stopReason: 'end_turn' | 'tool_use' | 'max_tokens';
+  thinking?: string;
 }
 
 export interface LlmProvider {

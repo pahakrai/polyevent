@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { HealthController } from './health.controller';
 import { AgentModule } from './agent/agent.module';
+import { KnowledgeModule } from './knowledge/knowledge.module';
 
 @Module({
   imports: [
@@ -10,6 +11,7 @@ import { AgentModule } from './agent/agent.module';
       envFilePath: ['.env', '../../../.env'],
     }),
     AgentModule,
+    KnowledgeModule,
   ],
   controllers: [HealthController],
 })

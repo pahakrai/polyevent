@@ -21,3 +21,7 @@ GRANT ALL PRIVILEGES ON DATABASE notification_db TO eventbooking;
 GRANT ALL PRIVILEGES ON DATABASE analytics_db TO eventbooking;
 GRANT ALL PRIVILEGES ON DATABASE admin_db TO eventbooking;
 GRANT ALL PRIVILEGES ON DATABASE agent_db TO eventbooking;
+
+-- Enable pgvector extension in agent_db for RAG document embeddings
+\c agent_db
+CREATE EXTENSION IF NOT EXISTS vector;

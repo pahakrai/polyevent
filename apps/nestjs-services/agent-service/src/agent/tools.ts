@@ -1,17 +1,36 @@
 /**
- * Tool definitions organized by Skill category.
+ * Tool definitions — the "Calculator" layer.
  *
- * Skill-in-the-Middle workflow:
- *   1. Introspect  — discover schema (list_tables, describe_table)
- *   2. Validate    — explain query plan before execution (explain_tool)
- *   3. Analyze     — run pre-built parameterized business queries
- *   4. Report      — synthesize findings into final report (LLM, no tool)
+ * Architecture:
+ *   Agent (LLM) reads Skills (text in system prompt) → calls these Tools → NestJS executes
  *
- * Each tool belongs to exactly one category. The Skill Registry
- * presents them to the LLM grouped by workflow phase.
+ * Skills are the "Textbook" (business rules as static text).
+ * Tools are the "Calculator" (execution tools the Agent invokes).
+ * They never talk to each other — the Agent is always the middleman.
+ *
+ * ReAct workflow the Agent follows:
+ *   1. Read business skills from system prompt (churn/retention/revenue definitions)
+ *   2. Introspect schema — list_tables, describe_table
+ *   3. Validate — explain_tool before heavy queries
+ *   4. Analyze — run pre-built parameterized business queries
+ *   5. Report — synthesize findings into final report (LLM, no tool)
  */
 
-import type { SkillToolDefinition } from './skills/skill.interface';
+// ── Tool definition type ──────────────────────────────────────────────
+
+export type ToolCategory = 'introspection' | 'validation' | 'analysis' | 'reporting';
+
+export interface SkillToolDefinition {
+  name: string;
+  description: string;
+  input_schema: {
+    type: 'object';
+    properties: Record<string, unknown>;
+    required?: string[];
+  };
+  category: ToolCategory;
+  safeAutoExecute: boolean;
+}
 
 // ── Introspection tools — discover schema ─────────────────────────────
 
@@ -216,7 +235,7 @@ export const BUSINESS_ANALYST_TOOLS: SkillToolDefinition[] = [
   },
 ];
 
-// ── Combined — all tools the LLM can call ──────────────────────────────
+// ── Combined — all tools the Agent can call ────────────────────────────
 
 export const ALL_TOOLS: SkillToolDefinition[] = [
   ...INTROSPECTION_TOOLS,
@@ -224,7 +243,7 @@ export const ALL_TOOLS: SkillToolDefinition[] = [
   ...BUSINESS_ANALYST_TOOLS,
 ];
 
-// ── Compatibility — keep the flat list for LLM provider interface ──────
+// ── LLM-compatible flat tool list ──────────────────────────────────────
 
 export interface ToolDefinition {
   name: string;

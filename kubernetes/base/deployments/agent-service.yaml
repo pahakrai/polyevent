@@ -62,7 +62,16 @@ spec:
               name: redis-secrets
               key: redis-url
         - name: LLM_PROVIDER
-          value: deepseek
+          value: anthropic
+        - name: LLM_MODEL
+          value: deepseek-v4-pro
+        - name: LLM_API_URL
+          value: https://api.deepseek.com/anthropic
+        - name: LLM_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: llm-secrets
+              key: api-key
         - name: DEEPSEEK_API_KEY
           valueFrom:
             secretKeyRef:
@@ -75,6 +84,10 @@ spec:
               name: llm-secrets
               key: anthropic-api-key
               optional: true
+        - name: MCP_SERVER_HOST
+          value: postgres-mcp
+        - name: MCP_SERVER_PORT
+          value: "8099"
         - name: PORT
           value: "3010"
         resources:

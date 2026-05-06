@@ -26,6 +26,8 @@ data:
     CREATE DATABASE vendor_db;
     CREATE DATABASE event_db;
     CREATE DATABASE agent_db;
+    \c agent_db
+    CREATE EXTENSION IF NOT EXISTS vector;
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -46,7 +48,7 @@ spec:
     spec:
       containers:
       - name: postgres
-        image: postgres:16-alpine
+        image: pgvector/pgvector:pg16
         ports:
         - containerPort: 5432
         env:
@@ -85,3 +87,66 @@ spec:
   ports:
   - port: 5432
     targetPort: 5432
+---
+# PostgreSQL MCP server — read-only database access for the agent service
+# crystaldba/postgres-mcp exposes a `query` tool via SSE transport
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-mcp
+  namespace: polydom-dev
+  labels:
+    app: postgres-mcp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-mcp
+  template:
+    metadata:
+      labels:
+        app: postgres-mcp
+    spec:
+      containers:
+      - name: postgres-mcp
+        image: crystaldba/postgres-mcp:latest
+        ports:
+        - containerPort: 8099
+          name: http
+        env:
+        - name: DATABASE_URI
+          value: "postgresql://postgres:postgres@postgres:5432/vendor_db"
+        args:
+        - "--transport=sse"
+        - "--sse-port=8099"
+        - "--access-mode=restricted"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        livenessProbe:
+          tcpSocket:
+            port: 8099
+          initialDelaySeconds: 15
+          periodSeconds: 15
+        readinessProbe:
+          tcpSocket:
+            port: 8099
+          initialDelaySeconds: 10
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-mcp
+  namespace: polydom-dev
+spec:
+  selector:
+    app: postgres-mcp
+  ports:
+  - port: 8099
+    targetPort: 8099
+    name: http

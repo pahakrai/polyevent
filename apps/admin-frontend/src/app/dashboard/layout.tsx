@@ -12,6 +12,7 @@ const NAV_ITEMS = [
   { href: '/dashboard/events', label: 'Events', icon: 'E' },
   { href: '/dashboard/bookings', label: 'Bookings', icon: 'B' },
   { href: '/dashboard/insights', label: 'Insights', icon: 'I' },
+  { href: '/dashboard/knowledge', label: 'Knowledge Base', icon: 'K' },
   { href: '/dashboard/settings', label: 'Settings', icon: 'S' },
 ];
 

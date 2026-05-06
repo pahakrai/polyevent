@@ -1,31 +1,25 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { McpModule } from '../mcp/mcp.module';
+import { KnowledgeModule } from '../knowledge/knowledge.module';
 import { AgentController } from './agent.controller';
 import { InvestigationService } from './investigation.service';
 import { ToolExecutorService } from './tool-executor.service';
-import { DeepSeekProvider } from './deepseek-provider';
 import { AnthropicProvider } from './anthropic-provider';
-import { IntrospectionSkill } from './skills/introspection.skill';
-import { ValidationSkill } from './skills/validation.skill';
-import { BusinessAnalystSkill } from './skills/business-analyst.skill';
-import { SkillRegistryService } from './skills/skill-registry.service';
+import { BusinessSkillsProvider } from './skills/business-skills.provider';
 
 @Module({
-  imports: [ConfigModule],
+  imports: [ConfigModule, McpModule, KnowledgeModule],
   controllers: [AgentController],
   providers: [
     // Core
     InvestigationService,
     ToolExecutorService,
-    // LLM providers
-    DeepSeekProvider,
+    // LLM provider (Anthropic SDK -> DeepSeek API)
     AnthropicProvider,
-    // Skills (Skill-in-the-Middle pipeline)
-    IntrospectionSkill,
-    ValidationSkill,
-    BusinessAnalystSkill,
-    SkillRegistryService,
+    // Business rules (textbook — injected into system prompt)
+    BusinessSkillsProvider,
   ],
-  exports: [InvestigationService, SkillRegistryService],
+  exports: [InvestigationService, ToolExecutorService],
 })
 export class AgentModule {}

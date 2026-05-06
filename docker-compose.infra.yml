@@ -3,7 +3,7 @@ version: '3.8'
 services:
   # Database
   postgres:
-    image: postgres:15-alpine
+    image: pgvector/pgvector:pg15
     environment:
       POSTGRES_USER: eventbooking
       POSTGRES_PASSWORD: eventbooking123
@@ -18,6 +18,27 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  # PostgreSQL MCP server — exposes database tools via SSE transport for the agent service
+  # crystaldba/postgres-mcp provides read-only SQL access with schema introspection
+  postgres-mcp:
+    image: crystaldba/postgres-mcp:latest
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URI: "postgresql://eventbooking:eventbooking123@postgres:5432/eventbooking"
+    ports:
+      - "3001:8099"
+    command:
+      - "--transport=sse"
+      - "--sse-port=8099"
+      - "--access-mode=restricted"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:8099/sse"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
 
   mongodb:
     image: mongo:7
@@ -139,7 +160,7 @@ services:
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     ports:
-      - "3001:3000"
+      - "3002:3000"
     volumes:
       - grafana_data:/var/lib/grafana
 

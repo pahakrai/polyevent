@@ -705,6 +705,10 @@ spec:
           value: deepseek-v4-pro
         - name: LLM_API_URL
           value: https://api.deepseek.com/anthropic
+        - name: MCP_SERVER_HOST
+          value: postgres-mcp
+        - name: MCP_SERVER_PORT
+          value: "8099"
         - name: LLM_API_KEY
           valueFrom:
             secretKeyRef:

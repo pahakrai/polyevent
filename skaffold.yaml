@@ -275,3 +275,8 @@ portForward:
     namespace: polydom-dev
     port: 80
     localPort: 5050
+  - resourceType: service
+    resourceName: postgres-mcp
+    namespace: polydom-dev
+    port: 8099
+    localPort: 3001

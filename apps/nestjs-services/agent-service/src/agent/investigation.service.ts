@@ -1,16 +1,23 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { v4 as uuid } from 'uuid';
-import { DeepSeekProvider } from './deepseek-provider';
 import { AnthropicProvider } from './anthropic-provider';
 import type { LlmMessage, LlmProvider } from './llm-provider.interface';
-import { SkillRegistryService } from './skills/skill-registry.service';
-import type { SkillContext } from './skills/skill.interface';
+import { BusinessSkillsProvider } from './skills/business-skills.provider';
+import { ToolExecutorService, ToolContext } from './tool-executor.service';
+import { VENDOR_INVESTIGATION_TOOLS } from './tools';
+import type { ToolDefinition } from './tools';
 
 export interface InvestigationStep {
   id: string;
   stepNumber: number;
-  type: 'reasoning' | 'tool_call' | 'tool_result' | 'final_report' | 'waiting' | 'redirected';
+  type:
+    | 'reasoning'
+    | 'tool_call'
+    | 'tool_result'
+    | 'final_report'
+    | 'waiting'
+    | 'redirected';
   content: string;
   toolName?: string;
   toolArgs?: Record<string, unknown>;
@@ -18,95 +25,157 @@ export interface InvestigationStep {
   timestamp: string;
 }
 
+export type InvestigationMode = 'auto' | 'manual';
+
 export interface InvestigationSession {
   id: string;
   vendorId: string;
   goal: string;
+  mode: InvestigationMode;
+  isSuperadmin: boolean;
   steps: InvestigationStep[];
   messages: LlmMessage[];
-  status: 'in_progress' | 'waiting_confirmation' | 'completed' | 'error';
+  status: 'in_progress' | 'waiting_confirmation' | 'completed' | 'cancelled' | 'error';
+  cancelled: boolean;
   createdAt: string;
   error?: string;
 }
 
-const BASE_SYSTEM_PROMPT = `You are a business intelligence agent for event vendors on the Polydom platform.
+const AGENT_SYSTEM_PROMPT = `You are a senior business intelligence analyst for the Polydom event platform.
 
-Your job is to investigate the vendor's questions about their business performance using a structured workflow.
+Your job is to investigate vendor business questions using a ReAct (Reasoning + Acting) loop.
+
+HOW YOU WORK:
+1. **Read Business Skills** — Your system prompt includes the business rules that define how Polydom calculates churn, revenue, retention, etc. Study these definitions before querying data. Wrong definitions = wrong answers.
+2. **Introspect Schema** — Use list_tables to see what data is available, then describe_table to verify column names and types.
+3. **Validate Queries** — Use explain_tool before running heavy queries to verify they'll be performant.
+4. **Analyze Data** — Run the business analyst tools to gather data. Start broad (booking trends) then narrow down (specific events, venues, segments).
+5. **Final Report** — When you have sufficient data, synthesize everything into a clear business report.
 
 RULES:
-1. Start with introspection — use list_tables and describe_table to understand the schema first.
-2. Validate before heavy queries — use explain_tool to check query performance.
-3. Start broad, then narrow down. Get the overall trend first, then dig into specifics.
-4. After each tool call, explain what you found and what you're investigating next.
-5. When you have enough data to answer the vendor's question, provide a clear final report.
-6. The final report should include: root cause, supporting data, and actionable recommendations.
-7. Never make up data — if a tool returns empty results, say so.
-8. If a tool returns an error, try a different approach.
-9. Keep explanations concise. Vendors are business owners, not data analysts.
-10. Compare against market averages when available to provide context.
-11. If the data doesn't explain the problem, say so honestly rather than forcing a conclusion.
-12. Format numbers readably: "43% fill rate" not "0.4285714".`;
+- NEVER skip business rules — read them in the system prompt first
+- Never skip introspection — verify schema before querying
+- After each tool call, explain what you found and what's next
+- If a tool returns empty results, try a different approach
+- Format numbers readably: "43% fill rate" not "0.4285714"
+- Never make up data — only reference what was returned by tools
+- Compare against market benchmarks when available
+
+DATA SCOPE — Unless told otherwise, you are scoped to a single vendor:
+- Every data query you make is automatically scoped to the current vendor's data
+- The backend enforces vendor isolation — you cannot access other vendors' raw data
+- The ONLY tool that spans all vendors is get_market_comparison (anonymized aggregates)
+- Do NOT attempt to query data across vendors — the security layer will block it
+- If the user asks for cross-vendor analysis, use get_market_comparison only
+
+FINAL REPORT FORMAT:
+1. **Executive Summary** (2-3 sentences)
+2. **Key Findings** (bullet points with supporting data)
+3. **Root Cause Analysis** (why this is happening)
+4. **Market Context** (compare against benchmarks)
+5. **Recommendations** (specific, prioritized, actionable)`;
 
 @Injectable()
 export class InvestigationService {
   private readonly logger = new Logger(InvestigationService.name);
   private readonly sessions = new Map<string, InvestigationSession>();
   private readonly llmProvider: LlmProvider;
-  private readonly systemPrompt: string;
 
   constructor(
     configService: ConfigService,
-    private readonly skillRegistry: SkillRegistryService,
-    deepseekProvider: DeepSeekProvider,
+    private readonly toolExecutor: ToolExecutorService,
+    private readonly businessSkills: BusinessSkillsProvider,
     anthropicProvider: AnthropicProvider,
   ) {
-    const provider = configService.get<string>('LLM_PROVIDER', 'deepseek');
-    this.llmProvider = provider === 'anthropic' ? anthropicProvider : deepseekProvider;
-    this.systemPrompt = BASE_SYSTEM_PROMPT + '\n\n' + this.skillRegistry.getWorkflowPrompt();
-    this.logger.log(`LLM provider: ${provider}`);
+    this.llmProvider = anthropicProvider;
+    this.logger.log(
+      `InvestigationService initialized with AnthropicProvider (LLM_API_URL=${configService.get<string>('LLM_API_URL') || 'default'})`,
+    );
   }
 
-  /** Start a new investigation. Runs the first step and returns the session. */
-  async startInvestigation(vendorId: string, goal: string): Promise<InvestigationSession> {
+  // ── Public API ──────────────────────────────────────────────────────
+
+  /** Start a new investigation. Mode: 'auto' runs full loop async, 'manual' runs one step at a time. */
+  startInvestigation(
+    vendorId: string,
+    goal: string,
+    mode: InvestigationMode = 'auto',
+    isSuperadmin = false,
+  ): InvestigationSession {
+    const fullSystemPrompt =
+      AGENT_SYSTEM_PROMPT +
+      '\n\n' +
+      this.businessSkills.getAllBusinessSkills();
+
     const session: InvestigationSession = {
       id: uuid(),
       vendorId,
       goal,
+      mode,
+      isSuperadmin,
       steps: [],
       messages: [
-        { role: 'system', content: this.systemPrompt },
-        {
-          role: 'user',
-          content: `Investigate this question about my business: "${goal}"`,
-        },
+        { role: 'system', content: fullSystemPrompt },
+        { role: 'user', content: `Investigate this question about my business: "${goal}"` },
       ],
       status: 'in_progress',
+      cancelled: false,
       createdAt: new Date().toISOString(),
     };
 
     this.sessions.set(session.id, session);
-    this.logger.log(`Investigation ${session.id} started for vendor ${vendorId}: "${goal}"`);
+    this.logger.log(`Investigation ${session.id} started [${mode}] for vendor ${vendorId}: "${goal}"`);
 
-    await this.runStep(session);
+    if (mode === 'auto') {
+      this.runAutoLoop(session).catch((err) => {
+        this.logger.error(`Investigation ${session.id} background loop failed`, err);
+        if (session.status === 'in_progress') {
+          session.status = 'error';
+          session.error = (err as Error).message;
+        }
+      });
+    } else {
+      this.runSingleStep(session).catch((err) => {
+        this.logger.error(`Investigation ${session.id} step failed`, err);
+        session.status = 'error';
+        session.error = (err as Error).message;
+      });
+    }
+
     return session;
   }
 
-  /** Continue the investigation after vendor confirmation. Runs one more step. */
+  /** Manual mode: advance one ReAct step (LLM call + tool execution). */
   async continueInvestigation(sessionId: string): Promise<InvestigationSession> {
     const session = this.sessions.get(sessionId);
     if (!session) throw new Error(`Session ${sessionId} not found`);
+    if (session.mode !== 'manual') throw new Error('Continue is only available in manual mode');
     if (session.status === 'completed') throw new Error('Investigation already completed');
+    if (session.status === 'cancelled') throw new Error('Investigation was cancelled');
 
     session.status = 'in_progress';
-    await this.runStep(session);
+    await this.runSingleStep(session);
     return session;
   }
 
-  /** Inject vendor guidance and continue. */
-  async redirectInvestigation(sessionId: string, instruction: string): Promise<InvestigationSession> {
+  /** Cancel a running investigation. Works for both auto and manual modes. */
+  cancelInvestigation(sessionId: string): InvestigationSession {
     const session = this.sessions.get(sessionId);
     if (!session) throw new Error(`Session ${sessionId} not found`);
     if (session.status === 'completed') throw new Error('Investigation already completed');
+    if (session.status === 'cancelled') throw new Error('Investigation already cancelled');
+
+    session.cancelled = true;
+    this.logger.log(`Investigation ${sessionId} cancelled by frontend`);
+    return session;
+  }
+
+  /** Vendor provides guidance mid-investigation. Works for both modes. */
+  redirectInvestigation(sessionId: string, instruction: string): InvestigationSession {
+    const session = this.sessions.get(sessionId);
+    if (!session) throw new Error(`Session ${sessionId} not found`);
+    if (session.status === 'completed') throw new Error('Investigation already completed');
+    if (session.status === 'cancelled') throw new Error('Investigation was cancelled');
 
     const step: InvestigationStep = {
       id: uuid(),
@@ -123,173 +192,214 @@ export class InvestigationService {
       content: `[VENDOR GUIDANCE] ${instruction}. Continue the investigation, taking this into account.`,
     });
 
-    session.status = 'in_progress';
-    await this.runStep(session);
     return session;
   }
 
-  /** Get a session by ID */
   getSession(sessionId: string): InvestigationSession | undefined {
     return this.sessions.get(sessionId);
   }
 
-  // ── Core loop ──────────────────────────────────────────────────────
+  // ── Tool list (passed to LLM) ───────────────────────────────────────
 
-  private async runStep(session: InvestigationSession): Promise<void> {
-    const maxSteps = 10;
-    if (session.steps.length >= maxSteps) {
-      session.status = 'completed';
-      const final: InvestigationStep = {
-        id: uuid(),
-        stepNumber: session.steps.length + 1,
-        type: 'final_report',
-        content: 'Investigation reached maximum steps. Please review the findings above.',
-        timestamp: new Date().toISOString(),
-      };
-      session.steps.push(final);
+  /** Build the combined tool list passed to the LLM. */
+  private getLlmTools(): ToolDefinition[] {
+    return VENDOR_INVESTIGATION_TOOLS;
+  }
+
+  // ── Core step logic (shared by both modes) ──────────────────────────
+
+  private async runSingleStep(session: InvestigationSession): Promise<void> {
+    if (session.cancelled) {
+      session.status = 'cancelled';
       return;
     }
 
-    try {
-      const llmTools = this.skillRegistry.getLlmTools();
+    // Safety: max 10 LLM calls (each LLM call counts as a reasoning step)
+    const maxLlmCalls = 10;
+    const llmCallCount = session.steps.filter(s => s.type === 'reasoning').length;
+    if (llmCallCount >= maxLlmCalls) {
+      session.status = 'completed';
+      this.logger.warn(`Investigation ${session.id} hit max LLM calls (${maxLlmCalls})`);
+      return;
+    }
 
-      // Call LLM with current message history and skill tools
-      const response = await this.llmProvider.chat(session.messages, llmTools);
+    const llmTools = this.getLlmTools();
+    const response = await this.llmProvider.chat(session.messages, llmTools);
 
-      // If LLM returned reasoning text, record it
-      if (response.text) {
-        const reasoningStep: InvestigationStep = {
+    if (session.cancelled) {
+      session.status = 'cancelled';
+      return;
+    }
+
+    // Record reasoning text
+    if (response.text) {
+      session.steps.push({
+        id: uuid(),
+        stepNumber: session.steps.length + 1,
+        type: 'reasoning',
+        content: response.text,
+        timestamp: new Date().toISOString(),
+      });
+    }
+
+    if (response.toolCalls.length > 0) {
+      // Feed assistant message back into conversation
+      session.messages.push({
+        role: 'assistant',
+        content: response.text,
+        tool_calls: response.toolCalls,
+        ...(response.thinking ? { thinking: response.thinking } : {}),
+      });
+
+      for (const tc of response.toolCalls) {
+        if (session.cancelled) {
+          session.status = 'cancelled';
+          return;
+        }
+
+        this.logger.log(
+          `[ReAct] Step ${session.steps.length + 1}: ${tc.name}(${JSON.stringify(tc.arguments)})`,
+        );
+
+        session.steps.push({
           id: uuid(),
           stepNumber: session.steps.length + 1,
-          type: 'reasoning',
-          content: response.text,
+          type: 'tool_call',
+          content: `Calling: ${tc.name}`,
+          toolName: tc.name,
+          toolArgs: tc.arguments,
           timestamp: new Date().toISOString(),
-        };
-        session.steps.push(reasoningStep);
-      }
-
-      // If LLM wants to call tools, record and execute them through SkillRegistry
-      if (response.toolCalls.length > 0) {
-        session.messages.push({
-          role: 'assistant',
-          content: response.text,
-          tool_calls: response.toolCalls,
         });
 
-        const skillContext: SkillContext = {
+        // Execute via ToolExecutorService — with vendor scope enforcement
+        const ctx: ToolContext = {
           vendorId: session.vendorId,
-          sessionId: session.id,
+          isSuperadmin: session.isSuperadmin,
         };
+        const result = await this.toolExecutor.execute(tc.name, tc.arguments, ctx);
 
-        for (const tc of response.toolCalls) {
-          this.logger.log(`Step ${session.steps.length + 1}: ${tc.name}(${JSON.stringify(tc.arguments)})`);
-
-          // Record the tool call step
-          const callStep: InvestigationStep = {
-            id: uuid(),
-            stepNumber: session.steps.length + 1,
-            type: 'tool_call',
-            content: `Querying: ${tc.name}`,
-            toolName: tc.name,
-            toolArgs: tc.arguments,
-            timestamp: new Date().toISOString(),
-          };
-          session.steps.push(callStep);
-
-          // Execute via Skill Registry — routes to the right skill
-          const result = await this.skillRegistry.execute(
-            tc.name,
-            tc.arguments,
-            skillContext,
-          );
-
-          // Record the tool result step
-          const resultStep: InvestigationStep = {
-            id: uuid(),
-            stepNumber: session.steps.length + 1,
-            type: 'tool_result',
-            content: this.summarizeResult(result),
-            toolName: tc.name,
-            toolResult: result,
-            timestamp: new Date().toISOString(),
-          };
-          session.steps.push(resultStep);
-
-          // Feed tool result back to LLM
-          session.messages.push({
-            role: 'tool',
-            content: result,
-            tool_call_id: tc.id,
-          });
-        }
-
-        // After executing tools, pause for vendor confirmation
-        session.status = 'waiting_confirmation';
-
-        if (session.steps.length < maxSteps) {
-          const waitingStep: InvestigationStep = {
-            id: uuid(),
-            stepNumber: session.steps.length + 1,
-            type: 'waiting',
-            content: 'Ready for next step. Click Continue or provide redirection.',
-            timestamp: new Date().toISOString(),
-          };
-          session.steps.push(waitingStep);
-        }
-      } else {
-        // No tool calls — this is the final answer
-        session.messages.push({
-          role: 'assistant',
-          content: response.text,
-        });
-
-        const finalStep: InvestigationStep = {
+        session.steps.push({
           id: uuid(),
           stepNumber: session.steps.length + 1,
-          type: 'final_report',
-          content: response.text,
+          type: 'tool_result',
+          content: this.summarizeResult(result),
+          toolName: tc.name,
+          toolResult: result,
           timestamp: new Date().toISOString(),
-        };
-        session.steps.push(finalStep);
-        session.status = 'completed';
-        this.logger.log(`Investigation ${session.id} completed`);
+        });
+
+        session.messages.push({
+          role: 'tool',
+          content: result,
+          tool_call_id: tc.id,
+        });
       }
-    } catch (error) {
-      this.logger.error(`Step failed for session ${session.id}`, error);
-      session.status = 'error';
-      session.error = (error as Error).message;
-      const errorStep: InvestigationStep = {
+
+      if (session.mode === 'manual') {
+        session.status = 'waiting_confirmation';
+        session.steps.push({
+          id: uuid(),
+          stepNumber: session.steps.length + 1,
+          type: 'waiting',
+          content: 'Ready for next step. Click Continue to proceed.',
+          timestamp: new Date().toISOString(),
+        });
+      }
+    } else {
+      // No tool calls — final report
+      session.messages.push({
+        role: 'assistant',
+        content: response.text,
+      });
+
+      session.steps.push({
         id: uuid(),
         stepNumber: session.steps.length + 1,
         type: 'final_report',
-        content: `Investigation failed: ${(error as Error).message}`,
+        content: response.text,
         timestamp: new Date().toISOString(),
-      };
-      session.steps.push(errorStep);
+      });
+
+      session.status = 'completed';
+      this.logger.log(`Investigation ${session.id} completed`);
     }
   }
+
+  // ── Auto mode: tight loop ───────────────────────────────────────────
+
+  private async runAutoLoop(session: InvestigationSession): Promise<void> {
+    const maxLlmCalls = 10;
+
+    while (
+      !session.cancelled &&
+      session.steps.filter(s => s.type === 'reasoning').length < maxLlmCalls &&
+      session.status === 'in_progress'
+    ) {
+      try {
+        await this.runSingleStep(session);
+      } catch (error) {
+        this.logger.error(`Investigation ${session.id} failed`, error);
+        session.status = 'error';
+        session.error = (error as Error).message;
+        session.steps.push({
+          id: uuid(),
+          stepNumber: session.steps.length + 1,
+          type: 'final_report',
+          content: `Investigation failed: ${(error as Error).message}`,
+          timestamp: new Date().toISOString(),
+        });
+        return;
+      }
+    }
+
+    if (session.cancelled) {
+      session.status = 'cancelled';
+      this.logger.log(`Investigation ${session.id} cancelled`);
+    } else if (session.status === 'in_progress') {
+      session.status = 'completed';
+      this.logger.warn(`Investigation ${session.id} hit max LLM calls (${maxLlmCalls})`);
+    }
+  }
+
+  // ── Helpers ─────────────────────────────────────────────────────────
 
   private summarizeResult(resultJson: string): string {
     try {
       const parsed = JSON.parse(resultJson);
       if (parsed.error) return `Error: ${parsed.error}`;
+
+      if (Array.isArray(parsed)) {
+        const text = parsed
+          .filter((c: { type: string }) => c.type === 'text')
+          .map((c: { text: string }) => {
+            try {
+              const inner = JSON.parse(c.text);
+              if (inner.rows) return `${inner.row_count || inner.rows.length} rows returned.`;
+              if (inner.tables) return `${inner.tables.length} tables found.`;
+              if (inner.columns) {
+                const dbInfo = inner.found ? ` in ${inner.table_name}` : '';
+                return `${inner.columns.length} columns${dbInfo}.`;
+              }
+              return c.text.slice(0, 200);
+            } catch {
+              return c.text.slice(0, 200);
+            }
+          })
+          .join(' ');
+        return text || 'Tool result received.';
+      }
+
       if (parsed.rows) {
         const count = parsed.row_count || parsed.rows.length;
-        if (count === 0) return 'Query returned no results.';
-        const preview = parsed.rows.slice(0, 3);
-        return `Returned ${count} rows. Sample: ${JSON.stringify(preview)}`;
-      }
-      if (parsed.vendor_db || parsed.event_db) {
-        // Introspection result
-        const vCount = parsed.vendor_db?.length || 0;
-        const eCount = parsed.event_db?.length || 0;
-        return `Schema discovery: ${vCount} tables in vendor_db, ${eCount} tables in event_db.`;
+        return count === 0
+          ? 'Query returned no results.'
+          : `Returned ${count} rows. Sample: ${JSON.stringify(parsed.rows.slice(0, 3))}`;
       }
       if (parsed.table && parsed.columns) {
         return `Table ${parsed.table}: ${parsed.columns.length} columns.`;
       }
       if (parsed.plan) {
-        return `EXPLAIN plan available for ${parsed.tool}.`;
+        return `EXPLAIN plan available.`;
       }
       return resultJson.slice(0, 200);
     } catch {
