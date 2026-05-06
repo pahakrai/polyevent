@@ -1,0 +1,13 @@
+> nest build --webpack
+
+[1m[31mERROR[39m[22m in [1m./src/agent/investigation.service.ts:81:22[39m[22m
+[90mTS6138: [39mProperty 'mcpClient' is declared but its value is never read.
+  [0m [90m 79 |[39m     [36mprivate[39m readonly toolExecutor[33m:[39m [33mToolExecutorService[39m[33m,[39m
+   [90m 80 |[39m     [36mprivate[39m readonly businessSkills[33m:[39m [33mBusinessSkillsProvider[39m[33m,[39m
+  [31m[1m>[22m[39m[90m 81 |[39m     [36mprivate[39m readonly mcpClient[33m:[39m [33mMcpClientService[39m[33m,[39m
+   [90m    |[39m                      [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 82 |[39m     anthropicProvider[33m:[39m [33mAnthropicProvider[39m[33m,[39m
+   [90m 83 |[39m   ) {
+   [90m 84 |[39m     [36mthis[39m[33m.[39mllmProvider [33m=[39m anthropicProvider[33m;[39m[0m
+
+webpack 5.97.1 compiled with [1m[31m1 error[39m[22m in 3228 ms

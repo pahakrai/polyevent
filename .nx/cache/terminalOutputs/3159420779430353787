@@ -1,0 +1,68 @@
+> nest build --webpack
+
+[1m[31mERROR[39m[22m in [1m./src/agent/sql-guard.utils.ts:77:62[39m[22m
+[90mTS2345: [39mArgument of type 'Select' is not assignable to parameter of type 'Record<string, unknown>'.
+  Index signature for type 'string' is missing in type 'Select'.
+  [0m [90m 75 |[39m
+   [90m 76 |[39m         [90m// Determine the vendor-scoping column from the primary FROM table[39m
+  [31m[1m>[22m[39m[90m 77 |[39m         [36mconst[39m scopeColumn [33m=[39m [33mSqlGuardUtils[39m[33m.[39mresolveScopeColumn(stmt)[33m;[39m
+   [90m    |[39m                                                              [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 78 |[39m         [36mif[39m ([33m![39mscopeColumn) {
+   [90m 79 |[39m           [33mSqlGuardUtils[39m[33m.[39mlogger[33m.[39mwarn(
+   [90m 80 |[39m             [32m`Could not resolve scope column for ${toolName} — skipping AST injection. `[39m [33m+[39m[0m
+
+[1m[31mERROR[39m[22m in [1m./src/agent/sql-guard.utils.ts:95:14[39m[22m
+[90mTS2352: [39mConversion of type 'Select' to type 'Record<string, unknown>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Index signature for type 'string' is missing in type 'Select'.
+  [0m [90m 93 |[39m
+   [90m 94 |[39m         [90m// Inject into WHERE clause[39m
+  [31m[1m>[22m[39m[90m 95 |[39m         [36mif[39m ((stmt [36mas[39m [33mRecord[39m[33m<[39m[33mstring[39m[33m,[39m unknown[33m>[39m)[33m.[39mwhere) {
+   [90m    |[39m              [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 96 |[39m           (stmt [36mas[39m [33mRecord[39m[33m<[39m[33mstring[39m[33m,[39m unknown[33m>[39m)[33m.[39mwhere [33m=[39m {
+   [90m 97 |[39m             type[33m:[39m [32m'binary_expr'[39m[33m,[39m
+   [90m 98 |[39m             operator[33m:[39m [32m'AND'[39m[33m,[39m[0m
+
+[1m[31mERROR[39m[22m in [1m./src/agent/sql-guard.utils.ts:96:12[39m[22m
+[90mTS2352: [39mConversion of type 'Select' to type 'Record<string, unknown>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Index signature for type 'string' is missing in type 'Select'.
+  [0m [90m 94 |[39m         [90m// Inject into WHERE clause[39m
+   [90m 95 |[39m         [36mif[39m ((stmt [36mas[39m [33mRecord[39m[33m<[39m[33mstring[39m[33m,[39m unknown[33m>[39m)[33m.[39mwhere) {
+  [31m[1m>[22m[39m[90m 96 |[39m           (stmt [36mas[39m [33mRecord[39m[33m<[39m[33mstring[39m[33m,[39m unknown[33m>[39m)[33m.[39mwhere [33m=[39m {
+   [90m    |[39m            [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 97 |[39m             type[33m:[39m [32m'binary_expr'[39m[33m,[39m
+   [90m 98 |[39m             operator[33m:[39m [32m'AND'[39m[33m,[39m
+   [90m 99 |[39m             left[33m:[39m (stmt [36mas[39m [33mRecord[39m[33m<[39m[33mstring[39m[33m,[39m unknown[33m>[39m)[33m.[39mwhere[33m,[39m[0m
+
+[1m[31mERROR[39m[22m in [1m./src/agent/sql-guard.utils.ts:99:20[39m[22m
+[90mTS2352: [39mConversion of type 'Select' to type 'Record<string, unknown>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Index signature for type 'string' is missing in type 'Select'.
+  [0m [90m  97 |[39m             type[33m:[39m [32m'binary_expr'[39m[33m,[39m
+   [90m  98 |[39m             operator[33m:[39m [32m'AND'[39m[33m,[39m
+  [31m[1m>[22m[39m[90m  99 |[39m             left[33m:[39m (stmt [36mas[39m [33mRecord[39m[33m<[39m[33mstring[39m[33m,[39m unknown[33m>[39m)[33m.[39mwhere[33m,[39m
+   [90m     |[39m                    [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 100 |[39m             right[33m:[39m scopeCondition[33m,[39m
+   [90m 101 |[39m           }[33m;[39m
+   [90m 102 |[39m         } [36melse[39m {[0m
+
+[1m[31mERROR[39m[22m in [1m./src/agent/sql-guard.utils.ts:103:12[39m[22m
+[90mTS2352: [39mConversion of type 'Select' to type 'Record<string, unknown>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Index signature for type 'string' is missing in type 'Select'.
+  [0m [90m 101 |[39m           }[33m;[39m
+   [90m 102 |[39m         } [36melse[39m {
+  [31m[1m>[22m[39m[90m 103 |[39m           (stmt [36mas[39m [33mRecord[39m[33m<[39m[33mstring[39m[33m,[39m unknown[33m>[39m)[33m.[39mwhere [33m=[39m scopeCondition[33m;[39m
+   [90m     |[39m            [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 104 |[39m         }
+   [90m 105 |[39m       }
+   [90m 106 |[39m[0m
+
+[1m[31mERROR[39m[22m in [1m./src/agent/sql-guard.utils.ts:110:49[39m[22m
+[90mTS2304: [39mCannot find name 'scopeColumn'.
+  [0m [90m 108 |[39m       [36mconst[39m secured [33m=[39m [33mSqlGuardUtils[39m[33m.[39mparser[33m.[39msqlify(ast[33m,[39m opt)[33m;[39m
+   [90m 109 |[39m       [33mSqlGuardUtils[39m[33m.[39mlogger[33m.[39mlog(
+  [31m[1m>[22m[39m[90m 110 |[39m         [32m`Vendor scope injected [${toolName}]: ${scopeColumn} = '${vendorId}'`[39m[33m,[39m
+   [90m     |[39m                                                 [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 111 |[39m       )[33m;[39m
+   [90m 112 |[39m       [36mreturn[39m secured[33m;[39m
+   [90m 113 |[39m     } [36mcatch[39m (error) {[0m
+
+webpack 5.97.1 compiled with [1m[31m6 errors[39m[22m in 6748 ms

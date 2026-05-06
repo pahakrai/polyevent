@@ -1,8 +1,8 @@
 {
   "run": {
-    "command": "nx build agent-service",
-    "startTime": "2026-05-06T01:25:07.540Z",
-    "endTime": "2026-05-06T01:25:13.341Z",
+    "command": "nx build agent-service --skip-nx-cache",
+    "startTime": "2026-05-06T07:08:08.377Z",
+    "endTime": "2026-05-06T07:08:15.840Z",
     "inner": false
   },
   "tasks": [
@@ -10,9 +10,9 @@
       "taskId": "agent-service:build",
       "target": "build",
       "projectName": "agent-service",
-      "hash": "11231555540910557126",
-      "startTime": "2026-05-06T01:25:07.549Z",
-      "endTime": "2026-05-06T01:25:13.340Z",
+      "hash": "15795096035538106005",
+      "startTime": "2026-05-06T07:08:08.386Z",
+      "endTime": "2026-05-06T07:08:15.839Z",
       "params": "",
       "cacheStatus": "cache-miss",
       "status": 0
