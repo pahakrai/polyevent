@@ -13,22 +13,6 @@ spec:
     requests:
       storage: 1Gi
 ---
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: postgres-init
-  namespace: polydom-dev
-data:
-  init.sql: |
-    CREATE DATABASE gateway_db;
-    CREATE DATABASE auth_db;
-    CREATE DATABASE user_db;
-    CREATE DATABASE vendor_db;
-    CREATE DATABASE event_db;
-    CREATE DATABASE agent_db;
-    \c agent_db
-    CREATE EXTENSION IF NOT EXISTS vector;
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -73,8 +57,8 @@ spec:
         persistentVolumeClaim:
           claimName: postgres-pvc
       - name: init
-        configMap:
-          name: postgres-init
+        secret:
+          secretName: postgres-init
 ---
 apiVersion: v1
 kind: Service

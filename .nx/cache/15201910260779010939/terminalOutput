@@ -1,0 +1,66 @@
+> next build
+
+  [1m[38;2;173;127;168m▲ Next.js 14.2.35[39m[22m
+
+ [37m[1m [22m[39m Creating an optimized production build ...
+ [33m[1m⚠[22m[39m Found lockfile missing swc dependencies, patching...
+ [31m[1m⨯[22m[39m Failed to patch lockfile, please try uninstalling and reinstalling next in this workspace
+TypeError: Cannot read properties of undefined (reading 'os')
+    at fetchPkgInfo (C:\Users\user\repo\polydom\node_modules\[4mnext[24m\dist\lib\patch-incorrect-lockfile.js:73:25)
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)[39m
+    at async Promise.all (index 0)
+    at async patchIncorrectLockfile (C:\Users\user\repo\polydom\node_modules\[4mnext[24m\dist\lib\patch-incorrect-lockfile.js:162:26)
+ [33m[1m⚠[22m[39m Found lockfile missing swc dependencies, patching...
+ [33m[1m⚠[22m[39m Found lockfile missing swc dependencies, patching...
+ [31m[1m⨯[22m[39m Failed to patch lockfile, please try uninstalling and reinstalling next in this workspace
+TypeError: Cannot read properties of undefined (reading 'os')
+    at fetchPkgInfo (C:\Users\user\repo\polydom\node_modules\[4mnext[24m\dist\lib\patch-incorrect-lockfile.js:73:25)
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)[39m
+    at async Promise.all (index 0)
+    at async patchIncorrectLockfile (C:\Users\user\repo\polydom\node_modules\[4mnext[24m\dist\lib\patch-incorrect-lockfile.js:162:26)
+ [32m[1m✓[22m[39m Compiled successfully
+ [37m[1m [22m[39m Linting and checking validity of types ...
+ [37m[1m [22m[39m Collecting page data ...
+ [33m[1m⚠[22m[39m Found lockfile missing swc dependencies, patching...
+ [37m[1m [22m[39m Generating static pages (0/13) ...
+ [37m[1m [22m[39m Generating static pages (3/13) 
+ [37m[1m [22m[39m Generating static pages (6/13) 
+ [37m[1m [22m[39m Generating static pages (9/13) 
+ [32m[1m✓[22m[39m Generating static pages (13/13)
+ [37m[1m [22m[39m Finalizing page optimization ...
+ [37m[1m [22m[39m Collecting build traces ...
+ [31m[1m⨯[22m[39m Failed to patch lockfile, please try uninstalling and reinstalling next in this workspace
+TypeError: Cannot read properties of undefined (reading 'os')
+    at fetchPkgInfo (C:\Users\user\repo\polydom\node_modules\[4mnext[24m\dist\lib\patch-incorrect-lockfile.js:73:25)
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)[39m
+    at async Promise.all (index 0)
+    at async patchIncorrectLockfile (C:\Users\user\repo\polydom\node_modules\[4mnext[24m\dist\lib\patch-incorrect-lockfile.js:162:26)
+
+[4mRoute (app)[24m                               [4mSize[24m     [4mFirst Load JS[24m
+┌ ○ /                                     2.38 kB         [37m[1m133 kB[22m[39m
+├ ○ /_not-found                           138 B          [37m[1m87.5 kB[22m[39m
+├ ƒ /book/[timeslotId]                    3.65 kB         [37m[1m123 kB[22m[39m
+├ ƒ /category/[category]                  969 B           [37m[1m132 kB[22m[39m
+├ ○ /chat                                 3.2 kB          [37m[1m114 kB[22m[39m
+├ ○ /events                               1.71 kB         [37m[1m135 kB[22m[39m
+├ ƒ /events/[id]                          2.19 kB         [37m[1m133 kB[22m[39m
+├ ○ /events/new                           5.44 kB         [37m[1m134 kB[22m[39m
+├ ○ /groups                               2.72 kB         [37m[1m131 kB[22m[39m
+├ ƒ /groups/[groupId]                     3.73 kB         [37m[1m132 kB[22m[39m
+├ ƒ /groups/[groupId]/vendors             2.48 kB         [37m[1m128 kB[22m[39m
+├ ○ /groups/new                           3.31 kB         [37m[1m120 kB[22m[39m
+├ ○ /login                                3.62 kB         [37m[1m132 kB[22m[39m
+├ ○ /register                             4.7 kB          [37m[1m133 kB[22m[39m
+├ ○ /search                               1.16 kB         [37m[1m132 kB[22m[39m
+├ ○ /vendors                              2.65 kB         [37m[1m128 kB[22m[39m
+├ ƒ /vendors/[vendorId]                   2.75 kB         [37m[1m128 kB[22m[39m
+└ ƒ /vendors/[vendorId]/venues/[venueId]  3.75 kB         [37m[1m132 kB[22m[39m
++ First Load JS shared by all             [37m[1m87.4 kB[22m[39m
+  ├ chunks/1dd3208c-f0fdd5bd9b9670e5.js   53.6 kB
+  ├ chunks/528-8aba66ad51c479de.js        31.7 kB
+  └ other shared chunks (total)           2.01 kB
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, jsonb, customType } from 'drizzle-orm/pg-core';
+import { pgTable, text, integer, timestamp, jsonb, customType } from 'drizzle-orm/pg-core';
 
 /**
  * Custom pgvector column type (384-dimensional embeddings from all-MiniLM-L6-v2).
@@ -51,7 +51,20 @@ export const documents = pgTable('documents', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });
 
+/**
+ * Per-chunk embeddings for RAG similarity search.
+ * Each chunk gets its own vector(384) — no more re-embedding at query time.
+ */
+export const documentChunks = pgTable('document_chunks', {
+  id: text('id').primaryKey(),
+  documentId: text('document_id').notNull(),
+  chunkIndex: integer('chunk_index').notNull(),
+  content: text('content').notNull(),
+  embedding: vector384('embedding').notNull(),
+});
+
 export const schema = {
   investigationSessions,
   documents,
+  documentChunks,
 };

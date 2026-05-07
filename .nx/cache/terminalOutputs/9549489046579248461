@@ -1,0 +1,49 @@
+> nest build --webpack
+
+[1m[31mERROR[39m[22m in [1m./src/knowledge/knowledge.service.ts:38:11[39m[22m
+[90mTS2564: [39mProperty 'textSplitter' has no initializer and is not definitely assigned in the constructor.
+  [0m [90m 36 |[39m   [36mprivate[39m readonly logger [33m=[39m [36mnew[39m [33mLogger[39m([33mKnowledgeService[39m[33m.[39mname)[33m;[39m
+   [90m 37 |[39m   [36mprivate[39m pool[33m:[39m pg[33m.[39m[33mPool[39m[33m;[39m
+  [31m[1m>[22m[39m[90m 38 |[39m   [36mprivate[39m textSplitter[33m:[39m [33mRecursiveCharacterTextSplitter[39m[33m;[39m
+   [90m    |[39m           [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 39 |[39m
+   [90m 40 |[39m   constructor(
+   [90m 41 |[39m     configService[33m:[39m [33mConfigService[39m[33m,[39m[0m
+
+[1m[31mERROR[39m[22m in [1m../../../libs/shared-types/src/domain/index.ts:12:10[39m[22m
+[90mTS1205: [39mRe-exporting a type when 'isolatedModules' is enabled requires using 'export type'.
+  [0m [90m 10 |[39m
+   [90m 11 |[39m [90m// Repository interfaces[39m
+  [31m[1m>[22m[39m[90m 12 |[39m [36mexport[39m { [33mRepository[39m } [36mfrom[39m [32m'./repositories/base.repository'[39m[33m;[39m
+   [90m    |[39m          [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 13 |[39m [36mexport[39m { [33mUserRepository[39m } [36mfrom[39m [32m'./repositories/user.repository'[39m[33m;[39m[0m
+
+[1m[31mERROR[39m[22m in [1m../../../libs/shared-types/src/domain/index.ts:13:10[39m[22m
+[90mTS1205: [39mRe-exporting a type when 'isolatedModules' is enabled requires using 'export type'.
+  [0m [90m 11 |[39m [90m// Repository interfaces[39m
+   [90m 12 |[39m [36mexport[39m { [33mRepository[39m } [36mfrom[39m [32m'./repositories/base.repository'[39m[33m;[39m
+  [31m[1m>[22m[39m[90m 13 |[39m [36mexport[39m { [33mUserRepository[39m } [36mfrom[39m [32m'./repositories/user.repository'[39m[33m;[39m
+   [90m    |[39m          [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[0m
+
+[1m[31mERROR[39m[22m in [1m../../../libs/shared-types/src/persistence/index.ts:1:10[39m[22m
+[90mTS1205: [39mRe-exporting a type when 'isolatedModules' is enabled requires using 'export type'.
+  [0m[31m[1m>[22m[39m[90m 1 |[39m [36mexport[39m { [33mDatabaseAdapter[39m } [36mfrom[39m [32m'./interfaces/database-adapter.interface'[39m[33m;[39m
+   [90m   |[39m          [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 2 |[39m [36mexport[39m { [33mRepositoryFactory[39m } [36mfrom[39m [32m'./interfaces/repository-factory.interface'[39m[33m;[39m
+   [90m 3 |[39m [36mexport[39m { [33mDatabaseConfig[39m } [36mfrom[39m [32m'./interfaces/database-config.interface'[39m[33m;[39m[0m
+
+[1m[31mERROR[39m[22m in [1m../../../libs/shared-types/src/persistence/index.ts:2:10[39m[22m
+[90mTS1205: [39mRe-exporting a type when 'isolatedModules' is enabled requires using 'export type'.
+  [0m [90m 1 |[39m [36mexport[39m { [33mDatabaseAdapter[39m } [36mfrom[39m [32m'./interfaces/database-adapter.interface'[39m[33m;[39m
+  [31m[1m>[22m[39m[90m 2 |[39m [36mexport[39m { [33mRepositoryFactory[39m } [36mfrom[39m [32m'./interfaces/repository-factory.interface'[39m[33m;[39m
+   [90m   |[39m          [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 3 |[39m [36mexport[39m { [33mDatabaseConfig[39m } [36mfrom[39m [32m'./interfaces/database-config.interface'[39m[33m;[39m[0m
+
+[1m[31mERROR[39m[22m in [1m../../../libs/shared-types/src/persistence/index.ts:3:10[39m[22m
+[90mTS1205: [39mRe-exporting a type when 'isolatedModules' is enabled requires using 'export type'.
+  [0m [90m 1 |[39m [36mexport[39m { [33mDatabaseAdapter[39m } [36mfrom[39m [32m'./interfaces/database-adapter.interface'[39m[33m;[39m
+   [90m 2 |[39m [36mexport[39m { [33mRepositoryFactory[39m } [36mfrom[39m [32m'./interfaces/repository-factory.interface'[39m[33m;[39m
+  [31m[1m>[22m[39m[90m 3 |[39m [36mexport[39m { [33mDatabaseConfig[39m } [36mfrom[39m [32m'./interfaces/database-config.interface'[39m[33m;[39m
+   [90m   |[39m          [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[0m
+
+webpack 5.97.1 compiled with [1m[31m6 errors[39m[22m in 15756 ms

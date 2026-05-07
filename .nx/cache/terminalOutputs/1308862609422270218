@@ -1,0 +1,66 @@
+> next build
+
+  [1m[38;2;173;127;168m▲ Next.js 14.2.35[39m[22m
+  - Environments: .env.local
+
+ [37m[1m [22m[39m Creating an optimized production build ...
+ [33m[1m⚠[22m[39m Found lockfile missing swc dependencies, patching...
+ [31m[1m⨯[22m[39m Failed to patch lockfile, please try uninstalling and reinstalling next in this workspace
+TypeError: Cannot read properties of undefined (reading 'os')
+    at fetchPkgInfo (C:\Users\user\repo\polydom\node_modules\[4mnext[24m\dist\lib\patch-incorrect-lockfile.js:73:25)
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)[39m
+    at async Promise.all (index 0)
+    at async patchIncorrectLockfile (C:\Users\user\repo\polydom\node_modules\[4mnext[24m\dist\lib\patch-incorrect-lockfile.js:162:26)
+ [33m[1m⚠[22m[39m Found lockfile missing swc dependencies, patching...
+ [33m[1m⚠[22m[39m Found lockfile missing swc dependencies, patching...
+ [31m[1m⨯[22m[39m Failed to patch lockfile, please try uninstalling and reinstalling next in this workspace
+TypeError: Cannot read properties of undefined (reading 'os')
+    at fetchPkgInfo (C:\Users\user\repo\polydom\node_modules\[4mnext[24m\dist\lib\patch-incorrect-lockfile.js:73:25)
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)[39m
+    at async Promise.all (index 0)
+    at async patchIncorrectLockfile (C:\Users\user\repo\polydom\node_modules\[4mnext[24m\dist\lib\patch-incorrect-lockfile.js:162:26)
+ [32m[1m✓[22m[39m Compiled successfully
+ [37m[1m [22m[39m Linting and checking validity of types ...
+ [37m[1m [22m[39m Collecting page data ...
+ [33m[1m⚠[22m[39m Found lockfile missing swc dependencies, patching...
+ [37m[1m [22m[39m Generating static pages (0/18) ...
+ [37m[1m [22m[39m Generating static pages (4/18) 
+ [37m[1m [22m[39m Generating static pages (8/18) 
+ [37m[1m [22m[39m Generating static pages (13/18) 
+ [32m[1m✓[22m[39m Generating static pages (18/18)
+ [37m[1m [22m[39m Finalizing page optimization ...
+ [37m[1m [22m[39m Collecting build traces ...
+ [31m[1m⨯[22m[39m Failed to patch lockfile, please try uninstalling and reinstalling next in this workspace
+TypeError: Cannot read properties of undefined (reading 'os')
+    at fetchPkgInfo (C:\Users\user\repo\polydom\node_modules\[4mnext[24m\dist\lib\patch-incorrect-lockfile.js:73:25)
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)[39m
+    at async Promise.all (index 0)
+    at async patchIncorrectLockfile (C:\Users\user\repo\polydom\node_modules\[4mnext[24m\dist\lib\patch-incorrect-lockfile.js:162:26)
+
+[4mRoute (app)[24m                                [4mSize[24m     [4mFirst Load JS[24m
+┌ ○ /                                      1.4 kB          [37m[1m112 kB[22m[39m
+├ ○ /_not-found                            873 B          [37m[1m88.2 kB[22m[39m
+├ ○ /dashboard                             2.4 kB          [37m[1m111 kB[22m[39m
+├ ○ /dashboard/bookings                    658 B            [37m[1m88 kB[22m[39m
+├ ○ /dashboard/events                      1.49 kB         [37m[1m110 kB[22m[39m
+├ ○ /dashboard/insights                    3.67 kB         [37m[1m112 kB[22m[39m
+├ ○ /dashboard/knowledge                   2.47 kB         [37m[1m111 kB[22m[39m
+├ ○ /dashboard/knowledge/chat              2.14 kB         [37m[1m111 kB[22m[39m
+├ ○ /dashboard/settings                    1.89 kB         [37m[1m113 kB[22m[39m
+├ ○ /dashboard/venues                      2.04 kB         [37m[1m111 kB[22m[39m
+├ ƒ /dashboard/venues/[venueId]/timeslots  2.16 kB         [37m[1m111 kB[22m[39m
+├ ○ /login                                 1.88 kB         [37m[1m122 kB[22m[39m
+├ ○ /onboarding/complete                   2.07 kB        [37m[1m89.4 kB[22m[39m
+├ ○ /onboarding/profile                    2.33 kB         [37m[1m113 kB[22m[39m
+├ ○ /onboarding/timeslots                  3.3 kB          [37m[1m112 kB[22m[39m
+├ ○ /onboarding/venues                     3.38 kB         [37m[1m112 kB[22m[39m
+└ ○ /register                              2 kB            [37m[1m122 kB[22m[39m
++ First Load JS shared by all              [37m[1m87.3 kB[22m[39m
+  ├ chunks/1dd3208c-8c1694849619830e.js    53.6 kB
+  ├ chunks/528-72aa6a5bcfa17a91.js         31.7 kB
+  └ other shared chunks (total)            1.95 kB
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

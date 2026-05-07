@@ -146,4 +146,42 @@ export class AnthropicProvider implements LlmProvider {
       throw error;
     }
   }
+
+  async *chatStream(messages: LlmMessage[], tools: ToolDefinition[]): AsyncIterable<string> {
+    const systemMsg = messages.find((m) => m.role === 'system');
+    const otherMsgs = messages.filter((m) => m.role !== 'system');
+
+    const anthropicTools: Anthropic.Tool[] = tools.map((t) => ({
+      name: t.name,
+      description: t.description,
+      input_schema: t.input_schema,
+    }));
+
+    // Build messages (non-streaming already has tool batching logic; keep it simple for now)
+    const anthropicMessages: Anthropic.MessageParam[] = otherMsgs.map((m) => ({
+      role: m.role as 'user' | 'assistant',
+      content: m.content,
+    }));
+
+    const stream = this.client.messages.stream({
+      model: this.model,
+      max_tokens: 64000,
+      ...(this.isDeepSeek
+        ? { thinking: { type: 'disabled' as const } }
+        : {
+            thinking: { type: 'adaptive' as const, display: 'summarized' as const },
+            output_config: { effort: 'xhigh' as 'high' | 'max' },
+            cache_control: { type: 'ephemeral' as const },
+          }),
+      system: systemMsg?.content,
+      messages: anthropicMessages,
+      tools: anthropicTools.length > 0 ? anthropicTools : undefined,
+    });
+
+    for await (const event of stream) {
+      if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
+        yield event.delta.text;
+      }
+    }
+  }
 }

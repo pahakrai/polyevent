@@ -26,4 +26,9 @@ export interface LlmProvider {
     messages: LlmMessage[],
     tools: ToolDefinition[],
   ): Promise<LlmResponse>;
+
+  chatStream(
+    messages: LlmMessage[],
+    tools: ToolDefinition[],
+  ): AsyncIterable<string>;
 }

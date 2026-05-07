@@ -242,7 +242,11 @@
       "Bash(git -C C:/Users/user/repo/polydom diff --cached --name-only)",
       "Bash(git -C C:/Users/user/repo/polydom add apps/admin-frontend/src/app/dashboard/layout.tsx apps/nestjs-services/agent-service/package.json apps/nestjs-services/agent-service/src/agent/agent.controller.ts apps/nestjs-services/agent-service/src/agent/agent.module.ts apps/nestjs-services/agent-service/src/agent/anthropic-provider.ts apps/nestjs-services/agent-service/src/agent/investigation.service.ts apps/nestjs-services/agent-service/src/agent/llm-provider.interface.ts apps/nestjs-services/agent-service/src/agent/skills/business-analyst.skill.ts apps/nestjs-services/agent-service/src/agent/skills/introspection.skill.ts apps/nestjs-services/agent-service/src/agent/skills/skill-registry.service.ts apps/nestjs-services/agent-service/src/agent/skills/skill.interface.ts apps/nestjs-services/agent-service/src/agent/skills/validation.skill.ts apps/nestjs-services/agent-service/src/agent/deepseek-provider.ts apps/nestjs-services/agent-service/src/agent/tool-executor.service.ts apps/nestjs-services/agent-service/src/agent/tools.ts apps/nestjs-services/agent-service/src/app.module.ts apps/nestjs-services/agent-service/src/database/schema.ts apps/nestjs-services/agent-service/src/mcp/mcp-client.service.ts apps/nestjs-services/agent-service/src/mcp/mcp.module.ts apps/nestjs-services/api-gateway/src/proxy/agent-proxy.controller.ts docker-compose.infra.yml docker-compose.yml kubernetes/base/deployments/agent-service.yaml kubernetes/base/stateful/postgres.yaml kubernetes/local/postgres.yaml kubernetes/local/services.yaml package-lock.json package.json skaffold.yaml tools/postgres-init/01-create-databases.sql)",
       "Bash(git -C C:/Users/user/repo/polydom diff --cached --stat)",
-      "Bash(git *)"
+      "Bash(git *)",
+      "Bash(taskkill //F //PID 19584 //PID 56648 //PID 56660)",
+      "Bash(skaffold diagnose *)",
+      "Bash(npm config *)",
+      "Bash(skaffold render *)"
     ]
   },
   "enableAllProjectMcpServers": true,

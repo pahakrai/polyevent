@@ -91,8 +91,10 @@ manifests:
   rawYaml:
     - kubernetes/local/namespace.yaml
     - kubernetes/local/secrets.yaml
+    - kubernetes/local/postgres-init.yaml
     - kubernetes/local/postgres.yaml
     - kubernetes/local/infrastructure.yaml
+    - kubernetes/local/pgadmin.yaml
     - kubernetes/local/services.yaml
     - kubernetes/local/ingress.yaml
 
@@ -165,3 +167,8 @@ portForward:
     namespace: polydom-dev
     port: 3010
     localPort: 3050
+  - resourceType: service
+    resourceName: agent-service
+    namespace: polydom-dev
+    port: 9234
+    localPort: 9234

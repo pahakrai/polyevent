@@ -42,7 +42,7 @@ export default function KnowledgeBasePage() {
     setUploading(true);
     setError('');
     try {
-      await uploadDocument(file, title, 'admin');
+      await uploadDocument(file, title);
       setTitle('');
       setFile(null);
       await loadDocs();

@@ -1,0 +1,51 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - link "Polydom" [ref=e5] [cursor=pointer]:
+        - /url: /
+      - navigation [ref=e6]:
+        - link "Search" [ref=e7] [cursor=pointer]:
+          - /url: /search
+        - link "Music" [ref=e8] [cursor=pointer]:
+          - /url: /category/music
+        - link "Art" [ref=e9] [cursor=pointer]:
+          - /url: /category/art
+        - link "Sports" [ref=e10] [cursor=pointer]:
+          - /url: /category/sports
+        - link "Activities" [ref=e11] [cursor=pointer]:
+          - /url: /category/activities
+        - link "Groups" [ref=e12] [cursor=pointer]:
+          - /url: /groups
+        - link "Vendors" [ref=e13] [cursor=pointer]:
+          - /url: /vendors
+        - link "Events" [ref=e14] [cursor=pointer]:
+          - /url: /events
+  - main [ref=e17]:
+    - generic [ref=e19]:
+      - generic [ref=e20]:
+        - heading "Welcome back" [level=3] [ref=e21]
+        - paragraph [ref=e22]: Sign in to your Polydom account
+      - generic [ref=e23]:
+        - generic [ref=e24]:
+          - generic [ref=e25]:
+            - text: Email
+            - textbox "Email" [ref=e26]:
+              - /placeholder: you@example.com
+          - generic [ref=e27]:
+            - text: Password
+            - textbox "Password" [ref=e28]:
+              - /placeholder: Your password
+        - generic [ref=e29]:
+          - button "Sign in" [ref=e30] [cursor=pointer]
+          - paragraph [ref=e31]:
+            - text: Don't have an account?
+            - link "Register" [ref=e32] [cursor=pointer]:
+              - /url: /register
+  - contentinfo [ref=e33]:
+    - generic [ref=e34]:
+      - paragraph [ref=e35]: Polydom — Connecting people through shared interests
+      - generic [ref=e36]:
+        - link "Discover Activities" [ref=e37] [cursor=pointer]:
+          - /url: /search
+        - generic [ref=e38]: ·
+        - generic [ref=e39]: © 2026 Polydom

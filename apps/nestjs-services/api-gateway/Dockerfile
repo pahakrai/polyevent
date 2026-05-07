@@ -22,15 +22,11 @@ RUN npm ci --no-audit --no-fund && npm cache clean --force && rm -rf /tmp/* /roo
 
 COPY apps/nestjs-services/api-gateway/ apps/nestjs-services/api-gateway/
 
-RUN chown -R appuser:appgroup /app
-
-USER appuser
-
 ENV NODE_ENV=development
 EXPOSE 3000
 EXPOSE 9229
 
-CMD ["npx", "nx", "run", "api-gateway:serve:debug"]
+CMD ["npx", "nx", "run", "api-gateway:serve", "--configuration=debug"]
 
 FROM node:20-alpine AS production
 

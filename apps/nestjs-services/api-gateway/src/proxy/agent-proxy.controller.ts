@@ -1,13 +1,16 @@
-import { Controller, Get, Post, Delete, Req, Res, Param } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Req, Res, Param, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { Request, Response } from 'express';
 import { firstValueFrom } from 'rxjs';
 import { AxiosError } from 'axios';
+import * as http from 'http';
 
 const AGENT_SERVICE_URL = process.env.AGENT_SERVICE_URL || 'http://agent-service:3010';
 
 @Controller()
 export class AgentProxyController {
+  private readonly logger = new Logger(AgentProxyController.name);
+
   constructor(private readonly httpService: HttpService) {}
 
   private forward(method: 'get' | 'post' | 'delete', path: string) {
@@ -24,22 +27,19 @@ export class AgentProxyController {
           return res.status(result.status).json(result.data);
         }
 
-        if (method === 'post') {
-          // For multipart uploads, forward raw body with content-type
-          if (req.is('multipart/form-data')) {
-            headers['content-type'] = req.headers['content-type'] as string;
-            const result = await firstValueFrom(
-              this.httpService.post(url, req.body, { headers }),
-            );
-            return res.status(result.status).json(result.data);
-          }
-          const result = await firstValueFrom(
-            this.httpService.post(url, req.body, { headers }),
-          );
+        if (method === 'get') {
+          const result = await firstValueFrom(this.httpService.get(url, { headers }));
           return res.status(result.status).json(result.data);
         }
 
-        const result = await firstValueFrom(this.httpService.get(url, { headers }));
+        // POST — dispatch to raw pipe for multipart, axios for JSON
+        if (req.is('multipart/form-data')) {
+          return this.pipeMultipart(url, headers, req, res);
+        }
+
+        const result = await firstValueFrom(
+          this.httpService.post(url, req.body, { headers }),
+        );
         return res.status(result.status).json(result.data);
       } catch (err: unknown) {
         const error = err as AxiosError;
@@ -48,6 +48,35 @@ export class AgentProxyController {
           .json(error.response?.data || { message: 'Agent service unavailable' });
       }
     };
+  }
+
+  private pipeMultipart(
+    url: string,
+    baseHeaders: Record<string, string>,
+    req: Request,
+    res: Response,
+  ) {
+    const headers: Record<string, string> = {
+      ...baseHeaders,
+      'content-type': req.headers['content-type'] as string,
+    };
+
+    const options: http.RequestOptions = {
+      method: 'POST',
+      headers,
+    };
+
+    const upstreamReq = http.request(url, options, (upstreamRes) => {
+      res.status(upstreamRes.statusCode || 200);
+      upstreamRes.pipe(res);
+    });
+
+    upstreamReq.on('error', (err) => {
+      this.logger.error(`Multipart proxy error: ${err.message}`);
+      res.status(502).json({ message: 'Agent service unavailable' });
+    });
+
+    req.pipe(upstreamReq);
   }
 
   // ── Investigation routes ──────────────────────────────────────────────
@@ -97,5 +126,38 @@ export class AgentProxyController {
   @Post('agent/chat')
   chat(@Req() r: Request, @Res() res: Response) {
     return this.forward('post', '/agent/chat')(r, res);
+  }
+
+  @Post('agent/chat/stream')
+  chatStream(@Req() req: Request, @Res() res: Response) {
+    const url = `${AGENT_SERVICE_URL}/agent/chat/stream`;
+
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+
+    const body = JSON.stringify(req.body);
+
+    const options: http.RequestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: req.headers.authorization as string,
+        'x-user-id': req.headers['x-user-id'] as string,
+        'Content-Length': Buffer.byteLength(body).toString(),
+      },
+    };
+
+    const upstreamReq = http.request(url, options, (upstreamRes) => {
+      upstreamRes.pipe(res);
+    });
+
+    upstreamReq.on('error', (err) => {
+      res.write(`event: error\ndata: ${JSON.stringify({ message: err.message })}\n\n`);
+      res.end();
+    });
+
+    upstreamReq.write(body);
+    upstreamReq.end();
   }
 }

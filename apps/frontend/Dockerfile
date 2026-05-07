@@ -30,10 +30,6 @@ RUN npm ci --no-audit --no-fund && npm cache clean --force && rm -rf /tmp/* /roo
 
 COPY apps/frontend/ apps/frontend/
 
-RUN chown -R appuser:appgroup /app
-
-USER appuser
-
 ENV NODE_ENV=development
 EXPOSE 3000
 

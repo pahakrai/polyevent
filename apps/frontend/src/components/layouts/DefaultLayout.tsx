@@ -17,6 +17,7 @@ const NAV_LINKS = [
   { href: "/groups", label: "Groups" },
   { href: "/vendors", label: "Vendors" },
   { href: "/events", label: "Events" },
+  { href: "/chat", label: "Chat" },
 ];
 
 function UserMenu() {

@@ -1,0 +1,12 @@
+# PostgreSQL init script — creates databases and extensions
+# Separate file to work around Skaffold v2.19.0 YAML serialization bug
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-init
+  namespace: polydom-dev
+type: Opaque
+stringData:
+  01-create-databases.sql: "CREATE DATABASE gateway_db; CREATE DATABASE auth_db; CREATE DATABASE user_db; CREATE DATABASE vendor_db; CREATE DATABASE event_db; CREATE DATABASE agent_db;"
+  02-setup-vector.sql: "\\c agent_db\nCREATE EXTENSION IF NOT EXISTS vector;"

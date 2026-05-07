@@ -1,18 +1,18 @@
 {
   "run": {
-    "command": "nx build agent-service --skip-nx-cache",
-    "startTime": "2026-05-06T07:08:08.377Z",
-    "endTime": "2026-05-06T07:08:15.840Z",
+    "command": "nx build api-gateway",
+    "startTime": "2026-05-07T13:14:16.110Z",
+    "endTime": "2026-05-07T13:14:39.025Z",
     "inner": false
   },
   "tasks": [
     {
-      "taskId": "agent-service:build",
+      "taskId": "api-gateway:build",
       "target": "build",
-      "projectName": "agent-service",
-      "hash": "15795096035538106005",
-      "startTime": "2026-05-06T07:08:08.386Z",
-      "endTime": "2026-05-06T07:08:15.839Z",
+      "projectName": "api-gateway",
+      "hash": "962990833762199260",
+      "startTime": "2026-05-07T13:14:16.123Z",
+      "endTime": "2026-05-07T13:14:39.024Z",
       "params": "",
       "cacheStatus": "cache-miss",
       "status": 0

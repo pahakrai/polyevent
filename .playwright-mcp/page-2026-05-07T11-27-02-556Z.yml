@@ -1,0 +1,59 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - link "Polydom" [ref=e5] [cursor=pointer]:
+          - /url: /
+        - navigation [ref=e6]:
+          - link "Search" [ref=e7] [cursor=pointer]:
+            - /url: /search
+          - link "Music" [ref=e8] [cursor=pointer]:
+            - /url: /category/music
+          - link "Art" [ref=e9] [cursor=pointer]:
+            - /url: /category/art
+          - link "Sports" [ref=e10] [cursor=pointer]:
+            - /url: /category/sports
+          - link "Activities" [ref=e11] [cursor=pointer]:
+            - /url: /category/activities
+          - link "Groups" [ref=e12] [cursor=pointer]:
+            - /url: /groups
+          - link "Vendors" [ref=e13] [cursor=pointer]:
+            - /url: /vendors
+          - link "Events" [ref=e14] [cursor=pointer]:
+            - /url: /events
+        - generic [ref=e15]:
+          - 'button "Theme: system. Click to switch to light." [ref=e16] [cursor=pointer]':
+            - img [ref=e17]
+          - button "Test" [ref=e20] [cursor=pointer]:
+            - generic [ref=e21]: Test
+            - img [ref=e22]
+    - main [ref=e24]:
+      - generic [ref=e26]:
+        - generic [ref=e27]:
+          - heading "Welcome back" [level=3] [ref=e28]
+          - paragraph [ref=e29]: Sign in to your Polydom account
+        - generic [ref=e30]:
+          - generic [ref=e31]:
+            - generic [ref=e32]:
+              - text: Email
+              - textbox "Email" [ref=e33]:
+                - /placeholder: you@example.com
+            - generic [ref=e34]:
+              - text: Password
+              - textbox "Password" [ref=e35]:
+                - /placeholder: Your password
+          - generic [ref=e36]:
+            - button "Sign in" [ref=e37] [cursor=pointer]
+            - paragraph [ref=e38]:
+              - text: Don't have an account?
+              - link "Register" [ref=e39] [cursor=pointer]:
+                - /url: /register
+    - contentinfo [ref=e40]:
+      - generic [ref=e41]:
+        - paragraph [ref=e42]: Polydom — Connecting people through shared interests
+        - generic [ref=e43]:
+          - link "Discover Activities" [ref=e44] [cursor=pointer]:
+            - /url: /search
+          - generic [ref=e45]: ·
+          - generic [ref=e46]: © 2026 Polydom
+  - alert [ref=e47]

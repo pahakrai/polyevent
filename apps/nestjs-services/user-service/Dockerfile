@@ -22,15 +22,11 @@ RUN npm ci --no-audit --no-fund && npm cache clean --force && rm -rf /tmp/* /roo
 
 COPY apps/nestjs-services/user-service/ apps/nestjs-services/user-service/
 
-RUN chown -R appuser:appgroup /app
-
-USER appuser
-
 ENV NODE_ENV=development
 EXPOSE 3000
 EXPOSE 9231
 
-CMD ["npx", "nx", "run", "user-service:serve:debug"]
+CMD ["npx", "nx", "run", "user-service:serve", "--configuration=debug"]
 
 FROM node:20-alpine AS production
 

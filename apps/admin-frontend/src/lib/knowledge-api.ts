@@ -16,12 +16,10 @@ export interface ChatResult {
 export async function uploadDocument(
   file: File,
   title: string,
-  createdBy: string,
 ): Promise<DocumentRecord> {
   const form = new FormData();
   form.append('file', file);
   form.append('title', title);
-  form.append('createdBy', createdBy);
 
   const { data } = await api.post('/agent/documents/upload', form, {
     headers: { 'Content-Type': 'multipart/form-data' },

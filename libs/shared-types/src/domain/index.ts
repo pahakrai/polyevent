@@ -9,5 +9,5 @@ export { NotificationSettings } from './value-objects/notification-settings';
 export { UserPreferences } from './value-objects/user-preferences';
 
 // Repository interfaces
-export { Repository } from './repositories/base.repository';
-export { UserRepository } from './repositories/user.repository';
+export type { Repository } from './repositories/base.repository';
+export type { UserRepository } from './repositories/user.repository';
