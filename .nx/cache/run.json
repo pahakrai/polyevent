@@ -1,18 +1,18 @@
 {
   "run": {
-    "command": "nx build api-gateway",
-    "startTime": "2026-05-07T13:14:16.110Z",
-    "endTime": "2026-05-07T13:14:39.025Z",
+    "command": "nx build agent-service",
+    "startTime": "2026-05-08T07:19:32.000Z",
+    "endTime": "2026-05-08T07:19:41.372Z",
     "inner": false
   },
   "tasks": [
     {
-      "taskId": "api-gateway:build",
+      "taskId": "agent-service:build",
       "target": "build",
-      "projectName": "api-gateway",
-      "hash": "962990833762199260",
-      "startTime": "2026-05-07T13:14:16.123Z",
-      "endTime": "2026-05-07T13:14:39.024Z",
+      "projectName": "agent-service",
+      "hash": "7826738867829355433",
+      "startTime": "2026-05-08T07:19:32.024Z",
+      "endTime": "2026-05-08T07:19:41.372Z",
       "params": "",
       "cacheStatus": "cache-miss",
       "status": 0

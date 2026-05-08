@@ -1,5 +1,6 @@
 # Production-grade multi-stage Dockerfile — monorepo context
 # Build from repo root: docker build -f apps/admin-frontend/Dockerfile .
+# syntax=docker/dockerfile:1
 FROM node:20-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
@@ -7,7 +8,10 @@ WORKDIR /app
 COPY package.json package-lock.json nx.json tsconfig.base.json workspace.json ./
 COPY apps/admin-frontend/package.json apps/admin-frontend/
 
-RUN npm ci --no-audit --no-fund && npm cache clean --force && rm -rf /tmp/* /root/.npm /root/.cache
+RUN --mount=type=cache,target=/root/.npm,id=npm \
+    npm ci --no-audit --no-fund --prefer-offline && \
+    npm cache clean --force && \
+    rm -rf /tmp/* /root/.cache
 
 # ---- Stage 2: Development (hot reload) ----
 FROM node:20-alpine AS development
@@ -19,7 +23,10 @@ RUN addgroup -g 1001 -S appgroup && \
 COPY package.json package-lock.json nx.json tsconfig.base.json workspace.json ./
 COPY apps/admin-frontend/package.json apps/admin-frontend/
 
-RUN npm ci --no-audit --no-fund && npm cache clean --force && rm -rf /tmp/* /root/.npm /root/.cache
+RUN --mount=type=cache,target=/root/.npm,id=npm \
+    npm ci --no-audit --no-fund --prefer-offline && \
+    npm cache clean --force && \
+    rm -rf /tmp/* /root/.cache
 
 COPY apps/admin-frontend/ apps/admin-frontend/
 

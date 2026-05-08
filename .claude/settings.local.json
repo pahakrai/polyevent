@@ -246,7 +246,22 @@
       "Bash(taskkill //F //PID 19584 //PID 56648 //PID 56660)",
       "Bash(skaffold diagnose *)",
       "Bash(npm config *)",
-      "Bash(skaffold render *)"
+      "Bash(skaffold render *)",
+      "Bash(DOCKER_BUILDKIT=1 docker build -f apps/nestjs-services/api-gateway/Dockerfile --target builder --build-arg BUILDKIT_INLINE_CACHE=1 -t polydom/api-gateway:test .)",
+      "Bash(python3 -c \"import yaml; yaml.safe_load\\(open\\('skaffold.yaml'\\)\\); print\\('YAML valid'\\)\")",
+      "Bash(python -c \"import yaml; yaml.safe_load\\(open\\('skaffold.yaml'\\)\\); print\\('YAML valid'\\)\")",
+      "Bash(taskkill //F //PID 35208)",
+      "Bash(taskkill //F //IM kubectl.exe)",
+      "mcp__playwright__browser_evaluate",
+      "Bash(netsh advfirewall *)",
+      "Bash(nslookup host.docker.internal)",
+      "Bash(ping -n 1 host.docker.internal)",
+      "Bash(docker network *)",
+      "Bash(powershell.exe *)",
+      "Bash(jobs *)",
+      "Bash(npm ci *)",
+      "Bash(rm -rf node_modules/.*/)",
+      "Bash(rm -rf node_modules/.*)"
     ]
   },
   "enableAllProjectMcpServers": true,

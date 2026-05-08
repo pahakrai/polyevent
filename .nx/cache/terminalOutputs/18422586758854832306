@@ -1,0 +1,121 @@
+> nest build --webpack
+
+[1m[31mERROR[39m[22m in [1m./src/agent/sql-guard.utils.ts[39m[22m [1m[32m5:26-52[39m[22m
+[1mModule [1m[31mnot found[39m[22m[1m: [1m[31mError[39m[22m[1m: Can't resolve 'node-sql-parser' in 'C:\Users\user\repo\polydom\apps\nestjs-services\agent-service\src\agent'[39m[22m
+ @ ./src/agent/tool-executor.service.ts 17:26-54
+ @ ./src/agent/agent.module.ts 16:32-66
+ @ ./src/app.module.ts 13:23-54
+ @ ./src/main.ts 4:21-44
+
+[1m[31mERROR[39m[22m in [1m./src/knowledge/embedding.service.ts[39m[22m [1m[32m57:77-108[39m[22m
+[1mModule [1m[31mnot found[39m[22m[1m: [1m[31mError[39m[22m[1m: Can't resolve '@xenova/transformers' in 'C:\Users\user\repo\polydom\apps\nestjs-services\agent-service\src\knowledge'[39m[22m
+ @ ./src/knowledge/knowledge.module.ts 15:28-58
+ @ ./src/app.module.ts 14:27-66
+ @ ./src/main.ts 4:21-44
+
+[1m[31mERROR[39m[22m in [1m./src/knowledge/knowledge.service.ts[39m[22m [1m[32m88:76-94[39m[22m
+[1mModule [1m[31mnot found[39m[22m[1m: [1m[31mError[39m[22m[1m: Can't resolve 'mammoth' in 'C:\Users\user\repo\polydom\apps\nestjs-services\agent-service\src\knowledge'[39m[22m
+ @ ./src/knowledge/knowledge.module.ts 14:28-58
+ @ ./src/app.module.ts 14:27-66
+ @ ./src/main.ts 4:21-44
+
+[1m[31mERROR[39m[22m in [1m../../../node_modules/@langchain/core/dist/load/map_keys.cjs[39m[22m [1m[32m2:17-38[39m[22m
+[1mModule [1m[31mnot found[39m[22m[1m: [1m[31mError[39m[22m[1m: Can't resolve 'decamelize' in 'C:\Users\user\repo\polydom\node_modules\@langchain\core\dist\load'[39m[22m
+ @ ../../../node_modules/@langchain/core/dist/load/serializable.cjs 3:25-50
+ @ ../../../node_modules/@langchain/core/dist/stores.cjs 3:34-68
+ @ ../../../node_modules/langchain/dist/index.cjs 33:29-62
+ @ ./src/knowledge/knowledge.service.ts 53:20-40
+ @ ./src/knowledge/knowledge.module.ts 14:28-58
+ @ ./src/app.module.ts 14:27-66
+ @ ./src/main.ts 4:21-44
+
+[1m[31mERROR[39m[22m in [1m../../../node_modules/@langchain/core/dist/output_parsers/transform.cjs[39m[22m [1m[32m6:28-60[39m[22m
+[1mModule [1m[31mnot found[39m[22m[1m: [1m[31mError[39m[22m[1m: Can't resolve '@cfworker/json-schema' in 'C:\Users\user\repo\polydom\node_modules\@langchain\core\dist\output_parsers'[39m[22m
+ @ ../../../node_modules/@langchain/core/dist/output_parsers/json.cjs 3:26-52
+ @ ../../../node_modules/@langchain/core/dist/language_models/structured_output.cjs 8:21-58
+ @ ../../../node_modules/@langchain/core/dist/language_models/chat_models.cjs 20:50-84
+ @ ../../../node_modules/langchain/dist/agents/tests/utils.cjs 3:50-104
+ @ ../../../node_modules/langchain/dist/index.cjs 11:24-59
+ @ ./src/knowledge/knowledge.service.ts 53:20-40
+ @ ./src/knowledge/knowledge.module.ts 14:28-58
+ @ ./src/app.module.ts 14:27-66
+ @ ./src/main.ts 4:21-44
+
+[1m[31mERROR[39m[22m in [1m../../../node_modules/@langchain/core/dist/prompts/template.cjs[39m[22m [1m[32m3:15-34[39m[22m
+[1mModule [1m[31mnot found[39m[22m[1m: [1m[31mError[39m[22m[1m: Can't resolve 'mustache' in 'C:\Users\user\repo\polydom\node_modules\@langchain\core\dist\prompts'[39m[22m
+ @ ../../../node_modules/@langchain/core/dist/prompts/index.cjs 5:25-50
+ @ ../../../node_modules/@langchain/core/dist/load/import_map.cjs 50:30-61
+ @ ../../../node_modules/@langchain/core/dist/load/index.cjs 7:27-54
+ @ ../../../node_modules/@langchain/langgraph-checkpoint/dist/serde/jsonplus.cjs 2:27-58
+ @ ../../../node_modules/@langchain/langgraph-checkpoint/dist/base.cjs 3:25-56
+ @ ../../../node_modules/@langchain/langgraph-checkpoint/dist/index.cjs 4:21-42
+ @ ../../../node_modules/langchain/dist/agents/tests/utils.cjs 6:0-42
+ @ ../../../node_modules/langchain/dist/index.cjs 11:24-59
+ @ ./src/knowledge/knowledge.service.ts 53:20-40
+ @ ./src/knowledge/knowledge.module.ts 14:28-58
+ @ ./src/app.module.ts 14:27-66
+ @ ./src/main.ts 4:21-44
+
+[1m[31mERROR[39m[22m in [1m../../../node_modules/@langchain/core/dist/singletons/callbacks.cjs[39m[22m [1m[32m4:14-32[39m[22m
+[1mModule [1m[31mnot found[39m[22m[1m: [1m[31mError[39m[22m[1m: Can't resolve 'p-queue' in 'C:\Users\user\repo\polydom\node_modules\@langchain\core\dist\singletons'[39m[22m
+ @ ../../../node_modules/@langchain/core/dist/callbacks/manager.cjs 11:26-64
+ @ ../../../node_modules/@langchain/core/dist/tools/index.cjs 5:34-69
+ @ ../../../node_modules/langchain/dist/index.cjs 31:28-60
+ @ ./src/knowledge/knowledge.service.ts 53:20-40
+ @ ./src/knowledge/knowledge.module.ts 14:28-58
+ @ ./src/app.module.ts 14:27-66
+ @ ./src/main.ts 4:21-44
+
+[1m[31mERROR[39m[22m in [1m../../../node_modules/@langchain/core/dist/tools/index.cjs[39m[22m [1m[32m16:28-60[39m[22m
+[1mModule [1m[31mnot found[39m[22m[1m: [1m[31mError[39m[22m[1m: Can't resolve '@cfworker/json-schema' in 'C:\Users\user\repo\polydom\node_modules\@langchain\core\dist\tools'[39m[22m
+ @ ../../../node_modules/langchain/dist/index.cjs 31:28-60
+ @ ./src/knowledge/knowledge.service.ts 53:20-40
+ @ ./src/knowledge/knowledge.module.ts 14:28-58
+ @ ./src/app.module.ts 14:27-66
+ @ ./src/main.ts 4:21-44
+
+[1m[31mERROR[39m[22m in [1m../../../node_modules/@langchain/core/dist/utils/async_caller.cjs[39m[22m [1m[32m5:14-32[39m[22m
+[1mModule [1m[31mnot found[39m[22m[1m: [1m[31mError[39m[22m[1m: Can't resolve 'p-queue' in 'C:\Users\user\repo\polydom\node_modules\@langchain\core\dist\utils'[39m[22m
+ @ ../../../node_modules/@langchain/core/dist/language_models/base.cjs 5:35-71
+ @ ../../../node_modules/langchain/dist/agents/middleware/llmToolSelector.cjs 6:43-90
+ @ ../../../node_modules/langchain/dist/index.cjs 16:32-82
+ @ ./src/knowledge/knowledge.service.ts 53:20-40
+ @ ./src/knowledge/knowledge.module.ts 14:28-58
+ @ ./src/app.module.ts 14:27-66
+ @ ./src/main.ts 4:21-44
+
+[1m[31mERROR[39m[22m in [1m../../../node_modules/@langchain/core/dist/utils/json_schema.cjs[39m[22m [1m[32m8:28-60[39m[22m
+[1mModule [1m[31mnot found[39m[22m[1m: [1m[31mError[39m[22m[1m: Can't resolve '@cfworker/json-schema' in 'C:\Users\user\repo\polydom\node_modules\@langchain\core\dist\utils'[39m[22m
+ @ ../../../node_modules/langchain/dist/agents/responses.cjs 5:40-84
+ @ ../../../node_modules/langchain/dist/index.cjs 6:26-59
+ @ ./src/knowledge/knowledge.service.ts 53:20-40
+ @ ./src/knowledge/knowledge.module.ts 14:28-58
+ @ ./src/app.module.ts 14:27-66
+ @ ./src/main.ts 4:21-44
+
+[1m[31mERROR[39m[22m in [1m../../../node_modules/langchain/dist/tools/headless.cjs[39m[22m [1m[32m17:30-60[39m[22m
+[1mModule [1m[31mnot found[39m[22m[1m: [1m[31mError[39m[22m[1m: Can't resolve '@langchain/langgraph' in 'C:\Users\user\repo\polydom\node_modules\langchain\dist\tools'[39m[22m
+ @ ../../../node_modules/langchain/dist/index.cjs 4:25-56
+ @ ./src/knowledge/knowledge.service.ts 53:20-40
+ @ ./src/knowledge/knowledge.module.ts 14:28-58
+ @ ./src/app.module.ts 14:27-66
+ @ ./src/main.ts 4:21-44
+
+[1m[31mERROR[39m[22m in [1m../../../node_modules/langsmith/dist/utils/p-queue.cjs[39m[22m [1m[32m7:34-52[39m[22m
+[1mModule [1m[31mnot found[39m[22m[1m: [1m[31mError[39m[22m[1m: Can't resolve 'p-queue' in 'C:\Users\user\repo\polydom\node_modules\langsmith\dist\utils'[39m[22m
+ @ ../../../node_modules/langsmith/dist/utils/async_caller.cjs 8:21-45
+ @ ../../../node_modules/langsmith/dist/client.cjs 41:26-61
+ @ ../../../node_modules/langsmith/dist/index.cjs 4:18-41
+ @ ../../../node_modules/langsmith/index.cjs 1:0-44
+ @ ../../../node_modules/@langchain/core/dist/singletons/async_local_storage/index.cjs 4:16-36
+ @ ../../../node_modules/@langchain/core/dist/tools/index.cjs 6:22-76
+ @ ../../../node_modules/langchain/dist/index.cjs 31:28-60
+ @ ./src/knowledge/knowledge.service.ts 53:20-40
+ @ ./src/knowledge/knowledge.module.ts 14:28-58
+ @ ./src/app.module.ts 14:27-66
+ @ ./src/main.ts 4:21-44
+
+[1m[33m12 errors have detailed information that is not shown.
+Use 'stats.errorDetails: true' resp. '--stats-error-details' to show it.[39m[22m
+
+webpack 5.97.1 compiled with [1m[31m12 errors[39m[22m in 13201 ms
