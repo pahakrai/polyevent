@@ -17,6 +17,10 @@ module.exports = function (options) {
       },
     },
     externals: [
+      { '@xenova/transformers': 'commonjs @xenova/transformers' },
+      { 'onnxruntime-node': 'commonjs onnxruntime-node' },
+      { 'sharp': 'commonjs sharp' },
+      { 'onnxruntime': 'commonjs onnxruntime' },
       nodeExternals({
         allowlist: [/^@polydom\//],
       }),
@@ -26,7 +30,7 @@ module.exports = function (options) {
       rules: [
         ...(options.module?.rules || []),
         { test: /\.html$/, type: 'asset/resource' },
-        { test: /\.node$/, loader: 'node-loader' },
+        { test: /\.node$/, use: 'node-loader' },
       ],
     },
     plugins: [

@@ -261,7 +261,17 @@
       "Bash(jobs *)",
       "Bash(npm ci *)",
       "Bash(rm -rf node_modules/.*/)",
-      "Bash(rm -rf node_modules/.*)"
+      "Bash(rm -rf node_modules/.*)",
+      "Bash(pkill -f \"port-forward.*api-gateway\")",
+      "Bash(python3 -c \"import sys,json,base64; d=json.load\\(sys.stdin\\); [print\\(f'{k}: {base64.b64decode\\(v\\).decode\\(\\)}'\\) for k,v in d.get\\('data',{}\\).items\\(\\)]\")",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d['accessToken']\\)\")",
+      "Bash(pkill -f \"port-forward.*postgres\")",
+      "Bash(PGPASSWORD=postgres psql -h localhost -p 5432 -U postgres -d agent_db -c \"CREATE EXTENSION IF NOT EXISTS vector;\" -c \"CREATE TABLE IF NOT EXISTS documents \\(id TEXT PRIMARY KEY, title TEXT NOT NULL, content TEXT NOT NULL, content_type TEXT NOT NULL, chunks JSONB NOT NULL, embedding vector\\(384\\), created_by TEXT NOT NULL, created_at TIMESTAMPTZ NOT NULL DEFAULT NOW\\(\\)\\);\" -c \"CREATE TABLE IF NOT EXISTS document_chunks \\(id TEXT PRIMARY KEY, document_id TEXT NOT NULL REFERENCES documents\\(id\\) ON DELETE CASCADE, chunk_index INTEGER NOT NULL, content TEXT NOT NULL, embedding vector\\(384\\)\\);\" -c \"CREATE INDEX IF NOT EXISTS doc_chunks_doc_id_idx ON document_chunks\\(document_id\\);\" -c \"CREATE INDEX IF NOT EXISTS doc_chunks_embedding_idx ON document_chunks USING ivfflat \\(embedding vector_cosine_ops\\) WITH \\(lists = 10\\);\")",
+      "Bash(pkill -9 -f \"kubectl.*port-forward\")",
+      "Bash(python3 -c \"import sys, json, base64; data=json.load\\(sys.stdin\\); [print\\(f'{k}: {base64.b64decode\\(v\\).decode\\(\\)}'\\) for k,v in data.items\\(\\)]\")",
+      "Bash(python3 -c \"import sys,json; print\\(json.load\\(sys.stdin\\)['accessToken']\\)\")",
+      "Bash(python3 -c \"import sys,json;tok=json.load\\(sys.stdin\\)['accessToken']; print\\(tok\\)\")",
+      "Bash(python3 -c \"import sys, json, base64; data=json.load\\(sys.stdin\\); [print\\(f'{k}: {base64.b64decode\\(v\\).decode\\(\\)[:40]}...'\\) if len\\(base64.b64decode\\(v\\)\\)>40 else print\\(f'{k}: {base64.b64decode\\(v\\).decode\\(\\)}'\\) for k,v in data.items\\(\\)]\")"
     ]
   },
   "enableAllProjectMcpServers": true,

@@ -110,6 +110,7 @@
     "@types/pdf-parse": "^1.1.5",
     "cross-env": "^7.0.3",
     "eslint": "^8.0.0",
+    "node-loader": "^2.1.0",
     "nx": "19.8.0",
     "prettier": "^3.0.0",
     "ts-node": "^10.9.2",

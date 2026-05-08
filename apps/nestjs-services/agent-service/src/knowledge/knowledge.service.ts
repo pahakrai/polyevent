@@ -23,6 +23,15 @@ export interface ChatResult {
   sources: { chunk: string; similarity: number }[];
 }
 
+/** Format a number array as a pgvector-compatible string (no scientific notation). */
+function toVectorString(values: number[]): string {
+  return `[${values.map((v) => {
+    // Use toFixed(10) to avoid scientific notation, then strip trailing zeros
+    const s = v.toFixed(10);
+    return s.includes('.') ? s.replace(/\.?0+$/, '') : s;
+  }).join(',')}]`;
+}
+
 const RAG_SYSTEM_PROMPT = `You are a helpful knowledge base assistant for the Polydom event platform.
 Answer questions using ONLY the provided document excerpts. If the excerpts don't contain the answer, say "I don't find that information in the knowledge base." Do not make up information.
 
@@ -120,17 +129,19 @@ export class KnowledgeService {
           rawContent,
           contentType,
           JSON.stringify(chunks),
-          `[${embeddings[0].join(',')}]`,
+          toVectorString(embeddings[0]),
           createdBy,
         ],
       );
 
       // Store each chunk with its own embedding
       for (let i = 0; i < chunks.length; i++) {
+        const vecStr = toVectorString(embeddings[i]);
+        this.logger.log(`Chunk ${i} vector sample: ${vecStr.slice(0, 80)}, hasSciNotation=${/e[+-]/.test(vecStr)}`);
         await client.query(
           `INSERT INTO document_chunks (id, document_id, chunk_index, content, embedding)
            VALUES ($1, $2, $3, $4, $5::vector)`,
-          [uuid(), docId, i, chunks[i], `[${embeddings[i].join(',')}]`],
+          [uuid(), docId, i, chunks[i], vecStr],
         );
       }
 
@@ -187,12 +198,14 @@ export class KnowledgeService {
   // ── Similarity search (direct chunk-level) ─────────────────────────
 
   async searchSimilar(queryEmbedding: number[], topK = 5): Promise<{ chunk: string; similarity: number }[]> {
+    const embeddingStr = toVectorString(queryEmbedding);
+
     const result = await this.pool.query(
-      `SELECT dc.content AS chunk, 1 - (dc.embedding <=> $1::vector) AS similarity
+      `SELECT dc.content AS chunk, 1 - (dc.embedding <=> '${embeddingStr}'::vector) AS similarity
        FROM document_chunks dc
-       ORDER BY dc.embedding <=> $1::vector
-       LIMIT $2`,
-      [`[${queryEmbedding.join(',')}]`, topK],
+       ORDER BY similarity
+       LIMIT $1`,
+      [topK],
     );
 
     return result.rows.map((r) => ({
@@ -205,7 +218,9 @@ export class KnowledgeService {
 
   async chat(question: string): Promise<ChatResult> {
     const queryEmbedding = await this.embeddingService.embed(question);
+    this.logger.log(`Chat query embedding: dim=${queryEmbedding.length}, first3=[${queryEmbedding.slice(0, 3).join(',')}], allZero=${queryEmbedding.every(v => v === 0)}`);
     const sources = await this.searchSimilar(queryEmbedding);
+    this.logger.log(`Chat sources found: ${sources.length}`);
 
     if (sources.length === 0) {
       return {

@@ -8,11 +8,11 @@ COPY apps/nestjs-services/agent-service/ apps/nestjs-services/agent-service/
 
 RUN npm ci --no-audit --no-fund && npx nx build agent-service && npm cache clean --force && rm -rf /tmp/* /root/.npm /root/.cache
 
-FROM node:20-alpine AS development
+FROM node:20-slim AS development
 WORKDIR /app
 
-RUN addgroup -g 1001 -S appgroup && \
-    adduser -u 1001 -S appuser -G appgroup
+RUN addgroup --gid 1001 appgroup && \
+    adduser --uid 1001 --gid 1001 appuser
 
 COPY package.json package-lock.json nx.json tsconfig.base.json workspace.json ./
 COPY libs/ libs/
