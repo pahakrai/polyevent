@@ -281,7 +281,10 @@
       "Bash(helm version *)",
       "Bash(PGPASSWORD=postgres psql *)",
       "Read(//mnt/c/Users/user/repo/**)",
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "Bash(xxd -l 20 kubernetes/local/ingress-controller.yaml)",
+      "Bash(file kubernetes/local/*.yaml kubernetes/base/**/*.yaml kubernetes/base/**/**/*.yaml)",
+      "Bash(xargs file)"
     ]
   },
   "enableAllProjectMcpServers": true,

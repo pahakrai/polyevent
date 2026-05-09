@@ -1,7 +1,7 @@
+---
 # Local dev nginx reverse proxy — replaces the need for an external ingress controller.
 # Routes: all API prefixes → api-gateway, /api/* → api-gateway (prefix stripped),
 #         /admin/* → admin-frontend, /* → frontend
----
 apiVersion: v1
 kind: ConfigMap
 metadata:
