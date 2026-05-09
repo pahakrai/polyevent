@@ -21,12 +21,15 @@ COPY apps/nestjs-services/user-service/package.json apps/nestjs-services/user-se
 RUN npm ci --no-audit --no-fund && npm cache clean --force && rm -rf /tmp/* /root/.npm /root/.cache
 
 COPY apps/nestjs-services/user-service/ apps/nestjs-services/user-service/
+COPY scripts/entrypoint-dev.sh scripts/
+
+RUN chmod +x scripts/entrypoint-dev.sh
 
 ENV NODE_ENV=development
 EXPOSE 3000
 EXPOSE 9231
 
-CMD ["npx", "nx", "run", "user-service:serve", "--configuration=debug"]
+CMD ["/app/scripts/entrypoint-dev.sh", "user-service"]
 
 FROM node:20-alpine AS production
 

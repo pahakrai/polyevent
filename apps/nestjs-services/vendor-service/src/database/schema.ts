@@ -8,7 +8,6 @@ import {
   boolean,
   real,
   pgEnum,
-  uniqueIndex,
   index,
 } from 'drizzle-orm/pg-core';
 
@@ -98,7 +97,6 @@ export const timeSlots = pgTable('time_slots', {
   updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdateFn(() => new Date()),
 });
 // Indexes
-export const vendorsUserIdIdx = uniqueIndex('vendors_user_id_idx').on(vendors.userId);
 export const venuesVendorIdIdx = index('venues_vendor_id_idx').on(venues.vendorId);
 export const timeSlotsVenueIdIdx = index('time_slots_venue_id_idx').on(timeSlots.venueId);
 

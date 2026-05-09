@@ -6,6 +6,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: redis-pvc
   namespace: polydom-dev
+  labels:
+    skaffold.dev/cleanup: "false"
 spec:
   accessModes:
     - ReadWriteOnce

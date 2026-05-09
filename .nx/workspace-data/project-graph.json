@@ -13958,6 +13958,15 @@
         "hash": "sha512-O5lz91xSOeoXP6DulyHfllpq+Eg00MWitZIbtPfoSEvqIHdl5gfcY6hYzDWnj0qD5tz52PI08u9qUvSVeUBeHw=="
       }
     },
+    "npm:node-loader": {
+      "type": "npm",
+      "name": "npm:node-loader",
+      "data": {
+        "version": "2.1.0",
+        "packageName": "node-loader",
+        "hash": "sha512-OwjPkyh8+7jW8DMd/iq71uU1Sspufr/C2+c3t0p08J3CrM9ApZ4U53xuisNrDXOHyGi5OYHgtfmmh+aK9zJA6g=="
+      }
+    },
     "npm:node-machine-id": {
       "type": "npm",
       "name": "npm:node-machine-id",
@@ -17345,11 +17354,6 @@
       },
       {
         "source": "agent-service",
-        "target": "npm:pdf-parse",
-        "type": "dynamic"
-      },
-      {
-        "source": "agent-service",
         "target": "npm:pg",
         "type": "static"
       },
@@ -17385,12 +17389,32 @@
       },
       {
         "source": "agent-service",
+        "target": "npm:uuid@9.0.1",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:@langchain/textsplitters",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:langchain",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:pdf-parse@1.1.4",
+        "type": "dynamic"
+      },
+      {
+        "source": "agent-service",
         "target": "npm:webpack-node-externals",
         "type": "static"
       },
       {
         "source": "agent-service",
-        "target": "npm:webpack",
+        "target": "npm:webpack@5.97.1",
         "type": "static"
       }
     ],
@@ -17604,7 +17628,22 @@
       },
       {
         "source": "auth-service",
+        "target": "npm:@nestjs/axios",
+        "type": "static"
+      },
+      {
+        "source": "auth-service",
+        "target": "npm:@nestjs/config",
+        "type": "static"
+      },
+      {
+        "source": "auth-service",
         "target": "@polydom/shared-types",
+        "type": "static"
+      },
+      {
+        "source": "auth-service",
+        "target": "npm:bcryptjs",
         "type": "static"
       },
       {
@@ -33950,6 +33989,18 @@
       {
         "source": "npm:node-fetch",
         "target": "npm:whatwg-url",
+        "type": "static"
+      }
+    ],
+    "npm:node-loader": [
+      {
+        "source": "npm:node-loader",
+        "target": "npm:webpack",
+        "type": "static"
+      },
+      {
+        "source": "npm:node-loader",
+        "target": "npm:loader-utils",
         "type": "static"
       }
     ],

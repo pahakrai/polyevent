@@ -1,11 +1,17 @@
 DO $$ BEGIN
- CREATE TYPE "public"."event_category" AS ENUM('CONCERT', 'WORKSHOP', 'JAM_SESSION', 'OPEN_MIC', 'FESTIVAL', 'PRIVATE_PARTY', 'CORPORATE_EVENT', 'CLASS', 'OTHER');
+ CREATE TYPE "public"."event_category" AS ENUM('MUSIC', 'ART', 'SPORTS', 'ACTIVITIES', 'OTHER');
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  CREATE TYPE "public"."event_status" AS ENUM('DRAFT', 'PUBLISHED', 'CANCELLED', 'COMPLETED', 'POSTPONED');
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ CREATE TYPE "public"."event_pricing_model" AS ENUM('FREE', 'PER_HOUR', 'CONTRACT', 'MIXED');
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -22,6 +28,7 @@ CREATE TABLE IF NOT EXISTS "events" (
 	"end_time" timestamp NOT NULL,
 	"location" json NOT NULL,
 	"price" json NOT NULL,
+	"pricing_model" "event_pricing_model" DEFAULT 'FREE' NOT NULL,
 	"max_attendees" integer,
 	"current_bookings" integer DEFAULT 0 NOT NULL,
 	"status" "event_status" DEFAULT 'DRAFT' NOT NULL,
@@ -30,6 +37,8 @@ CREATE TABLE IF NOT EXISTS "events" (
 	"age_restriction" integer,
 	"is_recurring" boolean DEFAULT false NOT NULL,
 	"recurring_rule" text,
+	"time_slot_id" text,
+	"group_id" text,
 	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp NOT NULL
+	"updated_at" timestamp DEFAULT now() NOT NULL
 );

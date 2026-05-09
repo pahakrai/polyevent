@@ -1,5 +1,11 @@
-CREATE EXTENSION IF NOT EXISTS vector;
-
+CREATE TABLE IF NOT EXISTS "document_chunks" (
+	"id" text PRIMARY KEY NOT NULL,
+	"document_id" text NOT NULL,
+	"chunk_index" integer NOT NULL,
+	"content" text NOT NULL,
+	"embedding" vector(384) NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "documents" (
 	"id" text PRIMARY KEY NOT NULL,
 	"title" text NOT NULL,

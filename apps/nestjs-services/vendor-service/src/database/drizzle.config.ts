@@ -8,7 +8,7 @@ const rootEnvPath = path.resolve(__dirname, '../../../../../.env');
 dotenv.config({ path: rootEnvPath }); // Override with root .env
 
 // Use Neon database URL if USE_NEON is set, otherwise use regular URL
-const databaseUrl = process.env.USE_NEON
+const databaseUrl = process.env.USE_NEON === 'true'
   ? process.env.NEON_VENDOR_DATABASE_URL || process.env.VENDOR_DATABASE_URL || ''
   : process.env.VENDOR_DATABASE_URL || '';
 

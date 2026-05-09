@@ -1,0 +1,54 @@
+- generic [ref=e1]:
+  - alert [ref=e2]
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e5]:
+        - heading "Polydom" [level=1] [ref=e6]
+        - paragraph [ref=e7]: Vendor Dashboard
+      - navigation [ref=e8]:
+        - link "G Overview" [ref=e9] [cursor=pointer]:
+          - /url: /dashboard
+          - generic [ref=e10]: G
+          - text: Overview
+        - link "V Venues" [ref=e11] [cursor=pointer]:
+          - /url: /dashboard/venues
+          - generic [ref=e12]: V
+          - text: Venues
+        - link "E Events" [ref=e13] [cursor=pointer]:
+          - /url: /dashboard/events
+          - generic [ref=e14]: E
+          - text: Events
+        - link "B Bookings" [ref=e15] [cursor=pointer]:
+          - /url: /dashboard/bookings
+          - generic [ref=e16]: B
+          - text: Bookings
+        - link "I Insights" [active] [ref=e17] [cursor=pointer]:
+          - /url: /dashboard/insights
+          - generic [ref=e18]: I
+          - text: Insights
+        - link "K Knowledge Base" [ref=e19] [cursor=pointer]:
+          - /url: /dashboard/knowledge
+          - generic [ref=e20]: K
+          - text: Knowledge Base
+        - link "S Settings" [ref=e21] [cursor=pointer]:
+          - /url: /dashboard/settings
+          - generic [ref=e22]: S
+          - text: Settings
+      - generic [ref=e23]:
+        - generic [ref=e24]: Mike Melody
+        - button "Sign out" [ref=e25] [cursor=pointer]
+    - main [ref=e26]:
+      - generic [ref=e68]:
+        - heading "Business Insights" [level=2] [ref=e69]
+        - paragraph [ref=e70]: Ask anything about Harmony Studios's performance. The agent investigates your data step by step and gives you a report with root cause analysis.
+        - generic [ref=e71]:
+          - generic [ref=e72]: What do you want to know?
+          - textbox "What do you want to know?" [ref=e73]:
+            - /placeholder: E.g. Why are my bookings down this month?
+          - generic [ref=e74]:
+            - button "Why are my bookings down this month?" [ref=e75] [cursor=pointer]
+            - button "How do my jazz events compare to the market?" [ref=e76] [cursor=pointer]
+            - button "Which of my venues has the lowest utilization?" [ref=e77] [cursor=pointer]
+            - button "What is my revenue trend over the last 6 months?" [ref=e78] [cursor=pointer]
+            - button "Are my time slots priced competitively?" [ref=e79] [cursor=pointer]
+          - button "Investigate" [disabled] [ref=e80]

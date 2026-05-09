@@ -1,5 +1,5 @@
 {
-  "id": "0a22e8c5-3697-497b-9926-8a32e94cbad8",
+  "id": "25a16311-c106-4e7c-a279-3bc1c7ea72bd",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "6",
   "dialect": "postgresql",
@@ -75,6 +75,14 @@
           "primaryKey": false,
           "notNull": true
         },
+        "pricing_model": {
+          "name": "pricing_model",
+          "type": "event_pricing_model",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'FREE'"
+        },
         "max_attendees": {
           "name": "max_attendees",
           "type": "integer",
@@ -129,6 +137,18 @@
           "primaryKey": false,
           "notNull": false
         },
+        "time_slot_id": {
+          "name": "time_slot_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "group_id": {
+          "name": "group_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -140,7 +160,8 @@
           "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
@@ -154,14 +175,10 @@
       "name": "event_category",
       "schema": "public",
       "values": [
-        "CONCERT",
-        "WORKSHOP",
-        "JAM_SESSION",
-        "OPEN_MIC",
-        "FESTIVAL",
-        "PRIVATE_PARTY",
-        "CORPORATE_EVENT",
-        "CLASS",
+        "MUSIC",
+        "ART",
+        "SPORTS",
+        "ACTIVITIES",
         "OTHER"
       ]
     },
@@ -174,6 +191,16 @@
         "CANCELLED",
         "COMPLETED",
         "POSTPONED"
+      ]
+    },
+    "public.event_pricing_model": {
+      "name": "event_pricing_model",
+      "schema": "public",
+      "values": [
+        "FREE",
+        "PER_HOUR",
+        "CONTRACT",
+        "MIXED"
       ]
     }
   },

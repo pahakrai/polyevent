@@ -96,12 +96,17 @@ manifests:
     - kubernetes/local/infrastructure.yaml
     - kubernetes/local/pgadmin.yaml
     - kubernetes/local/services.yaml
-    - kubernetes/local/ingress.yaml
+    - kubernetes/local/ingress-controller.yaml
 
 deploy:
   kubectl: {}
 
 portForward:
+  - resourceType: service
+    resourceName: nginx-ingress
+    namespace: polydom-dev
+    port: 80
+    localPort: 8080
   - resourceType: service
     resourceName: api-gateway
     namespace: polydom-dev

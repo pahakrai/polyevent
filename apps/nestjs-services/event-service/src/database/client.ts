@@ -1,10 +1,15 @@
 import { PostgresClient } from '@polydom/database-client';
 import * as dotenv from 'dotenv';
+import * as path from 'path';
 import * as schema from './schema';
 
 dotenv.config();
+const rootEnvPath = path.resolve(__dirname, '../../../../../.env');
+dotenv.config({ path: rootEnvPath });
 
-const databaseUrl = process.env.EVENT_DATABASE_URL;
+const databaseUrl = process.env.USE_NEON === 'true'
+  ? process.env.NEON_EVENT_DATABASE_URL || process.env.EVENT_DATABASE_URL || ''
+  : process.env.EVENT_DATABASE_URL || '';
 
 if (!databaseUrl) {
   throw new Error('EVENT_DATABASE_URL environment variable is not set');

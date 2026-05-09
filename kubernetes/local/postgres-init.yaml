@@ -8,5 +8,20 @@ metadata:
   namespace: polydom-dev
 type: Opaque
 stringData:
-  01-create-databases.sql: "CREATE DATABASE gateway_db; CREATE DATABASE auth_db; CREATE DATABASE user_db; CREATE DATABASE vendor_db; CREATE DATABASE event_db; CREATE DATABASE agent_db;"
-  02-setup-vector.sql: "\\c agent_db\nCREATE EXTENSION IF NOT EXISTS vector;"
+  01-create-databases.sql: |
+    CREATE DATABASE gateway_db;
+    CREATE DATABASE auth_db;
+    CREATE DATABASE user_db;
+    CREATE DATABASE vendor_db;
+    CREATE DATABASE event_db;
+    CREATE DATABASE agent_db;
+  02-setup-extensions.sh: |
+    #!/bin/bash
+    set -e
+    for db in agent_db; do
+      echo "Setting up extensions in $db..."
+      psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$db" <<'EOSQL'
+        CREATE EXTENSION IF NOT EXISTS vector;
+    EOSQL
+      echo "Extensions created in $db"
+    done

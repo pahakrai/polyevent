@@ -271,7 +271,17 @@
       "Bash(python3 -c \"import sys, json, base64; data=json.load\\(sys.stdin\\); [print\\(f'{k}: {base64.b64decode\\(v\\).decode\\(\\)}'\\) for k,v in data.items\\(\\)]\")",
       "Bash(python3 -c \"import sys,json; print\\(json.load\\(sys.stdin\\)['accessToken']\\)\")",
       "Bash(python3 -c \"import sys,json;tok=json.load\\(sys.stdin\\)['accessToken']; print\\(tok\\)\")",
-      "Bash(python3 -c \"import sys, json, base64; data=json.load\\(sys.stdin\\); [print\\(f'{k}: {base64.b64decode\\(v\\).decode\\(\\)[:40]}...'\\) if len\\(base64.b64decode\\(v\\)\\)>40 else print\\(f'{k}: {base64.b64decode\\(v\\).decode\\(\\)}'\\) for k,v in data.items\\(\\)]\")"
+      "Bash(python3 -c \"import sys, json, base64; data=json.load\\(sys.stdin\\); [print\\(f'{k}: {base64.b64decode\\(v\\).decode\\(\\)[:40]}...'\\) if len\\(base64.b64decode\\(v\\)\\)>40 else print\\(f'{k}: {base64.b64decode\\(v\\).decode\\(\\)}'\\) for k,v in data.items\\(\\)]\")",
+      "mcp__neon__describe_branch",
+      "mcp__playwright__browser_wait_for",
+      "Bash(python3 -c \"import sys,json; envs=json.load\\(sys.stdin\\); [print\\(f'{e[\\\\\"name\\\\\"]}={e.get\\(\\\\\"value\\\\\",e.get\\(\\\\\"valueFrom\\\\\",\\\\\"\\\\\"\\)\\)}'\\) for e in envs if 'DATABASE' in e.get\\('name',''\\)]\")",
+      "mcp__playwright__browser_network_request",
+      "mcp__neon__fetch",
+      "mcp__neon__get_database_tables",
+      "Bash(helm version *)",
+      "Bash(PGPASSWORD=postgres psql *)",
+      "Read(//mnt/c/Users/user/repo/**)",
+      "Bash(node -e ' *)"
     ]
   },
   "enableAllProjectMcpServers": true,

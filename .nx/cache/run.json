@@ -1,18 +1,40 @@
 {
   "run": {
-    "command": "nx build agent-service",
-    "startTime": "2026-05-08T07:19:32.000Z",
-    "endTime": "2026-05-08T07:19:41.372Z",
+    "command": "nx run-many --target=build --projects=user-service,vendor-service,event-service",
+    "startTime": "2026-05-09T06:52:07.253Z",
+    "endTime": "2026-05-09T06:52:26.276Z",
     "inner": false
   },
   "tasks": [
     {
-      "taskId": "agent-service:build",
+      "taskId": "event-service:build",
       "target": "build",
-      "projectName": "agent-service",
-      "hash": "7826738867829355433",
-      "startTime": "2026-05-08T07:19:32.024Z",
-      "endTime": "2026-05-08T07:19:41.372Z",
+      "projectName": "event-service",
+      "hash": "14359986543759934861",
+      "startTime": "2026-05-09T06:52:07.264Z",
+      "endTime": "2026-05-09T06:52:26.261Z",
+      "params": "",
+      "cacheStatus": "cache-miss",
+      "status": 0
+    },
+    {
+      "taskId": "user-service:build",
+      "target": "build",
+      "projectName": "user-service",
+      "hash": "8947422703102651024",
+      "startTime": "2026-05-09T06:52:07.263Z",
+      "endTime": "2026-05-09T06:52:26.268Z",
+      "params": "",
+      "cacheStatus": "cache-miss",
+      "status": 0
+    },
+    {
+      "taskId": "vendor-service:build",
+      "target": "build",
+      "projectName": "vendor-service",
+      "hash": "4803268150035858046",
+      "startTime": "2026-05-09T06:52:07.263Z",
+      "endTime": "2026-05-09T06:52:26.276Z",
       "params": "",
       "cacheStatus": "cache-miss",
       "status": 0

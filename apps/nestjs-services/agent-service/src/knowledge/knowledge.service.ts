@@ -51,9 +51,13 @@ export class KnowledgeService {
     private readonly embeddingService: EmbeddingService,
     private readonly llmProvider: AnthropicProvider,
   ) {
+    const useNeon = configService.get<string>('USE_NEON') === 'true';
+    const connectionString = useNeon
+      ? configService.get<string>('NEON_AGENT_DATABASE_URL') || configService.get<string>('AGENT_DATABASE_URL')
+      : configService.get<string>('AGENT_DATABASE_URL');
     this.pool = new pg.Pool({
       connectionString:
-        configService.get<string>('AGENT_DATABASE_URL') ||
+        connectionString ||
         'postgresql://eventbooking:eventbooking123@localhost:5432/agent_db',
     });
   }

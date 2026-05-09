@@ -1,0 +1,58 @@
+- generic [active] [ref=e1]:
+  - alert [ref=e4]
+  - generic [ref=e34]:
+    - banner [ref=e35]:
+      - generic [ref=e36]:
+        - heading "Vendor Onboarding" [level=1] [ref=e37]
+        - generic [ref=e38]:
+          - generic [ref=e39]: Step 2 of 3
+          - button "Sign out" [ref=e40] [cursor=pointer]
+    - generic [ref=e41]:
+      - generic [ref=e42]:
+        - generic [ref=e43]:
+          - generic [ref=e44]: "1"
+          - generic [ref=e45]: Business Profile
+        - generic [ref=e47]:
+          - generic [ref=e48]: "2"
+          - generic [ref=e49]: Venues
+        - generic [ref=e51]:
+          - generic [ref=e52]: "3"
+          - generic [ref=e53]: Time Slots
+      - generic [ref=e73]:
+        - heading "Add your first venue" [level=2] [ref=e74]
+        - paragraph [ref=e75]: Venues are the spaces users can book time at. You can add more later.
+        - generic [ref=e76]:
+          - generic [ref=e77]:
+            - text: Venue Name *
+            - textbox [ref=e78]
+          - generic [ref=e79]:
+            - text: Description
+            - textbox [ref=e80]
+          - generic [ref=e81]:
+            - generic [ref=e82]:
+              - text: Type *
+              - combobox [ref=e83]:
+                - option "Indoor" [selected]
+                - option "Outdoor"
+                - option "Studio"
+                - option "Gallery"
+                - option "Field"
+                - option "Court"
+                - option "Other"
+            - generic [ref=e84]:
+              - text: Capacity *
+              - spinbutton [ref=e85]: "20"
+          - generic [ref=e86]:
+            - generic [ref=e87]:
+              - text: Pricing Model *
+              - combobox [ref=e88]:
+                - option "Free"
+                - option "Per Hour" [selected]
+                - option "Contract"
+                - option "Mixed"
+            - generic [ref=e89]:
+              - text: Hourly Rate ($)
+              - spinbutton [ref=e90]
+          - generic [ref=e91]:
+            - button "Back" [ref=e92] [cursor=pointer]
+            - button "Continue to Time Slots" [ref=e93] [cursor=pointer]

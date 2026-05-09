@@ -48,11 +48,18 @@ spec:
         env:
         - name: NODE_ENV
           value: development
+        - name: USE_NEON
+          value: "false"
         - name: GATEWAY_DATABASE_URL
           valueFrom:
             secretKeyRef:
               name: database-secrets
               key: gateway-database-url
+        - name: NEON_GATEWAY_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database-secrets
+              key: neon-gateway-database-url
         - name: REDIS_URL
           valueFrom:
             secretKeyRef:
@@ -151,11 +158,18 @@ spec:
         env:
         - name: NODE_ENV
           value: development
+        - name: USE_NEON
+          value: "false"
         - name: AUTH_DATABASE_URL
           valueFrom:
             secretKeyRef:
               name: database-secrets
               key: auth-database-url
+        - name: NEON_AUTH_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database-secrets
+              key: neon-auth-database-url
         - name: REDIS_URL
           valueFrom:
             secretKeyRef:
@@ -391,11 +405,18 @@ spec:
         env:
         - name: NODE_ENV
           value: development
+        - name: USE_NEON
+          value: "false"
         - name: USER_DATABASE_URL
           valueFrom:
             secretKeyRef:
               name: database-secrets
               key: user-database-url
+        - name: NEON_USER_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database-secrets
+              key: neon-user-database-url
         - name: REDIS_URL
           valueFrom:
             secretKeyRef:
@@ -485,11 +506,18 @@ spec:
         env:
         - name: NODE_ENV
           value: development
+        - name: USE_NEON
+          value: "false"
         - name: VENDOR_DATABASE_URL
           valueFrom:
             secretKeyRef:
               name: database-secrets
               key: vendor-database-url
+        - name: NEON_VENDOR_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database-secrets
+              key: neon-vendor-database-url
         - name: REDIS_URL
           valueFrom:
             secretKeyRef:
@@ -579,11 +607,18 @@ spec:
         env:
         - name: NODE_ENV
           value: development
+        - name: USE_NEON
+          value: "false"
         - name: EVENT_DATABASE_URL
           valueFrom:
             secretKeyRef:
               name: database-secrets
               key: event-database-url
+        - name: NEON_EVENT_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database-secrets
+              key: neon-event-database-url
         - name: REDIS_URL
           valueFrom:
             secretKeyRef:
@@ -673,11 +708,18 @@ spec:
         env:
         - name: NODE_ENV
           value: development
+        - name: USE_NEON
+          value: "false"
         - name: AGENT_DATABASE_URL
           valueFrom:
             secretKeyRef:
               name: database-secrets
               key: agent-database-url
+        - name: NEON_AGENT_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database-secrets
+              key: neon-agent-database-url
         - name: REDIS_URL
           valueFrom:
             secretKeyRef:

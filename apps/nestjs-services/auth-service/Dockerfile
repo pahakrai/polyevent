@@ -21,12 +21,15 @@ COPY apps/nestjs-services/auth-service/package.json apps/nestjs-services/auth-se
 RUN npm ci --no-audit --no-fund && npm cache clean --force && rm -rf /tmp/* /root/.npm /root/.cache
 
 COPY apps/nestjs-services/auth-service/ apps/nestjs-services/auth-service/
+COPY scripts/entrypoint-dev.sh scripts/
+
+RUN chmod +x scripts/entrypoint-dev.sh
 
 ENV NODE_ENV=development
 EXPOSE 3000
 EXPOSE 9230
 
-CMD ["npx", "nx", "run", "auth-service:serve", "--configuration=debug"]
+CMD ["/app/scripts/entrypoint-dev.sh", "auth-service"]
 
 FROM node:20-alpine AS production
 

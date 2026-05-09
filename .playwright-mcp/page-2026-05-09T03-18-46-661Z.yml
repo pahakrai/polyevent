@@ -1,0 +1,50 @@
+- generic [active] [ref=e1]:
+  - alert [ref=e4]
+  - generic [ref=e34]:
+    - banner [ref=e35]:
+      - generic [ref=e36]:
+        - heading "Vendor Onboarding" [level=1] [ref=e37]
+        - generic [ref=e38]:
+          - generic [ref=e39]: Step 1 of 3
+          - button "Sign out" [ref=e40] [cursor=pointer]
+    - generic [ref=e41]:
+      - generic [ref=e42]:
+        - generic [ref=e43]:
+          - generic [ref=e44]: "1"
+          - generic [ref=e45]: Business Profile
+        - generic [ref=e47]:
+          - generic [ref=e48]: "2"
+          - generic [ref=e49]: Venues
+        - generic [ref=e51]:
+          - generic [ref=e52]: "3"
+          - generic [ref=e53]: Time Slots
+      - generic [ref=e54]:
+        - heading "Create your business profile" [level=2] [ref=e55]
+        - paragraph [ref=e56]: Tell us about your business so users can find you.
+        - generic [ref=e72]: Internal server error
+        - generic [ref=e57]:
+          - generic [ref=e58]:
+            - text: Business Name *
+            - textbox [ref=e59]: Harmony Studios
+          - generic [ref=e60]:
+            - text: Description
+            - textbox [ref=e61]: LA's premier recording and rehearsal space for musicians of all levels. Featuring vintage analog gear and professional acoustics.
+          - generic [ref=e62]:
+            - text: Category *
+            - combobox [ref=e63]:
+              - option "Music" [selected]
+              - option "Art"
+              - option "Sports"
+              - option "Activities"
+              - option "Other"
+          - generic [ref=e64]:
+            - generic [ref=e65]:
+              - text: Contact Email *
+              - textbox [ref=e66]: mike@harmonystudios.com
+            - generic [ref=e67]:
+              - text: Contact Phone *
+              - textbox [ref=e68]: 323-555-0199
+          - generic [ref=e69]:
+            - text: Website
+            - textbox "https://" [ref=e70]: https://harmonystudios.example.com
+          - button "Continue to Venues" [ref=e71] [cursor=pointer]

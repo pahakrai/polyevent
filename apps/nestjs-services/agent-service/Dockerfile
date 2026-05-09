@@ -21,12 +21,15 @@ COPY apps/nestjs-services/agent-service/package.json apps/nestjs-services/agent-
 RUN npm ci --no-audit --no-fund && npm cache clean --force && rm -rf /tmp/* /root/.npm /root/.cache
 
 COPY apps/nestjs-services/agent-service/ apps/nestjs-services/agent-service/
+COPY scripts/entrypoint-dev.sh scripts/
+
+RUN chmod +x scripts/entrypoint-dev.sh
 
 ENV NODE_ENV=development
 EXPOSE 3010
 EXPOSE 9234
 
-CMD ["npx", "nx", "run", "agent-service:serve", "--configuration=debug"]
+CMD ["/app/scripts/entrypoint-dev.sh", "agent-service"]
 
 FROM node:20-alpine AS production
 

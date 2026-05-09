@@ -1,0 +1,30 @@
+- generic [active] [ref=e1]:
+  - alert [ref=e4]
+  - generic [ref=e34]:
+    - banner [ref=e35]:
+      - generic [ref=e36]:
+        - heading "Vendor Onboarding" [level=1] [ref=e37]
+        - generic [ref=e38]:
+          - generic [ref=e39]: Step 3 of 3
+          - button "Sign out" [ref=e40] [cursor=pointer]
+    - generic [ref=e41]:
+      - generic [ref=e42]:
+        - generic [ref=e43]:
+          - generic [ref=e44]: "1"
+          - generic [ref=e45]: Business Profile
+        - generic [ref=e47]:
+          - generic [ref=e48]: "2"
+          - generic [ref=e49]: Venues
+        - generic [ref=e51]:
+          - generic [ref=e52]: "3"
+          - generic [ref=e53]: Time Slots
+      - generic [ref=e94]:
+        - heading "Set up your weekly schedule" [level=2] [ref=e95]
+        - paragraph [ref=e96]: Define when your venue is available for bookings each week.
+        - generic [ref=e97]:
+          - generic [ref=e98]:
+            - checkbox "I want to set up a weekly schedule" [ref=e99]
+            - generic [ref=e100]: I want to set up a weekly schedule
+          - generic [ref=e101]:
+            - button "Back" [ref=e102] [cursor=pointer]
+            - button "Skip — I'll add slots later" [ref=e103] [cursor=pointer]

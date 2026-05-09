@@ -21,12 +21,15 @@ COPY apps/nestjs-services/event-service/package.json apps/nestjs-services/event-
 RUN npm ci --no-audit --no-fund && npm cache clean --force && rm -rf /tmp/* /root/.npm /root/.cache
 
 COPY apps/nestjs-services/event-service/ apps/nestjs-services/event-service/
+COPY scripts/entrypoint-dev.sh scripts/
+
+RUN chmod +x scripts/entrypoint-dev.sh
 
 ENV NODE_ENV=development
 EXPOSE 3000
 EXPOSE 9233
 
-CMD ["npx", "nx", "run", "event-service:serve", "--configuration=debug"]
+CMD ["/app/scripts/entrypoint-dev.sh", "event-service"]
 
 FROM node:20-alpine AS production
 

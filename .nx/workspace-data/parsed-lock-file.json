@@ -12195,6 +12195,15 @@
         "hash": "sha512-O5lz91xSOeoXP6DulyHfllpq+Eg00MWitZIbtPfoSEvqIHdl5gfcY6hYzDWnj0qD5tz52PI08u9qUvSVeUBeHw=="
       }
     },
+    "npm:node-loader": {
+      "type": "npm",
+      "name": "npm:node-loader",
+      "data": {
+        "version": "2.1.0",
+        "packageName": "node-loader",
+        "hash": "sha512-OwjPkyh8+7jW8DMd/iq71uU1Sspufr/C2+c3t0p08J3CrM9ApZ4U53xuisNrDXOHyGi5OYHgtfmmh+aK9zJA6g=="
+      }
+    },
     "npm:node-machine-id": {
       "type": "npm",
       "name": "npm:node-machine-id",
@@ -35580,6 +35589,16 @@
     {
       "source": "npm:node-fetch",
       "target": "npm:whatwg-url",
+      "type": "static"
+    },
+    {
+      "source": "npm:node-loader",
+      "target": "npm:webpack",
+      "type": "static"
+    },
+    {
+      "source": "npm:node-loader",
+      "target": "npm:loader-utils",
       "type": "static"
     },
     {

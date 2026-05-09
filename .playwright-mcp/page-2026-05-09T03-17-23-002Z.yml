@@ -1,0 +1,18 @@
+- generic [active] [ref=e1]:
+  - alert [ref=e4]
+  - generic [ref=e6]:
+    - generic [ref=e7]:
+      - heading "Polydom Admin" [level=1] [ref=e8]
+      - paragraph [ref=e9]: Sign in to your vendor account
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - text: Email
+        - textbox "Email" [ref=e12]
+      - generic [ref=e13]:
+        - text: Password
+        - textbox "Password" [ref=e14]
+      - button "Sign in" [ref=e15] [cursor=pointer]
+    - paragraph [ref=e16]:
+      - text: Don't have a vendor account?
+      - link "Register here" [ref=e17] [cursor=pointer]:
+        - /url: /register
