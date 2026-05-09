@@ -284,7 +284,10 @@
       "Bash(node -e ' *)",
       "Bash(xxd -l 20 kubernetes/local/ingress-controller.yaml)",
       "Bash(file kubernetes/local/*.yaml kubernetes/base/**/*.yaml kubernetes/base/**/**/*.yaml)",
-      "Bash(xargs file)"
+      "Bash(xargs file)",
+      "Bash(pg_isready -h localhost -p 5432)",
+      "mcp__neon__describe_table_schema",
+      "Bash(docker exec *)"
     ]
   },
   "enableAllProjectMcpServers": true,
