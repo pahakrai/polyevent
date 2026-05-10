@@ -2,7 +2,7 @@ import { ValidationArguments, ValidatorConstraint, ValidatorConstraintInterface 
 
 @ValidatorConstraint({ name: 'isValidEmail', async: false })
 export class IsValidEmailConstraint implements ValidatorConstraintInterface {
-  validate(email: string, args: ValidationArguments) {
+  validate(email: string, _args: ValidationArguments) {
     if (!email) return false;
 
     // Basic email regex
@@ -32,7 +32,7 @@ export class IsValidEmailConstraint implements ValidatorConstraintInterface {
     return true;
   }
 
-  defaultMessage(args: ValidationArguments) {
+  defaultMessage(_args: ValidationArguments) {
     return 'Email must be a valid email address';
   }
 }

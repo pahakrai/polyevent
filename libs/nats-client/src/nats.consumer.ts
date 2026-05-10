@@ -3,8 +3,6 @@ import {
   connect,
   NatsConnection,
   Subscription,
-  headers as natsHeaders,
-  MsgHdrs,
 } from 'nats';
 
 export interface NatsConsumerConfig {

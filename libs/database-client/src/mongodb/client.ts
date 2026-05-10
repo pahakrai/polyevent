@@ -15,7 +15,6 @@ export const MONGODB_CLIENT_CONFIG = 'MONGODB_CLIENT_CONFIG';
 export class MongoDBClient {
   private readonly logger = new Logger(MongoDBClient.name);
   private mongoose: any;
-  private connection: any;
 
   constructor(
     @Optional() @Inject(MONGODB_CLIENT_CONFIG) private readonly config?: MongoDBClientConfig,
@@ -34,7 +33,6 @@ export class MongoDBClient {
         dbName: this.config?.dbName,
       });
 
-      this.connection = this.mongoose.connection;
       this.logger.log('Connected to MongoDB');
     } catch (error) {
       this.logger.error('Failed to connect to MongoDB', error);

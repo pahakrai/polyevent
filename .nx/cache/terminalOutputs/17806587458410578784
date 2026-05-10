@@ -1,0 +1,4 @@
+> tsc -p tsconfig.lib.json
+
+src/postgres/client.ts(1,30): error TS6133: 'Inject' is declared but its value is never read.
+src/postgres/client.ts(1,38): error TS6133: 'Optional' is declared but its value is never read.

@@ -1,0 +1,4 @@
+> tsc -p tsconfig.lib.json
+
+src/mongodb/client.ts(18,11): error TS6133: 'connection' is declared but its value is never read.
+src/postgres/client.ts(20,66): error TS6138: Property 'config' is declared but its value is never read.

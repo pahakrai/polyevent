@@ -1,0 +1,3 @@
+> tsc -p tsconfig.lib.json
+
+src/postgres/client.ts(20,66): error TS6138: Property '_config' is declared but its value is never read.

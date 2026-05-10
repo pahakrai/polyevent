@@ -41,7 +41,7 @@ export class UserProfileMapper {
       firstName: userProfile.firstName,
       lastName: userProfile.lastName,
       phone: userProfile.phone ?? null,
-      role: userProfile.role as unknown as "USER" | "VENDOR" | "ADMIN",
+      role: UserProfileMapper.mapRoleToPersistence(userProfile.role),
       location: userProfile.location ? JSON.stringify(userProfile.location) : null,
       preferences: JSON.stringify(userProfile.preferences),
       createdAt: userProfile.createdAt,
@@ -67,6 +67,22 @@ export class UserProfileMapper {
       return JSON.parse(preferences);
     }
     return preferences as UserPreferences;
+  }
+
+  /**
+   * Map UserRole enum to persistence role string (uppercase)
+   */
+  static mapRoleToPersistence(role: UserRole): "USER" | "VENDOR" | "ADMIN" {
+    switch (role) {
+      case UserRole.USER:
+        return 'USER';
+      case UserRole.VENDOR:
+        return 'VENDOR';
+      case UserRole.ADMIN:
+        return 'ADMIN';
+      default:
+        return 'USER';
+    }
   }
 
   /**

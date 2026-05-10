@@ -1,5 +1,189 @@
 {
   "nodes": {
+    "search-service": {
+      "name": "search-service",
+      "type": "app",
+      "data": {
+        "root": "apps/nestjs-services/search-service",
+        "sourceRoot": "apps/nestjs-services/search-service/src",
+        "name": "search-service",
+        "tags": [
+          "npm:private",
+          "service",
+          "nest"
+        ],
+        "metadata": {
+          "targetGroups": {
+            "NPM Scripts": [
+              "start",
+              "start:dev",
+              "test:watch",
+              "test:cov"
+            ]
+          }
+        },
+        "targets": {
+          "start": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "start"
+            },
+            "metadata": {
+              "scriptContent": "node dist/main",
+              "runCommand": "npm run start"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "start:dev": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "start:dev"
+            },
+            "metadata": {
+              "scriptContent": "nest start --watch",
+              "runCommand": "npm run start:dev"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "test:watch": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "test:watch"
+            },
+            "metadata": {
+              "scriptContent": "jest --watch",
+              "runCommand": "npm run test:watch"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "test:cov": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "test:cov"
+            },
+            "metadata": {
+              "scriptContent": "jest --coverage",
+              "runCommand": "npm run test:cov"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "build": {
+            "executor": "nx:run-commands",
+            "outputs": [
+              "{projectRoot}/dist"
+            ],
+            "options": {
+              "command": "nest build --webpack",
+              "cwd": "apps/nestjs-services/search-service"
+            },
+            "configurations": {
+              "production": {
+                "command": "nest build --webpack"
+              },
+              "development": {
+                "command": "nest build --webpack"
+              }
+            },
+            "parallelism": true,
+            "dependsOn": [
+              "^build"
+            ],
+            "inputs": [
+              "production",
+              "^production"
+            ]
+          },
+          "serve": {
+            "executor": "@nx/js:node",
+            "options": {
+              "buildTarget": "search-service:build",
+              "port": 3000
+            },
+            "configurations": {
+              "production": {
+                "buildTarget": "search-service:build:production"
+              },
+              "development": {
+                "buildTarget": "search-service:build:development"
+              },
+              "debug": {
+                "inspect": true,
+                "host": "0.0.0.0",
+                "port": 9235
+              }
+            },
+            "parallelism": true
+          },
+          "lint": {
+            "executor": "@nx/eslint:eslint",
+            "outputs": [
+              "{options.outputFile}"
+            ],
+            "options": {
+              "lintFilePatterns": [
+                "apps/nestjs-services/search-service/**/*.ts"
+              ]
+            },
+            "configurations": {},
+            "parallelism": true,
+            "inputs": [
+              "default",
+              "^production"
+            ]
+          },
+          "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": [
+              "{workspaceRoot}/coverage/apps/nestjs-services/search-service"
+            ],
+            "options": {
+              "jestConfig": "apps/nestjs-services/search-service/jest.config.ts",
+              "passWithNoTests": true
+            },
+            "configurations": {
+              "ci": {
+                "ci": true,
+                "codeCoverage": true
+              }
+            },
+            "parallelism": true,
+            "inputs": [
+              "default",
+              "^production"
+            ]
+          },
+          "container": {
+            "executor": "@nx-tools/nx-container:build",
+            "dependsOn": [
+              "build"
+            ],
+            "options": {
+              "push": false,
+              "engine": "docker",
+              "metadata": {
+                "images": [
+                  "polydom/search-service"
+                ],
+                "load": true,
+                "tags": [
+                  "type=sha,prefix=sha-",
+                  "type=ref,event=branch"
+                ]
+              }
+            },
+            "configurations": {},
+            "parallelism": true
+          }
+        },
+        "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "application",
+        "implicitDependencies": []
+      }
+    },
     "vendor-service": {
       "name": "vendor-service",
       "type": "app",
@@ -1361,37 +1545,151 @@
         "implicitDependencies": []
       }
     },
-    "@polydom/elasticsearch-client": {
-      "name": "@polydom/elasticsearch-client",
+    "elasticsearch-client": {
+      "name": "elasticsearch-client",
       "type": "lib",
       "data": {
         "root": "libs/elasticsearch-client",
-        "sourceRoot": "libs/elasticsearch-client",
-        "name": "@polydom/elasticsearch-client",
+        "sourceRoot": "libs/elasticsearch-client/src",
+        "name": "elasticsearch-client",
         "tags": [
-          "npm:private"
+          "npm:private",
+          "shared",
+          "lib"
         ],
         "metadata": {
           "targetGroups": {}
         },
-        "targets": {},
+        "targets": {
+          "build": {
+            "executor": "nx:run-commands",
+            "outputs": [
+              "{projectRoot}/dist"
+            ],
+            "options": {
+              "command": "tsc -p tsconfig.lib.json",
+              "cwd": "libs/elasticsearch-client"
+            },
+            "configurations": {},
+            "parallelism": true,
+            "dependsOn": [
+              "^build"
+            ],
+            "inputs": [
+              "production",
+              "^production"
+            ]
+          },
+          "lint": {
+            "executor": "@nx/eslint:eslint",
+            "outputs": [
+              "{options.outputFile}"
+            ],
+            "options": {
+              "lintFilePatterns": [
+                "libs/elasticsearch-client/**/*.ts"
+              ]
+            },
+            "configurations": {},
+            "parallelism": true,
+            "inputs": [
+              "default",
+              "^production"
+            ]
+          },
+          "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": [
+              "{workspaceRoot}/coverage/libs/elasticsearch-client"
+            ],
+            "options": {
+              "jestConfig": "libs/elasticsearch-client/jest.config.ts",
+              "passWithNoTests": true
+            },
+            "configurations": {},
+            "parallelism": true,
+            "inputs": [
+              "default",
+              "^production"
+            ]
+          }
+        },
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "library",
         "implicitDependencies": []
       }
     },
-    "@polydom/database-client": {
-      "name": "@polydom/database-client",
+    "database-client": {
+      "name": "database-client",
       "type": "lib",
       "data": {
         "root": "libs/database-client",
-        "sourceRoot": "libs/database-client",
-        "name": "@polydom/database-client",
+        "sourceRoot": "libs/database-client/src",
+        "name": "database-client",
         "tags": [
-          "npm:private"
+          "npm:private",
+          "shared",
+          "lib"
         ],
         "metadata": {
           "targetGroups": {}
         },
-        "targets": {},
+        "targets": {
+          "build": {
+            "executor": "nx:run-commands",
+            "outputs": [
+              "{projectRoot}/dist"
+            ],
+            "options": {
+              "command": "tsc -p tsconfig.lib.json",
+              "cwd": "libs/database-client"
+            },
+            "configurations": {},
+            "parallelism": true,
+            "dependsOn": [
+              "^build"
+            ],
+            "inputs": [
+              "production",
+              "^production"
+            ]
+          },
+          "lint": {
+            "executor": "@nx/eslint:eslint",
+            "outputs": [
+              "{options.outputFile}"
+            ],
+            "options": {
+              "lintFilePatterns": [
+                "libs/database-client/**/*.ts"
+              ]
+            },
+            "configurations": {},
+            "parallelism": true,
+            "inputs": [
+              "default",
+              "^production"
+            ]
+          },
+          "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": [
+              "{workspaceRoot}/coverage/libs/database-client"
+            ],
+            "options": {
+              "jestConfig": "libs/database-client/jest.config.ts",
+              "passWithNoTests": true
+            },
+            "configurations": {},
+            "parallelism": true,
+            "inputs": [
+              "default",
+              "^production"
+            ]
+          }
+        },
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "library",
         "implicitDependencies": []
       }
     },
@@ -1530,54 +1828,225 @@
         "implicitDependencies": []
       }
     },
-    "@polydom/kafka-client": {
-      "name": "@polydom/kafka-client",
+    "kafka-client": {
+      "name": "kafka-client",
       "type": "lib",
       "data": {
         "root": "libs/kafka-client",
-        "sourceRoot": "libs/kafka-client",
-        "name": "@polydom/kafka-client",
+        "sourceRoot": "libs/kafka-client/src",
+        "name": "kafka-client",
         "tags": [
-          "npm:private"
+          "npm:private",
+          "shared",
+          "lib"
         ],
         "metadata": {
           "targetGroups": {}
         },
-        "targets": {},
+        "targets": {
+          "build": {
+            "executor": "nx:run-commands",
+            "outputs": [
+              "{projectRoot}/dist"
+            ],
+            "options": {
+              "command": "tsc -p tsconfig.lib.json",
+              "cwd": "libs/kafka-client"
+            },
+            "configurations": {},
+            "parallelism": true,
+            "dependsOn": [
+              "^build"
+            ],
+            "inputs": [
+              "production",
+              "^production"
+            ]
+          },
+          "lint": {
+            "executor": "@nx/eslint:eslint",
+            "outputs": [
+              "{options.outputFile}"
+            ],
+            "options": {
+              "lintFilePatterns": [
+                "libs/kafka-client/**/*.ts"
+              ]
+            },
+            "configurations": {},
+            "parallelism": true,
+            "inputs": [
+              "default",
+              "^production"
+            ]
+          },
+          "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": [
+              "{workspaceRoot}/coverage/libs/kafka-client"
+            ],
+            "options": {
+              "jestConfig": "libs/kafka-client/jest.config.ts",
+              "passWithNoTests": true
+            },
+            "configurations": {},
+            "parallelism": true,
+            "inputs": [
+              "default",
+              "^production"
+            ]
+          }
+        },
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "library",
         "implicitDependencies": []
       }
     },
-    "@polydom/shared-types": {
-      "name": "@polydom/shared-types",
+    "shared-types": {
+      "name": "shared-types",
       "type": "lib",
       "data": {
         "root": "libs/shared-types",
-        "sourceRoot": "libs/shared-types",
-        "name": "@polydom/shared-types",
+        "sourceRoot": "libs/shared-types/src",
+        "name": "shared-types",
         "tags": [
-          "npm:private"
+          "npm:private",
+          "shared",
+          "lib"
         ],
         "metadata": {
           "targetGroups": {}
         },
-        "targets": {},
+        "targets": {
+          "build": {
+            "executor": "nx:run-commands",
+            "outputs": [
+              "{projectRoot}/dist"
+            ],
+            "options": {
+              "command": "tsc -p tsconfig.lib.json",
+              "cwd": "libs/shared-types"
+            },
+            "configurations": {},
+            "parallelism": true,
+            "dependsOn": [
+              "^build"
+            ],
+            "inputs": [
+              "production",
+              "^production"
+            ]
+          },
+          "lint": {
+            "executor": "@nx/eslint:eslint",
+            "outputs": [
+              "{options.outputFile}"
+            ],
+            "options": {
+              "lintFilePatterns": [
+                "libs/shared-types/**/*.ts"
+              ]
+            },
+            "configurations": {},
+            "parallelism": true,
+            "inputs": [
+              "default",
+              "^production"
+            ]
+          },
+          "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": [
+              "{workspaceRoot}/coverage/libs/shared-types"
+            ],
+            "options": {
+              "jestConfig": "libs/shared-types/jest.config.ts",
+              "passWithNoTests": true
+            },
+            "configurations": {},
+            "parallelism": true,
+            "inputs": [
+              "default",
+              "^production"
+            ]
+          }
+        },
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "library",
         "implicitDependencies": []
       }
     },
-    "@polydom/nats-client": {
-      "name": "@polydom/nats-client",
+    "nats-client": {
+      "name": "nats-client",
       "type": "lib",
       "data": {
         "root": "libs/nats-client",
-        "sourceRoot": "libs/nats-client",
-        "name": "@polydom/nats-client",
+        "sourceRoot": "libs/nats-client/src",
+        "name": "nats-client",
         "tags": [
-          "npm:private"
+          "npm:private",
+          "shared",
+          "lib"
         ],
         "metadata": {
           "targetGroups": {}
         },
-        "targets": {},
+        "targets": {
+          "build": {
+            "executor": "nx:run-commands",
+            "outputs": [
+              "{projectRoot}/dist"
+            ],
+            "options": {
+              "command": "tsc -p tsconfig.lib.json",
+              "cwd": "libs/nats-client"
+            },
+            "configurations": {},
+            "parallelism": true,
+            "dependsOn": [
+              "^build"
+            ],
+            "inputs": [
+              "production",
+              "^production"
+            ]
+          },
+          "lint": {
+            "executor": "@nx/eslint:eslint",
+            "outputs": [
+              "{options.outputFile}"
+            ],
+            "options": {
+              "lintFilePatterns": [
+                "libs/nats-client/**/*.ts"
+              ]
+            },
+            "configurations": {},
+            "parallelism": true,
+            "inputs": [
+              "default",
+              "^production"
+            ]
+          },
+          "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": [
+              "{workspaceRoot}/coverage/libs/nats-client"
+            ],
+            "options": {
+              "jestConfig": "libs/nats-client/jest.config.ts",
+              "passWithNoTests": true
+            },
+            "configurations": {},
+            "parallelism": true,
+            "inputs": [
+              "default",
+              "^production"
+            ]
+          }
+        },
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "library",
         "implicitDependencies": []
       }
     },
@@ -1727,37 +2196,151 @@
         "implicitDependencies": []
       }
     },
-    "@polydom/utils": {
-      "name": "@polydom/utils",
+    "utils": {
+      "name": "utils",
       "type": "lib",
       "data": {
         "root": "libs/utils",
-        "sourceRoot": "libs/utils",
-        "name": "@polydom/utils",
+        "sourceRoot": "libs/utils/src",
+        "name": "utils",
         "tags": [
-          "npm:private"
+          "npm:private",
+          "shared",
+          "lib"
         ],
         "metadata": {
           "targetGroups": {}
         },
-        "targets": {},
+        "targets": {
+          "build": {
+            "executor": "nx:run-commands",
+            "outputs": [
+              "{projectRoot}/dist"
+            ],
+            "options": {
+              "command": "tsc -p tsconfig.lib.json",
+              "cwd": "libs/utils"
+            },
+            "configurations": {},
+            "parallelism": true,
+            "dependsOn": [
+              "^build"
+            ],
+            "inputs": [
+              "production",
+              "^production"
+            ]
+          },
+          "lint": {
+            "executor": "@nx/eslint:eslint",
+            "outputs": [
+              "{options.outputFile}"
+            ],
+            "options": {
+              "lintFilePatterns": [
+                "libs/utils/**/*.ts"
+              ]
+            },
+            "configurations": {},
+            "parallelism": true,
+            "inputs": [
+              "default",
+              "^production"
+            ]
+          },
+          "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": [
+              "{workspaceRoot}/coverage/libs/utils"
+            ],
+            "options": {
+              "jestConfig": "libs/utils/jest.config.ts",
+              "passWithNoTests": true
+            },
+            "configurations": {},
+            "parallelism": true,
+            "inputs": [
+              "default",
+              "^production"
+            ]
+          }
+        },
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "library",
         "implicitDependencies": []
       }
     },
-    "@polydom/auth": {
-      "name": "@polydom/auth",
+    "auth": {
+      "name": "auth",
       "type": "lib",
       "data": {
         "root": "libs/auth",
-        "sourceRoot": "libs/auth",
-        "name": "@polydom/auth",
+        "sourceRoot": "libs/auth/src",
+        "name": "auth",
         "tags": [
-          "npm:private"
+          "npm:private",
+          "shared",
+          "lib"
         ],
         "metadata": {
           "targetGroups": {}
         },
-        "targets": {},
+        "targets": {
+          "build": {
+            "executor": "nx:run-commands",
+            "outputs": [
+              "{projectRoot}/dist"
+            ],
+            "options": {
+              "command": "tsc -p tsconfig.lib.json",
+              "cwd": "libs/auth"
+            },
+            "configurations": {},
+            "parallelism": true,
+            "dependsOn": [
+              "^build"
+            ],
+            "inputs": [
+              "production",
+              "^production"
+            ]
+          },
+          "lint": {
+            "executor": "@nx/eslint:eslint",
+            "outputs": [
+              "{options.outputFile}"
+            ],
+            "options": {
+              "lintFilePatterns": [
+                "libs/auth/**/*.ts"
+              ]
+            },
+            "configurations": {},
+            "parallelism": true,
+            "inputs": [
+              "default",
+              "^production"
+            ]
+          },
+          "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": [
+              "{workspaceRoot}/coverage/libs/auth"
+            ],
+            "options": {
+              "jestConfig": "libs/auth/jest.config.ts",
+              "passWithNoTests": true
+            },
+            "configurations": {},
+            "parallelism": true,
+            "inputs": [
+              "default",
+              "^production"
+            ]
+          }
+        },
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "library",
         "implicitDependencies": []
       }
     }
@@ -17074,6 +17657,128 @@
     }
   },
   "dependencies": {
+    "search-service": [
+      {
+        "source": "search-service",
+        "target": "npm:@nestjs/cli@10.4.9",
+        "type": "static"
+      },
+      {
+        "source": "search-service",
+        "target": "npm:@nestjs/schematics@10.2.3",
+        "type": "static"
+      },
+      {
+        "source": "search-service",
+        "target": "npm:@nestjs/testing",
+        "type": "static"
+      },
+      {
+        "source": "search-service",
+        "target": "npm:@types/node",
+        "type": "static"
+      },
+      {
+        "source": "search-service",
+        "target": "npm:typescript@5.7.2",
+        "type": "static"
+      },
+      {
+        "source": "search-service",
+        "target": "npm:jest",
+        "type": "static"
+      },
+      {
+        "source": "search-service",
+        "target": "npm:@types/jest",
+        "type": "static"
+      },
+      {
+        "source": "search-service",
+        "target": "npm:ts-jest",
+        "type": "static"
+      },
+      {
+        "source": "search-service",
+        "target": "elasticsearch-client",
+        "type": "static"
+      },
+      {
+        "source": "search-service",
+        "target": "elasticsearch-client",
+        "type": "dynamic"
+      },
+      {
+        "source": "search-service",
+        "target": "npm:pg",
+        "type": "static"
+      },
+      {
+        "source": "search-service",
+        "target": "npm:pg",
+        "type": "dynamic"
+      },
+      {
+        "source": "search-service",
+        "target": "npm:ioredis",
+        "type": "static"
+      },
+      {
+        "source": "search-service",
+        "target": "npm:ioredis",
+        "type": "dynamic"
+      },
+      {
+        "source": "search-service",
+        "target": "npm:@nestjs/common",
+        "type": "static"
+      },
+      {
+        "source": "search-service",
+        "target": "npm:@nestjs/config",
+        "type": "static"
+      },
+      {
+        "source": "search-service",
+        "target": "npm:@nestjs/core",
+        "type": "static"
+      },
+      {
+        "source": "search-service",
+        "target": "npm:@nestjs/platform-express",
+        "type": "static"
+      },
+      {
+        "source": "search-service",
+        "target": "npm:class-validator",
+        "type": "static"
+      },
+      {
+        "source": "search-service",
+        "target": "npm:class-transformer",
+        "type": "static"
+      },
+      {
+        "source": "search-service",
+        "target": "npm:rxjs",
+        "type": "static"
+      },
+      {
+        "source": "search-service",
+        "target": "npm:dotenv",
+        "type": "static"
+      },
+      {
+        "source": "search-service",
+        "target": "npm:webpack-node-externals",
+        "type": "static"
+      },
+      {
+        "source": "search-service",
+        "target": "npm:webpack@5.97.1",
+        "type": "static"
+      }
+    ],
     "vendor-service": [
       {
         "source": "vendor-service",
@@ -17197,17 +17902,17 @@
       },
       {
         "source": "vendor-service",
-        "target": "@polydom/nats-client",
+        "target": "nats-client",
         "type": "static"
       },
       {
         "source": "vendor-service",
-        "target": "@polydom/database-client",
+        "target": "database-client",
         "type": "static"
       },
       {
         "source": "vendor-service",
-        "target": "@polydom/auth",
+        "target": "auth",
         "type": "static"
       },
       {
@@ -17229,12 +17934,27 @@
       },
       {
         "source": "agent-service",
-        "target": "npm:@nestjs/schematics",
+        "target": "npm:@nestjs/cli@10.4.9",
         "type": "static"
       },
       {
         "source": "agent-service",
-        "target": "npm:@types/multer",
+        "target": "npm:@nestjs/schematics@10.2.3",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:@nestjs/testing",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:@types/jest",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:@types/multer@1.4.13",
         "type": "static"
       },
       {
@@ -17244,7 +17964,17 @@
       },
       {
         "source": "agent-service",
+        "target": "npm:@types/uuid",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
         "target": "npm:drizzle-kit",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:ts-jest",
         "type": "static"
       },
       {
@@ -17254,12 +17984,37 @@
       },
       {
         "source": "agent-service",
-        "target": "npm:typescript",
+        "target": "npm:typescript@5.7.2",
         "type": "static"
       },
       {
         "source": "agent-service",
+        "target": "npm:@ai-sdk/deepseek",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:@anthropic-ai/sdk",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:@modelcontextprotocol/sdk",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:@modelcontextprotocol/sdk",
+        "type": "dynamic"
+      },
+      {
+        "source": "agent-service",
         "target": "npm:@nestjs/common",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:@nestjs/config",
         "type": "static"
       },
       {
@@ -17294,12 +18049,17 @@
       },
       {
         "source": "agent-service",
-        "target": "npm:passport",
+        "target": "npm:passport@0.7.0",
         "type": "static"
       },
       {
         "source": "agent-service",
         "target": "npm:passport-jwt",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:@langchain/textsplitters",
         "type": "static"
       },
       {
@@ -17311,6 +18071,16 @@
         "source": "agent-service",
         "target": "npm:@xenova/transformers",
         "type": "dynamic"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:langchain",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:ai",
+        "type": "static"
       },
       {
         "source": "agent-service",
@@ -17344,13 +18114,23 @@
       },
       {
         "source": "agent-service",
-        "target": "npm:multer",
+        "target": "npm:multer@1.4.5-lts.2",
         "type": "static"
       },
       {
         "source": "agent-service",
-        "target": "npm:pdf-parse",
+        "target": "npm:node-sql-parser",
         "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:pdf-parse@1.1.4",
+        "type": "static"
+      },
+      {
+        "source": "agent-service",
+        "target": "npm:pdf-parse@1.1.4",
+        "type": "dynamic"
       },
       {
         "source": "agent-service",
@@ -17364,7 +18144,7 @@
       },
       {
         "source": "agent-service",
-        "target": "npm:uuid",
+        "target": "npm:uuid@9.0.1",
         "type": "static"
       },
       {
@@ -17374,38 +18154,8 @@
       },
       {
         "source": "agent-service",
-        "target": "@polydom/auth",
+        "target": "auth",
         "type": "static"
-      },
-      {
-        "source": "agent-service",
-        "target": "npm:@nestjs/testing",
-        "type": "static"
-      },
-      {
-        "source": "agent-service",
-        "target": "npm:@nestjs/config",
-        "type": "static"
-      },
-      {
-        "source": "agent-service",
-        "target": "npm:uuid@9.0.1",
-        "type": "static"
-      },
-      {
-        "source": "agent-service",
-        "target": "npm:@langchain/textsplitters",
-        "type": "static"
-      },
-      {
-        "source": "agent-service",
-        "target": "npm:langchain",
-        "type": "static"
-      },
-      {
-        "source": "agent-service",
-        "target": "npm:pdf-parse@1.1.4",
-        "type": "dynamic"
       },
       {
         "source": "agent-service",
@@ -17421,7 +18171,17 @@
     "event-service": [
       {
         "source": "event-service",
-        "target": "npm:@nestjs/schematics",
+        "target": "npm:@nestjs/cli@10.4.9",
+        "type": "static"
+      },
+      {
+        "source": "event-service",
+        "target": "npm:@nestjs/schematics@10.2.3",
+        "type": "static"
+      },
+      {
+        "source": "event-service",
+        "target": "npm:@nestjs/testing",
         "type": "static"
       },
       {
@@ -17431,7 +18191,22 @@
       },
       {
         "source": "event-service",
-        "target": "npm:typescript",
+        "target": "npm:typescript@5.7.2",
+        "type": "static"
+      },
+      {
+        "source": "event-service",
+        "target": "npm:jest",
+        "type": "static"
+      },
+      {
+        "source": "event-service",
+        "target": "npm:@types/jest",
+        "type": "static"
+      },
+      {
+        "source": "event-service",
+        "target": "npm:ts-jest",
         "type": "static"
       },
       {
@@ -17446,12 +18221,17 @@
       },
       {
         "source": "event-service",
-        "target": "@polydom/kafka-client",
+        "target": "kafka-client",
         "type": "static"
       },
       {
         "source": "event-service",
         "target": "npm:@nestjs/common",
+        "type": "static"
+      },
+      {
+        "source": "event-service",
+        "target": "npm:@nestjs/config",
         "type": "static"
       },
       {
@@ -17496,12 +18276,12 @@
       },
       {
         "source": "event-service",
-        "target": "@polydom/nats-client",
+        "target": "nats-client",
         "type": "static"
       },
       {
         "source": "event-service",
-        "target": "@polydom/database-client",
+        "target": "database-client",
         "type": "static"
       },
       {
@@ -17511,14 +18291,34 @@
       },
       {
         "source": "event-service",
-        "target": "npm:webpack",
+        "target": "npm:webpack@5.97.1",
         "type": "static"
       }
     ],
     "auth-service": [
       {
         "source": "auth-service",
-        "target": "npm:@nestjs/schematics",
+        "target": "npm:@nestjs/cli@10.4.9",
+        "type": "static"
+      },
+      {
+        "source": "auth-service",
+        "target": "npm:@nestjs/schematics@10.2.3",
+        "type": "static"
+      },
+      {
+        "source": "auth-service",
+        "target": "npm:@nestjs/testing",
+        "type": "static"
+      },
+      {
+        "source": "auth-service",
+        "target": "npm:@types/bcryptjs",
+        "type": "static"
+      },
+      {
+        "source": "auth-service",
+        "target": "npm:@types/jest",
         "type": "static"
       },
       {
@@ -17528,7 +18328,27 @@
       },
       {
         "source": "auth-service",
+        "target": "npm:@types/passport-jwt",
+        "type": "static"
+      },
+      {
+        "source": "auth-service",
         "target": "npm:drizzle-kit",
+        "type": "static"
+      },
+      {
+        "source": "auth-service",
+        "target": "npm:jest",
+        "type": "static"
+      },
+      {
+        "source": "auth-service",
+        "target": "npm:ts-jest",
+        "type": "static"
+      },
+      {
+        "source": "auth-service",
+        "target": "npm:ts-node-dev",
         "type": "static"
       },
       {
@@ -17543,7 +18363,7 @@
       },
       {
         "source": "auth-service",
-        "target": "npm:typescript",
+        "target": "npm:typescript@5.7.2",
         "type": "static"
       },
       {
@@ -17553,7 +18373,17 @@
       },
       {
         "source": "auth-service",
+        "target": "npm:@nestjs/axios",
+        "type": "static"
+      },
+      {
+        "source": "auth-service",
         "target": "npm:@nestjs/common",
+        "type": "static"
+      },
+      {
+        "source": "auth-service",
+        "target": "npm:@nestjs/config",
         "type": "static"
       },
       {
@@ -17578,7 +18408,17 @@
       },
       {
         "source": "auth-service",
-        "target": "@polydom/kafka-client",
+        "target": "npm:@nestjs/swagger",
+        "type": "static"
+      },
+      {
+        "source": "auth-service",
+        "target": "kafka-client",
+        "type": "static"
+      },
+      {
+        "source": "auth-service",
+        "target": "npm:bcryptjs",
         "type": "static"
       },
       {
@@ -17623,37 +18463,27 @@
       },
       {
         "source": "auth-service",
+        "target": "npm:swagger-ui-express",
+        "type": "static"
+      },
+      {
+        "source": "auth-service",
         "target": "npm:express",
         "type": "static"
       },
       {
         "source": "auth-service",
-        "target": "npm:@nestjs/axios",
+        "target": "shared-types",
         "type": "static"
       },
       {
         "source": "auth-service",
-        "target": "npm:@nestjs/config",
+        "target": "auth",
         "type": "static"
       },
       {
         "source": "auth-service",
-        "target": "@polydom/shared-types",
-        "type": "static"
-      },
-      {
-        "source": "auth-service",
-        "target": "npm:bcryptjs",
-        "type": "static"
-      },
-      {
-        "source": "auth-service",
-        "target": "@polydom/auth",
-        "type": "static"
-      },
-      {
-        "source": "auth-service",
-        "target": "@polydom/database-client",
+        "target": "database-client",
         "type": "static"
       },
       {
@@ -17663,14 +18493,24 @@
       },
       {
         "source": "auth-service",
-        "target": "npm:webpack",
+        "target": "npm:webpack@5.97.1",
         "type": "static"
       }
     ],
     "user-service": [
       {
         "source": "user-service",
-        "target": "npm:@nestjs/schematics",
+        "target": "npm:@nestjs/cli@10.4.9",
+        "type": "static"
+      },
+      {
+        "source": "user-service",
+        "target": "npm:@nestjs/schematics@10.2.3",
+        "type": "static"
+      },
+      {
+        "source": "user-service",
+        "target": "npm:@nestjs/testing",
         "type": "static"
       },
       {
@@ -17680,7 +18520,22 @@
       },
       {
         "source": "user-service",
-        "target": "npm:typescript",
+        "target": "npm:typescript@5.7.2",
+        "type": "static"
+      },
+      {
+        "source": "user-service",
+        "target": "npm:jest",
+        "type": "static"
+      },
+      {
+        "source": "user-service",
+        "target": "npm:@types/jest",
+        "type": "static"
+      },
+      {
+        "source": "user-service",
+        "target": "npm:ts-jest",
         "type": "static"
       },
       {
@@ -17696,6 +18551,11 @@
       {
         "source": "user-service",
         "target": "npm:@nestjs/common",
+        "type": "static"
+      },
+      {
+        "source": "user-service",
+        "target": "npm:@nestjs/config",
         "type": "static"
       },
       {
@@ -17745,22 +18605,17 @@
       },
       {
         "source": "user-service",
-        "target": "@polydom/nats-client",
+        "target": "nats-client",
         "type": "static"
       },
       {
         "source": "user-service",
-        "target": "@polydom/shared-types",
+        "target": "shared-types",
         "type": "static"
       },
       {
         "source": "user-service",
-        "target": "npm:@nestjs/config",
-        "type": "static"
-      },
-      {
-        "source": "user-service",
-        "target": "@polydom/database-client",
+        "target": "database-client",
         "type": "static"
       },
       {
@@ -17777,7 +18632,22 @@
     "api-gateway": [
       {
         "source": "api-gateway",
-        "target": "npm:@nestjs/schematics",
+        "target": "npm:@nestjs/cli@10.4.9",
+        "type": "static"
+      },
+      {
+        "source": "api-gateway",
+        "target": "npm:@nestjs/schematics@10.2.3",
+        "type": "static"
+      },
+      {
+        "source": "api-gateway",
+        "target": "npm:@nestjs/testing",
+        "type": "static"
+      },
+      {
+        "source": "api-gateway",
+        "target": "npm:@types/jest",
         "type": "static"
       },
       {
@@ -17787,12 +18657,32 @@
       },
       {
         "source": "api-gateway",
-        "target": "npm:typescript",
+        "target": "npm:jest",
+        "type": "static"
+      },
+      {
+        "source": "api-gateway",
+        "target": "npm:ts-jest",
+        "type": "static"
+      },
+      {
+        "source": "api-gateway",
+        "target": "npm:typescript@5.7.2",
+        "type": "static"
+      },
+      {
+        "source": "api-gateway",
+        "target": "npm:@nestjs/axios",
         "type": "static"
       },
       {
         "source": "api-gateway",
         "target": "npm:@nestjs/common",
+        "type": "static"
+      },
+      {
+        "source": "api-gateway",
+        "target": "npm:@nestjs/config",
         "type": "static"
       },
       {
@@ -17822,7 +18712,12 @@
       },
       {
         "source": "api-gateway",
-        "target": "npm:passport",
+        "target": "npm:@nestjs/swagger",
+        "type": "static"
+      },
+      {
+        "source": "api-gateway",
+        "target": "npm:passport@0.7.0",
         "type": "static"
       },
       {
@@ -17832,12 +18727,12 @@
       },
       {
         "source": "api-gateway",
-        "target": "@polydom/auth",
+        "target": "auth",
         "type": "static"
       },
       {
         "source": "api-gateway",
-        "target": "@polydom/kafka-client",
+        "target": "kafka-client",
         "type": "static"
       },
       {
@@ -17872,65 +18767,70 @@
       },
       {
         "source": "api-gateway",
-        "target": "npm:webpack",
+        "target": "npm:webpack@5.97.1",
         "type": "static"
       }
     ],
-    "@polydom/elasticsearch-client": [
+    "elasticsearch-client": [
       {
-        "source": "@polydom/elasticsearch-client",
+        "source": "elasticsearch-client",
         "target": "npm:@nestjs/common",
         "type": "static"
       },
       {
-        "source": "@polydom/elasticsearch-client",
+        "source": "elasticsearch-client",
         "target": "npm:@elastic/elasticsearch",
         "type": "static"
+      },
+      {
+        "source": "elasticsearch-client",
+        "target": "npm:@elastic/elasticsearch",
+        "type": "dynamic"
       }
     ],
-    "@polydom/database-client": [
+    "database-client": [
       {
-        "source": "@polydom/database-client",
+        "source": "database-client",
         "target": "npm:@nestjs/common",
         "type": "static"
       },
       {
-        "source": "@polydom/database-client",
+        "source": "database-client",
         "target": "npm:@neondatabase/serverless",
         "type": "static"
       },
       {
-        "source": "@polydom/database-client",
+        "source": "database-client",
         "target": "npm:drizzle-orm",
         "type": "static"
       },
       {
-        "source": "@polydom/database-client",
+        "source": "database-client",
         "target": "npm:drizzle-orm",
         "type": "dynamic"
       },
       {
-        "source": "@polydom/database-client",
+        "source": "database-client",
         "target": "npm:mongoose",
         "type": "static"
       },
       {
-        "source": "@polydom/database-client",
+        "source": "database-client",
         "target": "npm:mongoose",
         "type": "dynamic"
       },
       {
-        "source": "@polydom/database-client",
+        "source": "database-client",
         "target": "npm:ioredis",
         "type": "static"
       },
       {
-        "source": "@polydom/database-client",
+        "source": "database-client",
         "target": "npm:ioredis",
         "type": "dynamic"
       },
       {
-        "source": "@polydom/database-client",
+        "source": "database-client",
         "target": "npm:pg",
         "type": "dynamic"
       }
@@ -18042,27 +18942,27 @@
         "type": "static"
       }
     ],
-    "@polydom/kafka-client": [
+    "kafka-client": [
       {
-        "source": "@polydom/kafka-client",
+        "source": "kafka-client",
         "target": "npm:@nestjs/common",
         "type": "static"
       },
       {
-        "source": "@polydom/kafka-client",
+        "source": "kafka-client",
         "target": "npm:kafkajs",
         "type": "static"
       }
     ],
-    "@polydom/shared-types": [],
-    "@polydom/nats-client": [
+    "shared-types": [],
+    "nats-client": [
       {
-        "source": "@polydom/nats-client",
+        "source": "nats-client",
         "target": "npm:@nestjs/common",
         "type": "static"
       },
       {
-        "source": "@polydom/nats-client",
+        "source": "nats-client",
         "target": "npm:nats",
         "type": "static"
       }
@@ -18145,6 +19045,11 @@
       },
       {
         "source": "frontend",
+        "target": "npm:shadcn-ui",
+        "type": "static"
+      },
+      {
+        "source": "frontend",
         "target": "npm:tailwind-merge",
         "type": "static"
       },
@@ -18164,57 +19069,57 @@
         "type": "static"
       }
     ],
-    "@polydom/utils": [
+    "utils": [
       {
-        "source": "@polydom/utils",
+        "source": "utils",
         "target": "npm:@nestjs/common",
         "type": "static"
       },
       {
-        "source": "@polydom/utils",
+        "source": "utils",
         "target": "npm:class-transformer",
         "type": "static"
       },
       {
-        "source": "@polydom/utils",
+        "source": "utils",
         "target": "npm:class-validator",
         "type": "static"
       }
     ],
-    "@polydom/auth": [
+    "auth": [
       {
-        "source": "@polydom/auth",
+        "source": "auth",
         "target": "npm:@types/passport-jwt",
         "type": "static"
       },
       {
-        "source": "@polydom/auth",
+        "source": "auth",
         "target": "npm:@nestjs/common",
         "type": "static"
       },
       {
-        "source": "@polydom/auth",
+        "source": "auth",
         "target": "npm:@nestjs/core",
         "type": "static"
       },
       {
-        "source": "@polydom/auth",
+        "source": "auth",
         "target": "npm:@nestjs/jwt",
         "type": "static"
       },
       {
-        "source": "@polydom/auth",
+        "source": "auth",
         "target": "npm:@nestjs/passport",
         "type": "static"
       },
       {
-        "source": "@polydom/auth",
+        "source": "auth",
         "target": "npm:passport-jwt",
         "type": "static"
       },
       {
-        "source": "@polydom/auth",
-        "target": "@polydom/shared-types",
+        "source": "auth",
+        "target": "shared-types",
         "type": "static"
       }
     ],

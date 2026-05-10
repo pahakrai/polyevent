@@ -1,4 +1,4 @@
-import { Injectable, Logger, Inject, Optional } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 
 export interface PostgresClientConfig {
   databaseUrl: string;
@@ -16,9 +16,7 @@ export class PostgresClient {
   private _client: any;
   private _db: any;
 
-  constructor(
-    @Optional() @Inject(POSTGRES_CLIENT_CONFIG) private readonly config?: PostgresClientConfig,
-  ) {}
+  constructor() {}
 
   /**
    * Initialize the client with a database URL and optional schema.

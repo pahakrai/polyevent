@@ -1,42 +1,53 @@
 {
   "run": {
-    "command": "nx run-many --target=build --projects=user-service,vendor-service,event-service",
-    "startTime": "2026-05-09T06:52:07.253Z",
-    "endTime": "2026-05-09T06:52:26.276Z",
+    "command": "nx build api-gateway",
+    "startTime": "2026-05-10T15:50:50.045Z",
+    "endTime": "2026-05-10T15:50:50.147Z",
     "inner": false
   },
   "tasks": [
     {
-      "taskId": "event-service:build",
+      "taskId": "shared-types:build",
       "target": "build",
-      "projectName": "event-service",
-      "hash": "14359986543759934861",
-      "startTime": "2026-05-09T06:52:07.264Z",
-      "endTime": "2026-05-09T06:52:26.261Z",
+      "projectName": "shared-types",
+      "hash": "3576634914032552772",
+      "startTime": "2026-05-10T15:50:50.054Z",
+      "endTime": "2026-05-10T15:50:50.086Z",
       "params": "",
-      "cacheStatus": "cache-miss",
+      "cacheStatus": "local-cache-hit",
       "status": 0
     },
     {
-      "taskId": "user-service:build",
+      "taskId": "kafka-client:build",
       "target": "build",
-      "projectName": "user-service",
-      "hash": "8947422703102651024",
-      "startTime": "2026-05-09T06:52:07.263Z",
-      "endTime": "2026-05-09T06:52:26.268Z",
+      "projectName": "kafka-client",
+      "hash": "3867947015520859909",
+      "startTime": "2026-05-10T15:50:50.054Z",
+      "endTime": "2026-05-10T15:50:50.091Z",
       "params": "",
-      "cacheStatus": "cache-miss",
+      "cacheStatus": "local-cache-hit",
       "status": 0
     },
     {
-      "taskId": "vendor-service:build",
+      "taskId": "auth:build",
       "target": "build",
-      "projectName": "vendor-service",
-      "hash": "4803268150035858046",
-      "startTime": "2026-05-09T06:52:07.263Z",
-      "endTime": "2026-05-09T06:52:26.276Z",
+      "projectName": "auth",
+      "hash": "15467833041470705389",
+      "startTime": "2026-05-10T15:50:50.100Z",
+      "endTime": "2026-05-10T15:50:50.114Z",
       "params": "",
-      "cacheStatus": "cache-miss",
+      "cacheStatus": "local-cache-hit",
+      "status": 0
+    },
+    {
+      "taskId": "api-gateway:build",
+      "target": "build",
+      "projectName": "api-gateway",
+      "hash": "17287582593766996910",
+      "startTime": "2026-05-10T15:50:50.123Z",
+      "endTime": "2026-05-10T15:50:50.130Z",
+      "params": "",
+      "cacheStatus": "local-cache-hit",
       "status": 0
     }
   ]

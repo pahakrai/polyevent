@@ -1,5 +1,5 @@
 import { Injectable, Logger, OnModuleInit, OnModuleDestroy, Inject } from '@nestjs/common';
-import { Kafka, Consumer, EachMessagePayload, ConsumerConfig } from 'kafkajs';
+import { Kafka, Consumer, EachMessagePayload } from 'kafkajs';
 
 export interface ConsumerConfigInput {
   clientId: string;

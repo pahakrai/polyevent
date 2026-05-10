@@ -287,7 +287,17 @@
       "Bash(xargs file)",
       "Bash(pg_isready -h localhost -p 5432)",
       "mcp__neon__describe_table_schema",
-      "Bash(docker exec *)"
+      "Bash(docker exec *)",
+      "Bash(python3 *)",
+      "Bash(python *)",
+      "Bash(/c/Users/user/AppData/Local/Microsoft/WinGet/Packages/Google.ContainerTools.Skaffold_Microsoft.Winget.Source_8wekyb3d8bbwe/skaffold.exe version *)",
+      "Read(//tmp/**)",
+      "Bash(DOCKER_BUILDKIT=1 skaffold build -b 1)",
+      "Bash(DOCKER_BUILDKIT=1 docker build -f apps/nestjs-services/search-service/Dockerfile --target development -t polydom/search-service:dev .)",
+      "Bash(DOCKER_BUILDKIT=1 docker build -f apps/nestjs-services/search-service/Dockerfile --target development -t polydom/search-service:dev --no-cache-filter=copy-search .)",
+      "Bash(DOCKER_BUILDKIT=1 docker build -f apps/nestjs-services/search-service/Dockerfile --target development -t polydom/search-service:dev --no-cache .)",
+      "Bash(PORT=3099 node \"C:/Users/user/repo/polydom/apps/nestjs-services/search-service/dist/main.js\")",
+      "Bash(wait)"
     ]
   },
   "enableAllProjectMcpServers": true,

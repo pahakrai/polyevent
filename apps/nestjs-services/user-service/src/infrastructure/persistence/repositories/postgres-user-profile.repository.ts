@@ -114,7 +114,7 @@ export class PostgresUserProfileRepository implements UserProfileRepository {
 
   async findByRole(role: UserRole): Promise<UserProfile[]> {
     const db = this.adapter.getClient();
-    const result = await db.select().from(users).where(eq(users.role, role as unknown as "USER" | "VENDOR" | "ADMIN"));
+    const result = await db.select().from(users).where(eq(users.role, UserProfileMapper.mapRoleToPersistence(role)));
     return result.map(UserProfileMapper.toDomain);
   }
 

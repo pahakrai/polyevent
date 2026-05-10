@@ -17,7 +17,7 @@ export interface PersonalizedSearchResult extends SearchResult {
   personalization_score: number;
   blended_score: number;
   text_score: number;
-  ranking_features: Record<string, number>;
+  ranking_features: Record<string, unknown>;
 }
 
 export interface SearchRequest {
@@ -266,7 +266,7 @@ export class SearchService {
         '@polydom/elasticsearch-client'
       );
       const { buildEventSearchQuery } = await import(
-        '@polydom/elasticsearch-client/queries/event.queries'
+        '@polydom/elasticsearch-client/src/queries/event.queries'
       );
 
       const client = new ElasticsearchClient();

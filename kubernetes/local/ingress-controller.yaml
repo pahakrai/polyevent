@@ -11,6 +11,10 @@ data:
   nginx.conf: |
     events {}
     http {
+      # Resolve upstreams at request time instead of startup so nginx doesn't
+      # crash when upstream services haven't been created yet.
+      resolver kube-dns.kube-system.svc.cluster.local valid=30s ipv6=off;
+
       server {
         listen 80;
         server_name localhost;
@@ -19,7 +23,8 @@ data:
         # Regex matches any top-level API prefix: /auth, /events, /users, /groups,
         # /vendors, /venues, /timeslots, /agent, /tracking, /health
         location ~ ^/(auth|events|users|groups|vendors|venues|timeslots|agent|tracking|health)(/|$) {
-          proxy_pass http://api-gateway:3000;
+          set $apigw api-gateway:3000;
+          proxy_pass http://$apigw;
           proxy_http_version 1.1;
           proxy_set_header Host $host;
           proxy_set_header X-Real-IP $remote_addr;
@@ -30,7 +35,8 @@ data:
         # K8s Ingress-compatible /api prefix — strips /api before forwarding
         # (e.g. /api/auth/login → /auth/login at the gateway)
         location /api/ {
-          proxy_pass http://api-gateway:3000/;
+          set $apigw api-gateway:3000;
+          proxy_pass http://$apigw/;
           proxy_http_version 1.1;
           proxy_set_header Host $host;
           proxy_set_header X-Real-IP $remote_addr;
@@ -40,7 +46,8 @@ data:
 
         # Admin Frontend
         location /admin {
-          proxy_pass http://admin-frontend:3000/admin;
+          set $adminfe admin-frontend:3000;
+          proxy_pass http://$adminfe/admin;
           proxy_http_version 1.1;
           proxy_set_header Host $host;
           proxy_set_header X-Real-IP $remote_addr;
@@ -50,7 +57,8 @@ data:
 
         # Frontend — everything else
         location / {
-          proxy_pass http://frontend:3000;
+          set $fe frontend:3000;
+          proxy_pass http://$fe;
           proxy_http_version 1.1;
           proxy_set_header Host $host;
           proxy_set_header X-Real-IP $remote_addr;

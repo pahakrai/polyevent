@@ -15,35 +15,35 @@ import { ConsoleLogger } from './console.logger';
 export class CustomLogger extends ConsoleLogger implements NestLoggerService {
   // Override NestLoggerService methods with proper signature mapping
 
-  log(message: any, ...optionalParams: any[]): void {
+  override log(message: any, ...optionalParams: any[]): void {
     const messageStr = this.stringifyMessage(message);
     const context = this.extractContext(optionalParams);
     super.log(messageStr, context);
   }
 
-  error(message: any, ...optionalParams: any[]): void {
+  override error(message: any, ...optionalParams: any[]): void {
     const messageStr = this.stringifyMessage(message);
     const context = this.extractContext(optionalParams);
     const trace = this.extractTrace(optionalParams);
     super.error(messageStr, trace, context);
   }
 
-  warn(message: any, ...optionalParams: any[]): void {
+  override warn(message: any, ...optionalParams: any[]): void {
     const messageStr = this.stringifyMessage(message);
     const context = this.extractContext(optionalParams);
     super.warn(messageStr, context);
   }
 
-  debug?(message: any, ...optionalParams: any[]): void {
+  override debug(message: any, ...optionalParams: any[]): void {
     const messageStr = this.stringifyMessage(message);
     const context = this.extractContext(optionalParams);
-    super.debug?.(messageStr, context);
+    super.debug(messageStr, context);
   }
 
-  verbose?(message: any, ...optionalParams: any[]): void {
+  override verbose(message: any, ...optionalParams: any[]): void {
     const messageStr = this.stringifyMessage(message);
     const context = this.extractContext(optionalParams);
-    super.verbose?.(messageStr, context);
+    super.verbose(messageStr, context);
   }
 
   private stringifyMessage(message: any): string {
