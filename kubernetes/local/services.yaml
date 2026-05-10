@@ -794,3 +794,91 @@ spec:
   - port: 9234
     targetPort: 9234
     name: debug
+
+---
+# ============================================================
+# Search Service
+# ============================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: search-service
+  namespace: polydom-dev
+  labels:
+    app: search-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: search-service
+  template:
+    metadata:
+      labels:
+        app: search-service
+    spec:
+      serviceAccountName: app-sa
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: search-service
+        image: polydom/search-service:dev
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
+          name: http
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
+        env:
+        - name: NODE_ENV
+          value: development
+        - name: VECTOR_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database-secrets
+              key: vector-database-url
+        - name: ELASTICSEARCH_HOSTS
+          value: http://elasticsearch:9200
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: redis-secrets
+              key: redis-url
+        - name: PYTHON_INFERENCE_URL
+          value: http://inference:8000
+        - name: PORT
+          value: "3000"
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /search
+            port: 3000
+          initialDelaySeconds: 60
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /search
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: search-service
+  namespace: polydom-dev
+spec:
+  selector:
+    app: search-service
+  ports:
+  - port: 3000
+    targetPort: 3000
+    name: http

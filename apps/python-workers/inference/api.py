@@ -15,15 +15,24 @@ from __future__ import annotations
 
 import logging
 import os
+import sys
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Tuple
 
+import numpy as np
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 from search_ranker import SearchRanker
+from candidate_generator import CandidateGenerator
+from search_personalizer import SearchPersonalizer
+from session_vector import SessionVectorComputer
+
+# FeatureStore for Redis-backed session state
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ml-training"))
+from feature_engineering import FeatureStore
 
 logging.basicConfig(
     level=logging.INFO,
@@ -34,15 +43,35 @@ logger = logging.getLogger("inference-api")
 # ── Global state ──────────────────────────────────────────────────────
 
 ranker: Optional[SearchRanker] = None
+candidate_generator: Optional[CandidateGenerator] = None
+personalizer: Optional[SearchPersonalizer] = None
+session_computer: Optional[SessionVectorComputer] = None
+feature_store: Optional[FeatureStore] = None
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global ranker
+    global ranker, candidate_generator, personalizer, session_computer, feature_store
     model_path = os.getenv("MODEL_PATH")
+    event_catalog_path = os.getenv("EVENT_CATALOG_PATH")
+
     ranker = SearchRanker(model_path)
-    logger.info("SearchRanker initialized")
+    candidate_generator = CandidateGenerator(
+        db_url=os.getenv("VECTOR_DATABASE_URL"),
+        event_catalog_path=event_catalog_path,
+    )
+    personalizer = SearchPersonalizer(
+        ranker=ranker,
+        alpha=float(os.getenv("SEARCH_PERSONALIZATION_ALPHA", "0.4")),
+    )
+    session_computer = SessionVectorComputer()
+    feature_store = FeatureStore(
+        redis_url=os.getenv("FEATURE_STORE_URL", "redis://localhost:6379"),
+    )
+    logger.info("SearchRanker, CandidateGenerator, SearchPersonalizer, and FeatureStore initialized")
     yield
+    if candidate_generator:
+        candidate_generator.close()
     logger.info("Shutting down")
 
 
@@ -101,6 +130,33 @@ class FeedbackRequest(BaseModel):
     position: int
     score: float
     dwell_time_ms: Optional[int] = None
+
+
+class SearchResultItem(BaseModel):
+    id: str
+    title: str = ""
+    category: str = ""
+    genres: List[str] = Field(default_factory=list)
+    _score: Optional[float] = None
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
+    price: Optional[float] = None
+
+
+class SearchPersonalizeRequest(BaseModel):
+    user_id: str
+    results: List[SearchResultItem]
+    lat: Optional[float] = None
+    lon: Optional[float] = None
+    alpha: float = Field(default=0.4, ge=0.0, le=1.0)
+    top_k: int = Field(default=20, ge=1, le=100)
+
+
+class SearchPersonalizeResponse(BaseModel):
+    user_id: str
+    model_version: str
+    items: List[RecommendationItem]
+    generated_at: str
 
 
 class HealthResponse(BaseModel):
@@ -319,7 +375,153 @@ async def record_feedback(feedback: FeedbackRequest):
     return {"status": "recorded", "timestamp": datetime.now(timezone.utc).isoformat()}
 
 
-# ── Candidate generation (production: Elasticsearch + embedding ANN) ──
+@app.post("/search/personalize", response_model=SearchPersonalizeResponse)
+async def personalize_search(request: SearchPersonalizeRequest):
+    """
+    Re-rank raw search results with personalization.
+
+    Accepts search results from Elasticsearch (via NestJS search service),
+    scores each with user-specific relevance features, and blends with
+    the original text relevance scores.
+
+    The `alpha` parameter controls the trade-off:
+      alpha = 1.0 → pure text relevance (original order)
+      alpha = 0.0 → pure personalization
+      alpha = 0.4 → balanced (default)
+    """
+    if personalizer is None:
+        raise HTTPException(status_code=503, detail="Search personalizer not initialized")
+
+    user_location = (request.lat, request.lon) if request.lat is not None and request.lon is not None else None
+
+    results = [r.model_dump() for r in request.results]
+    personalized = personalizer.personalize(
+        user_id=request.user_id,
+        search_results=results,
+        user_location=user_location,
+        top_k=request.top_k,
+        alpha_override=request.alpha,
+    )
+
+    return SearchPersonalizeResponse(
+        user_id=request.user_id,
+        model_version=os.getenv("MODEL_VERSION", "latest"),
+        items=[
+            RecommendationItem(
+                event_id=r.get("id", ""),
+                title=r.get("title", "Unknown"),
+                category=r.get("category", ""),
+                genres=r.get("genres", []),
+                relevance_score=r.get("blended_score", r.get("relevance_score", 0.0)),
+                distance_km=r.get("distance_km"),
+                explanation=r.get("ranking_features", {}),
+            )
+            for r in personalized
+        ],
+        generated_at=datetime.now(timezone.utc).isoformat(),
+    )
+
+
+class InferenceVectorRequest(BaseModel):
+    user_id: str
+    recent_event_ids: List[str] = Field(default_factory=list, max_length=20)
+    alpha: Optional[float] = Field(default=0.7, ge=0.0, le=1.0)
+
+
+class InferenceVectorResponse(BaseModel):
+    user_id: str
+    vector: List[float]
+    dimension: int
+    source: str  # "session", "blended", "batch"
+    ttl_seconds: int = 1800
+
+
+@app.post("/inference-vector", response_model=InferenceVectorResponse)
+async def compute_inference_vector(request: InferenceVectorRequest):
+    """
+    Compute a real-time session inference vector from recent event clicks.
+
+    Flow:
+    1. If recent_event_ids are provided, use them directly.
+    2. Otherwise, look up Redis `recent_clicks:{userId}` for real-time click data.
+    3. Fetch event embeddings from pgvector for those event IDs.
+    4. Compute session vector via exponential moving average pooling.
+    5. Cache the result in Redis `inference_vector:{userId}` with TTL 30 min.
+    6. If no clicks available, fall back to the batch user embedding from pgvector.
+    """
+    if candidate_generator is None:
+        raise HTTPException(status_code=503, detail="Candidate generator not initialized")
+
+    event_ids = list(request.recent_event_ids)
+
+    # If caller didn't provide event IDs, check Redis for recent clicks
+    if not event_ids and feature_store is not None:
+        event_ids = feature_store.get_recent_clicks(request.user_id)
+        if event_ids:
+            logger.info("Using %d event IDs from Redis recent_clicks for user %s",
+                        len(event_ids), request.user_id)
+
+    # Fetch event embeddings from pgvector
+    event_embs = {}
+    if event_ids:
+        event_embs = candidate_generator.get_event_embeddings_batch(event_ids)
+
+    # Try to get batch user embedding for blend
+    user_emb = candidate_generator.get_user_embedding(request.user_id)
+    user_embeddings = {request.user_id: user_emb} if user_emb is not None else {}
+
+    if event_embs:
+        # Compute session vector from event embeddings
+        computer = SessionVectorComputer(
+            event_embeddings=event_embs,
+            user_embeddings=user_embeddings,
+            alpha=request.alpha if user_emb is not None else 1.0,
+        )
+        session_vec = computer.compute(request.user_id, event_ids)
+        if session_vec is not None:
+            # Cache in Redis for future requests
+            if feature_store is not None:
+                feature_store.cache_inference_vector(request.user_id, session_vec, ttl=1800)
+
+            source = "blended" if (user_emb is not None and request.alpha < 1.0) else "session"
+            return InferenceVectorResponse(
+                user_id=request.user_id,
+                vector=session_vec.tolist(),
+                dimension=len(session_vec),
+                source=source,
+                ttl_seconds=1800,
+            )
+
+    # No event clicks — fall back to cached or batch user embedding
+    if feature_store is not None:
+        cached = feature_store.get_inference_vector(request.user_id)
+        if cached is not None:
+            logger.info("Returning cached inference vector for user %s", request.user_id)
+            return InferenceVectorResponse(
+                user_id=request.user_id,
+                vector=cached.tolist(),
+                dimension=len(cached),
+                source="cached",
+                ttl_seconds=1800,
+            )
+
+    if user_emb is not None:
+        logger.info("Falling back to batch user embedding for user %s", request.user_id)
+        return InferenceVectorResponse(
+            user_id=request.user_id,
+            vector=user_emb.tolist(),
+            dimension=len(user_emb),
+            source="batch",
+            ttl_seconds=1800,
+        )
+
+    raise HTTPException(
+        status_code=404,
+        detail="No embeddings or recent clicks found for this user",
+    )
+
+
+# ── Candidate generation ─────────────────────────────────────────────
 
 async def _generate_candidates(
     user_id: str,
@@ -333,40 +535,45 @@ async def _generate_candidates(
     """
     Generate candidate events for ranking.
 
-    Production implementation:
-      1. ANN search on event embeddings in Elasticsearch (k=500)
-      2. Geo-distance filter (elasticsearch geo_distance query)
-      3. Category/genre pre-filter (elasticsearch terms query)
-      4. Price filter (elasticsearch range query)
+    Uses CandidateGenerator which combines embedding-based ANN retrieval
+    with geo-distance, category, genre, and price filters.
+    Falls back to heuristic scoring when embeddings are unavailable.
 
-    For dev: returns structured placeholders.
+    In production, replace with Elasticsearch kNN + filters for scale.
     """
-    # In production: Elasticsearch query with:
-    #   - knn on event_embedding field
-    #   - geo_distance filter on event_location
-    #   - terms filter on category/genres
-    #   - range filter on price
-    return []
+    if candidate_generator is None:
+        logger.warning("CandidateGenerator not initialized")
+        return []
+
+    return candidate_generator.generate_candidates(
+        user_id=user_id,
+        user_location=user_location,
+        radius_km=radius_km,
+        categories=categories,
+        genres=genres,
+        max_price=max_price,
+        limit=limit,
+    )
 
 
 async def _get_similar_event_candidates(
     event_id: str,
     top_k: int = 50,
 ) -> List[Dict[str, Any]]:
-    """Find similar events via embedding cosine similarity."""
-    # In production: Elasticsearch more_like_this or ANN on event_embedding
-    # GET /events/_search { "knn": { "field": "event_embedding", "query_vector": [...], "k": 50 } }
-    return []
+    """Find similar events via embedding cosine similarity or content overlap."""
+    if candidate_generator is None:
+        return []
+    return candidate_generator.get_similar_events(event_id, top_k=top_k)
 
 
 async def _get_trending_candidates(
     city: Optional[str] = None,
     limit: int = 60,
 ) -> List[Dict[str, Any]]:
-    """Get trending events by recent booking velocity."""
-    # In production: Elasticsearch aggregation on booking count, filtered by city
-    # Sort by: booking_count (last 7 days) DESC, event_start ASC
-    return []
+    """Get trending events by booking velocity, optionally filtered by city."""
+    if candidate_generator is None:
+        return []
+    return candidate_generator.get_trending(city=city, limit=limit)
 
 
 # ── Entry point ───────────────────────────────────────────────────────

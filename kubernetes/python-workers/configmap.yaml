@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: python-workers-config
+  namespace: production
+  labels:
+    component: python-workers
+data:
+  PIPELINE_MODE: "incremental"
+  PIPELINE_WINDOW_DAYS: "7"
+  USE_NEURAL_EMBEDDINGS: "1"
+  SEARCH_PERSONALIZATION_ALPHA: "0.4"
+  KAFKA_CONSUMER_GROUP: "python-workers-prod"
+  BATCH_SIZE: "100"
+  BATCH_TIMEOUT_MS: "5000"
+  MODEL_VERSION: "production"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: training-data-pvc
+  namespace: production
+  labels:
+    component: python-workers
+  annotations:
+    # This PVC uses ReadWriteMany access mode, which requires a shared
+    # filesystem provisioner in the cluster:
+    #   - NFS provisioner (e.g. nfs-subdir-external-provisioner)
+    #   - AWS EFS CSI driver (for EKS)
+    #   - Azure Files CSI driver (for AKS)
+    #   - GCP Filestore CSI driver (for GKE)
+    #
+    # The PVC is mounted by both the ml-training CronJob (writes models)
+    # and the inference Deployment (reads models). ReadWriteOnce would
+    # not work across multiple nodes/pods.
+    #
+    # Fallback for clusters without RWX support:
+    #   Use an init container in the inference Deployment that downloads
+    #   the latest model artifacts from an S3-compatible bucket (MinIO)
+    #   to an emptyDir volume, bypassing the shared PVC entirely.
+    #   See: kubernetes/python-workers/README.md for setup instructions.
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 50Gi

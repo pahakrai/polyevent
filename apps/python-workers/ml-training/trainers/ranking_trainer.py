@@ -3,7 +3,8 @@
 Ranking model trainer for event recommendations.
 
 Trains a LambdaMART (LightGBM) ranker with the concatenated feature set:
-  location(20) + category(25) + collaborative(33) + temporal(12) + engagement(15) = 105 features
+  location(20) + category(25) + collaborative(33) + temporal(12) + engagement(15) +
+  interest_similarity(18) + participant_cooccurrence(16) = 139 features
 
 Supports:
   - Pointwise training (binary classification: will-book / won't-book)
@@ -67,7 +68,8 @@ class RankingTrainer:
                 - 'category': (N, 25) category features
                 - 'collaborative': (N, 33) collaborative features
                 - 'temporal': (N, 12) temporal features
-                - 'engagement': (N, 15) engagement features
+                - 'interest_similarity': (N, 18) interest similarity features
+                - 'participant': (N, 16) participant co-occurrence features
                 - 'labels': (N,) binary labels (1 = will-book)
 
         Returns:
@@ -132,6 +134,8 @@ class RankingTrainer:
             ("collaborative", 33),
             ("temporal", 12),
             ("engagement", 15),
+            ("interest_similarity", 18),
+            ("participant", 16),
         ]
 
         for name, expected_dim in group_dims:

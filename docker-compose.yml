@@ -378,6 +378,9 @@ services:
       TRAINING_DATA_PATH: /data/training
       PIPELINE_MODE: incremental
       PIPELINE_WINDOW_DAYS: "30"
+      VECTOR_DATABASE_URL: postgresql://eventbooking:eventbooking123@postgres:5432/vector_db
+      SOURCE_DATABASE_URL: postgresql://eventbooking:eventbooking123@postgres:5432/eventbooking
+      EXPORT_PARQUET: "1"
     volumes:
       - ./apps/python-workers:/app
       - training_data:/data/training
@@ -397,6 +400,9 @@ services:
       ELASTICSEARCH_HOSTS: http://elasticsearch:9200
       MODEL_PATH: /data/training/models
       MODEL_VERSION: latest
+      VECTOR_DATABASE_URL: postgresql://eventbooking:eventbooking123@postgres:5432/vector_db
+      EMBEDDINGS_PATH: /data/training/models
+      EVENT_CATALOG_PATH: /data/training/event_catalog.json
     ports:
       - "8000:8000"
     volumes:
@@ -408,6 +414,34 @@ services:
       interval: 15s
       timeout: 5s
       retries: 3
+
+  search-service:
+    build:
+      context: .
+      dockerfile: ./apps/nestjs-services/search-service/Dockerfile
+      target: development
+    depends_on:
+      postgres:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+      inference:
+        condition: service_healthy
+    environment:
+      NODE_ENV: development
+      VECTOR_DATABASE_URL: postgresql://eventbooking:eventbooking123@postgres:5432/vector_db
+      REDIS_URL: redis://:redispass123@redis:6379
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+      PYTHON_INFERENCE_URL: http://inference:8000
+      PORT: 3060
+    ports:
+      - "3060:3060"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/apps/nestjs-services/search-service/node_modules
+    command: npx nest start --watch
+    working_dir: /app/apps/nestjs-services/search-service
 
 volumes:
   postgres_data:

@@ -125,6 +125,20 @@ export function useAnalytics() {
     [userId, sessionId],
   );
 
+  const trackVendorView = useCallback(
+    (vendorId: string, category?: string) => {
+      track('vendor_view', { vendorId, eventCategory: category });
+    },
+    [track],
+  );
+
+  const trackVendorFollow = useCallback(
+    (vendorId: string) => {
+      track('vendor_follow', { vendorId });
+    },
+    [track],
+  );
+
   const trackMapInteraction = useCallback(
     (params: {
       type: 'location_search' | 'nearby_search' | 'map_pan' | 'map_zoom';
@@ -153,6 +167,8 @@ export function useAnalytics() {
     trackLocationBrowse,
     trackClick,
     trackPageView,
+    trackVendorView,
+    trackVendorFollow,
     trackSearchEvent,
     trackRecFeedback,
     trackMapInteraction,

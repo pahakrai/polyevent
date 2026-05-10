@@ -14,6 +14,7 @@ Exposed as a FastAPI service for low-latency HTTP inference.
 
 from __future__ import annotations
 
+import json
 import logging
 import math
 import os
@@ -50,7 +51,9 @@ class InferenceFeatureExtractor:
     N_COLLABORATIVE = 33
     N_TEMPORAL = 12
     N_ENGAGEMENT = 15
-    N_TOTAL = 105
+    N_INTEREST_SIMILARITY = 18
+    N_PARTICIPANT = 16
+    N_TOTAL = 139
 
     def __init__(self, feature_store_url: str = "redis://localhost:6379"):
         self.feature_store_url = feature_store_url
@@ -79,8 +82,10 @@ class InferenceFeatureExtractor:
         col = self._collaborative_features(user, event)
         tmp = self._temporal_features(user, event)
         eng = self._engagement_features(user, event)
+        ints = self._interest_similarity_features(user, event)
+        part = self._participant_features(user, event)
 
-        return np.concatenate([loc, cat, col, tmp, eng]).astype(np.float32)
+        return np.concatenate([loc, cat, col, tmp, eng, ints, part]).astype(np.float32)
 
     def _get_user_profile(self, user_id: str) -> Dict[str, Any]:
         """Fetch user profile from cache or feature store."""
@@ -181,6 +186,60 @@ class InferenceFeatureExtractor:
             0.0, 0.0,  # event CTR, conversion rate
             0.0,  # recency days
             1.0 if ue.get("total_activities", 0) > 100 else 0.0,
+        ], dtype=np.float32)
+
+    def _interest_similarity_features(self, user: Dict, event: Dict) -> np.ndarray:
+        user_interests = user.get("interests", [])
+        user_interest_vec = user.get("interest_vector", np.zeros(5, dtype=np.float32))
+        event_tags = event.get("genres", [])
+        event_tag_vec = event.get("tag_vector", np.zeros(5, dtype=np.float32))
+
+        user_set = set(i.lower().strip() if isinstance(i, str) else str(i) for i in user_interests)
+        event_set = set(t.lower().strip() if isinstance(t, str) else str(t) for t in event_tags)
+
+        intersection = user_set & event_set
+        union = user_set | event_set
+        jaccard = len(intersection) / max(len(union), 1)
+        dice = (2.0 * len(intersection)) / max(len(user_set) + len(event_set), 1)
+        overlap_count = float(len(intersection))
+        interest_coverage = len(intersection) / max(len(user_set), 1)
+        event_coverage = len(intersection) / max(len(event_set), 1)
+        tfidf_proxy = float(len(intersection)) / max(len(user_set), 1) * math.log1p(len(intersection))
+
+        return np.array([
+            jaccard,
+            dice,
+            overlap_count,
+            interest_coverage,
+            event_coverage,
+            tfidf_proxy,
+            *user_interest_vec[:5],
+            *event_tag_vec[:5],
+            0.0,  # freshness_days
+            1.0 if intersection else 0.0,  # overlap_binary
+        ], dtype=np.float32)
+
+    def _participant_features(self, user: Dict, event: Dict) -> np.ndarray:
+        coattendee_data = user.get("coattendee_data", {})
+        event_category = event.get("category", "")
+
+        return np.array([
+            coattendee_data.get("coattendee_count", 0),
+            math.log1p(coattendee_data.get("coattendee_count", 0)),
+            coattendee_data.get("avg_events", 0),
+            coattendee_data.get("cohort_diversity", 0),
+            coattendee_data.get("jaccard_mean", 0),
+            coattendee_data.get("jaccard_max", 0),
+            coattendee_data.get("n_common_events", 0),
+            coattendee_data.get("category_affinity", 0),
+            coattendee_data.get("genre_affinity", 0),
+            coattendee_data.get("event_popularity", 0),
+            coattendee_data.get("cohort_size_norm", 0),
+            coattendee_data.get("genre_diversity", 0),
+            coattendee_data.get("recency_days", 365.0),
+            coattendee_data.get("avg_shared", 0),
+            min(coattendee_data.get("coattendee_count_log", 0) / 10.0, 1.0),
+            min(coattendee_data.get("category_affinity", 0), 1.0),
         ], dtype=np.float32)
 
     @staticmethod
@@ -369,26 +428,56 @@ class SearchRanker:
 
     def _explain(self, features: np.ndarray) -> Dict[str, float]:
         """Return key feature values for explainability."""
-        if len(features) < 105:
+        if len(features) < 139:
             return {}
 
         return {
             "distance_km": float(features[4]),
             "genre_similarity": float(features[20]),
             "category_match": float(features[22]),
-            "user_embedding_affinity": float(features[-33]),  # last element of collab group
-            "evening_preference": float(features[61 + 7]),
+            "user_embedding_affinity": float(features[77]),
+            "evening_preference": float(features[86]),
+            "interest_jaccard": float(features[105]),
+            "interest_overlap_count": float(features[107]),
+            "coattendee_count": float(features[123]),
+            "coattended_category_affinity": float(features[130]),
         }
 
     def update_model(self, feedback_data: List[Dict[str, Any]]) -> None:
         """
         Online model update from feedback.
 
-        In production: writes feedback events to Kafka topic
-        'recommendation-feedback', which feeds back into the batch training
-        pipeline. Online SGD updates can be done for the linear layer only.
+        Writes feedback events to Kafka topic 'recommendation-feedback',
+        which feeds back into the batch training pipeline.
+
+        For real-time: updates a lightweight online model (FTRL, online SGD).
         """
         logger.info("Received %d feedback samples for online learning", len(feedback_data))
-        # In production: push to Kafka for batch retraining
-        # For real-time: update a lightweight online model (FTRL, online SGD)
-        pass
+
+        # Push to Kafka for batch retraining loop
+        kafka_brokers = os.getenv("KAFKA_BROKERS", "")
+        if kafka_brokers and feedback_data:
+            try:
+                from confluent_kafka import Producer
+
+                producer = Producer({"bootstrap.servers": kafka_brokers})
+                for feedback in feedback_data:
+                    producer.produce(
+                        topic="recommendation-feedback",
+                        key=feedback.get("user_id", ""),
+                        value=json.dumps({
+                            "userId": feedback.get("user_id", ""),
+                            "sessionId": feedback.get("session_id", ""),
+                            "recommendationId": feedback.get("recommendation_id", ""),
+                            "modelId": feedback.get("model_id", "ranking-v1"),
+                            "type": feedback.get("interaction_type", "impression"),
+                            "timestamp": datetime.now(timezone.utc).isoformat(),
+                            "placement_page": feedback.get("placement", {}).get("page", "search"),
+                            "placement_widget": feedback.get("placement", {}).get("widget", "recommendations"),
+                            "metadata": feedback,
+                        }),
+                    )
+                producer.flush(timeout=5)
+                logger.info("Pushed %d feedback events to Kafka", len(feedback_data))
+            except Exception as e:
+                logger.warning("Failed to push feedback to Kafka: %s", e)

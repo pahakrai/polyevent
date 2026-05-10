@@ -9,6 +9,7 @@
     "user-service": "apps/nestjs-services/user-service",
     "vendor-service": "apps/nestjs-services/vendor-service",
     "event-service": "apps/nestjs-services/event-service",
+    "search-service": "apps/nestjs-services/search-service",
     "booking-service": "apps/nestjs-services/booking-service",
     "agent-service": "apps/nestjs-services/agent-service",
     "shared-types": "libs/shared-types",

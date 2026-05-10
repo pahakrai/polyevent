@@ -61,6 +61,11 @@ build:
       docker:
         dockerfile: apps/nestjs-services/agent-service/Dockerfile
         target: development
+    - image: polydom/search-service
+      context: .
+      docker:
+        dockerfile: apps/nestjs-services/search-service/Dockerfile
+        target: development
     - image: polydom/frontend
       context: .
       docker:
@@ -177,3 +182,8 @@ portForward:
     namespace: polydom-dev
     port: 9234
     localPort: 9234
+  - resourceType: service
+    resourceName: search-service
+    namespace: polydom-dev
+    port: 3000
+    localPort: 3060

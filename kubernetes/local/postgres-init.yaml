@@ -15,13 +15,36 @@ stringData:
     CREATE DATABASE vendor_db;
     CREATE DATABASE event_db;
     CREATE DATABASE agent_db;
+    CREATE DATABASE vector_db;
   02-setup-extensions.sh: |
     #!/bin/bash
     set -e
-    for db in agent_db; do
+    for db in agent_db vector_db; do
       echo "Setting up extensions in $db..."
       psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$db" <<'EOSQL'
         CREATE EXTENSION IF NOT EXISTS vector;
     EOSQL
       echo "Extensions created in $db"
     done
+    echo "Setting up vector_db tables..."
+    psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname vector_db <<'EOSQL'
+    CREATE TABLE IF NOT EXISTS event_embeddings (
+        event_id VARCHAR(50) PRIMARY KEY,
+        embedding vector(64) NOT NULL,
+        metadata jsonb NOT NULL DEFAULT '{}',
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+        updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+    );
+    CREATE TABLE IF NOT EXISTS user_embeddings (
+        user_id VARCHAR(50) PRIMARY KEY,
+        embedding vector(64) NOT NULL,
+        updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+    );
+    CREATE INDEX IF NOT EXISTS idx_event_embeddings_vector
+        ON event_embeddings USING hnsw (embedding vector_cosine_ops)
+        WITH (m = 16, ef_construction = 200);
+    CREATE INDEX IF NOT EXISTS idx_user_embeddings_vector
+        ON user_embeddings USING hnsw (embedding vector_cosine_ops)
+        WITH (m = 16, ef_construction = 200);
+    EOSQL
+    echo "vector_db tables created"

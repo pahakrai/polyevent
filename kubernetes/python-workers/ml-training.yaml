@@ -1,0 +1,87 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ml-training
+  namespace: production
+  labels:
+    app: ml-training
+    component: python-workers
+spec:
+  schedule: "0 4 * * *"
+  suspend: false
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      activeDeadlineSeconds: 3600
+      template:
+        metadata:
+          labels:
+            app: ml-training
+            component: python-workers
+        spec:
+          serviceAccountName: app-sa
+          restartPolicy: OnFailure
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+            fsGroup: 1001
+          containers:
+          - name: ml-training
+            image: polydom/python-workers:latest
+            imagePullPolicy: IfNotPresent
+            command: ["python", "-m", "ml-training.data_pipeline"]
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+            env:
+            - name: PIPELINE_MODE
+              value: "incremental"
+            - name: PIPELINE_WINDOW_DAYS
+              value: "7"
+            - name: KAFKA_BROKERS
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: KAFKA_BROKERS
+            - name: FEATURE_STORE_URL
+              value: "redis://redis-service:6379"
+            - name: VECTOR_DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: database-secrets
+                  key: vector-database-url
+            - name: SOURCE_DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: database-secrets
+                  key: source-database-url
+            - name: TRAINING_DATA_PATH
+              value: "/data/training"
+            - name: EXPORT_PARQUET
+              value: "1"
+            - name: BULK_LOAD_PGVECTOR
+              value: "1"
+            - name: USE_NEURAL_EMBEDDINGS
+              value: "0"
+            - name: EXPORT_EVENT_CATALOG
+              value: "1"
+            resources:
+              requests:
+                memory: "1Gi"
+                cpu: "1000m"
+              limits:
+                memory: "4Gi"
+                cpu: "4000m"
+            volumeMounts:
+            - name: training-data
+              mountPath: /data/training
+          volumes:
+          - name: training-data
+            persistentVolumeClaim:
+              claimName: training-data-pvc

@@ -17,6 +17,8 @@ import sys
 from datetime import datetime, timezone
 from typing import Any, Callable, Dict, List, Optional
 
+import redis
+import redis.exceptions
 from confluent_kafka import Consumer, KafkaError, KafkaException, TopicPartition
 from confluent_kafka.admin import AdminClient, NewTopic
 
@@ -79,6 +81,7 @@ class UserActivityConsumer:
         self.consumer: Optional[Consumer] = None
         self.running = False
         self.handlers: Dict[str, Callable] = {}
+        self._feature_store: Any = None
 
     # ── Kafka lifecycle ───────────────────────────────────────────────
 
@@ -127,6 +130,40 @@ class UserActivityConsumer:
 
     def register_handler(self, topic: str, handler: Callable[[Any], None]) -> None:
         self.handlers[topic] = handler
+
+    def set_feature_store(self, store: Any) -> None:
+        """Attach a FeatureStore for Redis-backed handler operations."""
+        self._feature_store = store
+
+    # ── Click-tracking handlers ────────────────────────────────────────
+
+    def _handle_user_activity(self, msg: Any) -> None:
+        """Track recent event views/clicks in Redis for session vector compute."""
+        store = self._feature_store
+        if store is None:
+            return
+        event_type = getattr(msg, "type", "") or msg.get("type", "") if isinstance(msg, dict) else ""
+        if event_type in ("event_view", "click"):
+            uid = getattr(msg, "userId", "") or msg.get("userId", "")
+            eid = getattr(msg, "eventId", "") or msg.get("eventId", "") or \
+                  (msg.get("metadata_eventId", "") if isinstance(msg, dict) else getattr(msg, "metadata_eventId", ""))
+            if uid and eid:
+                store.push_recent_click(str(uid), str(eid))
+
+    def _handle_booking_event(self, msg: Any) -> None:
+        """Invalidate cached inference vector on confirmed booking."""
+        store = self._feature_store
+        if store is None:
+            return
+        event_type = getattr(msg, "type", "") or msg.get("type", "") if isinstance(msg, dict) else ""
+        if event_type == "booking_confirmed":
+            uid = getattr(msg, "userId", "") or msg.get("userId", "")
+            if uid:
+                store.invalidate_user_cache(str(uid))
+
+    def _handle_search_event(self, msg: Any) -> None:
+        """No-op for now — will feed search feature engineer later."""
+        pass
 
     # ── Message processing ────────────────────────────────────────────
 
@@ -226,5 +263,18 @@ if __name__ == "__main__":
     consumer = UserActivityConsumer(
         bootstrap_servers=os.getenv("KAFKA_BROKERS", "localhost:9092"),
         group_id=os.getenv("KAFKA_CONSUMER_GROUP", "python-workers"),
+        feature_store_url=os.getenv("FEATURE_STORE_URL", "redis://localhost:6379"),
     )
+
+    # Attach FeatureStore for Redis-backed click tracking
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ml-training"))
+    from feature_engineering import FeatureStore
+    store = FeatureStore(redis_url=consumer.feature_store_url or "redis://localhost:6379")
+    consumer.set_feature_store(store)
+
+    # Register handlers for real-time session tracking
+    consumer.register_handler(USER_ACTIVITY_TOPIC, consumer._handle_user_activity)
+    consumer.register_handler(BOOKING_EVENTS_TOPIC, consumer._handle_booking_event)
+    consumer.register_handler(SEARCH_EVENTS_TOPIC, consumer._handle_search_event)
+
     consumer.run()

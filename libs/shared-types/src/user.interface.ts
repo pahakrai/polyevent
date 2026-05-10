@@ -50,4 +50,7 @@ export type ActivityType =
   | 'booking'
   | 'login'
   | 'logout'
-  | 'profile_update';
+  | 'profile_update'
+  | 'notification_interaction'
+  | 'vendor_view'
+  | 'vendor_follow';

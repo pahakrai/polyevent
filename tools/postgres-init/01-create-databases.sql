@@ -22,6 +22,37 @@ GRANT ALL PRIVILEGES ON DATABASE analytics_db TO eventbooking;
 GRANT ALL PRIVILEGES ON DATABASE admin_db TO eventbooking;
 GRANT ALL PRIVILEGES ON DATABASE agent_db TO eventbooking;
 
+CREATE DATABASE vector_db;
+GRANT ALL PRIVILEGES ON DATABASE vector_db TO eventbooking;
+
 -- Enable pgvector extension in agent_db for RAG document embeddings
 \c agent_db
 CREATE EXTENSION IF NOT EXISTS vector;
+
+-- Set up vector_db for recommendation embeddings (user + event vectors)
+\c vector_db
+CREATE EXTENSION IF NOT EXISTS vector;
+
+CREATE TABLE IF NOT EXISTS event_embeddings (
+    event_id VARCHAR(50) PRIMARY KEY,
+    embedding vector(64) NOT NULL,
+    metadata jsonb NOT NULL DEFAULT '{}',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS user_embeddings (
+    user_id VARCHAR(50) PRIMARY KEY,
+    embedding vector(64) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+);
+
+-- HNSW index for fast cosine similarity search over event embeddings
+CREATE INDEX IF NOT EXISTS idx_event_embeddings_vector
+    ON event_embeddings USING hnsw (embedding vector_cosine_ops)
+    WITH (m = 16, ef_construction = 200);
+
+-- HNSW index for user embedding lookups
+CREATE INDEX IF NOT EXISTS idx_user_embeddings_vector
+    ON user_embeddings USING hnsw (embedding vector_cosine_ops)
+    WITH (m = 16, ef_construction = 200);

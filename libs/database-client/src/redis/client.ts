@@ -99,6 +99,26 @@ export class RedisClient {
     return this.client.expire(key, seconds);
   }
 
+  async lpush(key: string, ...values: string[]): Promise<number> {
+    if (!this.client) throw new Error('Redis not connected');
+    return this.client.lpush(key, ...values);
+  }
+
+  async lrange(key: string, start: number, stop: number): Promise<string[]> {
+    if (!this.client) throw new Error('Redis not connected');
+    return this.client.lrange(key, start, stop);
+  }
+
+  async ltrim(key: string, start: number, stop: number): Promise<string> {
+    if (!this.client) throw new Error('Redis not connected');
+    return this.client.ltrim(key, start, stop);
+  }
+
+  async llen(key: string): Promise<number> {
+    if (!this.client) throw new Error('Redis not connected');
+    return this.client.llen(key);
+  }
+
   getClient(): any {
     return this.client;
   }

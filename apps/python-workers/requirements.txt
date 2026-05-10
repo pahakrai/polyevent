@@ -17,6 +17,8 @@ lightgbm>=4.0.0
 # Data Processing
 pyspark>=3.4.0
 apache-airflow>=2.6.0
+pyarrow>=14.0.0
+psycopg2-binary>=2.9.0
 
 # Utilities
 python-dotenv>=1.0.0
@@ -24,6 +26,7 @@ requests>=2.31.0
 pydantic>=2.0.0
 fastapi>=0.100.0
 uvicorn>=0.23.0
+redis>=5.0.0
 
 # Monitoring
 prometheus-client>=0.17.0
