@@ -105,6 +105,7 @@ manifests:
 
 deploy:
   kubectl: {}
+  statusCheckDeadlineSeconds: 300
 
 portForward:
   - resourceType: service

@@ -15,18 +15,27 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run dev:infra` - Start Docker Compose **infrastructure only** (databases, message queues, search) — for running services natively
 - `npm run dev:infra:down` - Stop infrastructure-only Docker Compose
 - `npm run skaffold:dev` - Skaffold watch mode: build + deploy all services to local Kubernetes with port-forward
+- `npm run skaffold:dev:debug` - Skaffold watch mode with sequential builds (`--build-concurrency=1`) — prevents resource contention during builds
 - `npm run skaffold:run` - Skaffold one-shot: build + deploy all services to local Kubernetes once
 - `npm run skaffold:build` - Skaffold build only (no deploy)
 - `npm run k8s:apply` - Apply Kubernetes manifests
 - `npm run k8s:delete` - Delete Kubernetes resources
 
 ### Database operations (per service)
-Each NestJS service has its own database. Use `npm run db:<action>:<service>` where `<service>` is `auth`, `user`, `vendor`, `event`, `booking`, `notification`, `analytics`, `admin`. Actions:
+Each NestJS service has its own database. Use `npm run db:<action>:<service>` where `<service>` is `auth`, `user`, `vendor`, `event`, `booking`, `notification`, `analytics`, `admin`, `agent`. Actions:
 - `db:generate` - Generate Drizzle migrations
 - `db:migrate` - Run migrations
 - `db:seed` - Seed database
 - `db:studio` - Open Drizzle Studio UI
 - `db:push` - Push schema changes (development)
+
+### Database reset (truncate all tables)
+During development, you can wipe all table records while keeping schemas intact:
+- `npm run db:truncate:docker` - Truncate all tables in Docker PostgreSQL
+- `npm run db:truncate:k8s` - Truncate all tables in K8s PostgreSQL
+- `npm run db:reset:docker` - Truncate + re-migrate (Docker)
+- `npm run db:reset:k8s` - Truncate + re-migrate (K8s)
+- `bash scripts/db-reset.sh docker --migrate` - Manual control with `--migrate` flag
 
 ### NX commands
 - `nx run-many --target=serve --projects=<comma-separated>` - Start specific services
@@ -93,6 +102,16 @@ Each microservice has its own PostgreSQL database managed with Drizzle ORM:
 | Analytics Service | `analytics_db` | `apps/nestjs-services/analytics-service/src/database/` |
 | Admin Service | `admin_db` | `apps/nestjs-services/admin-service/src/database/` |
 
+### How databases are created
+
+Databases are created automatically via `docker-entrypoint-initdb.d` mechanism:
+
+- **Docker Compose**: `tools/postgres-init/*.sql` files run on first PVC boot. `01-create-databases.sql` creates all 11 databases; `02-create-extensions.sql` sets up pgvector. These only run when the PostgreSQL volume is empty (first boot).
+- **Kubernetes (Skaffold)**: `kubernetes/local/postgres-init.yaml` ConfigMap with the same SQL mounted to the PostgreSQL pod's `/docker-entrypoint-initdb.d/`. Applies on first PersistentVolumeClaim creation.
+- **Migrations** (run separately after DB creation) use Drizzle ORM to create/alter tables and seed data.
+
+**Important**: Init containers CANNOT replace `docker-entrypoint-initdb.d` — they run before the PostgreSQL process starts, so SQL execution would fail.
+
 ### Setup steps
 1. Copy `.env.example` to `.env` and adjust database URLs
 2. `npm run docker:up` - Start PostgreSQL and other dependencies
@@ -148,9 +167,9 @@ npm run skaffold:run       # One-shot: build + deploy, then exit
 ```
 
 This deploys everything to the `polydom-dev` namespace:
-- **PostgreSQL**: 9 separate instances (one per microservice) following database-per-service pattern
+- **PostgreSQL**: Single PostgreSQL instance with 11 databases (one per microservice) following database-per-service pattern. Created via `docker-entrypoint-initdb.d` init scripts.
 - **Infrastructure**: Redis, MongoDB, Kafka, Zookeeper, Elasticsearch, Kibana, Prometheus, Grafana
-- **Services**: API Gateway, Auth, User, Vendor, Event
+- **Services**: API Gateway, Auth, User, Vendor, Event, Booking, Search, Agent
 - **Frontend**: Next.js (via `polydom/frontend`)
 - **Python workers**: ML training, inference, Kafka consumers (via `polydom/python-workers`)
 
@@ -161,6 +180,17 @@ All stateful services use PersistentVolumeClaims. Data survives pod restarts and
 2. Add to `docker-compose.yml` and Kubernetes manifests
 3. Configure API Gateway routing
 4. Create database schema and migrations
+
+### Config sync rule: Docker Compose ↔ Kubernetes
+
+**CRITICAL**: Docker Compose (`docker-compose.yml`, `docker-compose.infra.yml`) and Kubernetes configs (`kubernetes/local/`) MUST stay in sync. When changing one, update the other:
+
+| What | Docker Compose | Kubernetes |
+|------|---------------|------------|
+| Databases | `tools/postgres-init/` | `kubernetes/local/postgres-init.yaml` |
+| Secrets/env vars | `.env` / `.env.example` | `kubernetes/local/secrets.yaml` |
+| Service env vars | `docker-compose.yml` | `kubernetes/local/services.yaml` |
+| Service replicas | `docker-compose.yml` | `kubernetes/local/services.yaml` |
 
 ### Code standards
 - TypeScript strict mode
@@ -209,21 +239,22 @@ See `README.md` for detailed descriptions of each service (Auth, User, Vendor, E
 |-----------|--------|-------|
 | **Frontend** | Basic structure | Next.js app with placeholder page |
 | **API Gateway** | Basic structure | NestJS app with Dockerfile |
-| **Auth Service** | Basic structure | Database schema defined |
-| **User Service** | Basic structure | Database schema defined |
-| **Vendor Service** | Basic structure | Database schema defined |
-| **Event Service** | Basic structure | Database schema defined |
-| **Booking Service** | Not generated | Mentioned in README but not in workspace.json |
-| **Search Service** | Not generated | Mentioned in README but not in workspace.json |
-| **Notification Service** | Not generated | Mentioned in README but not in workspace.json |
-| **Analytics Service** | Not generated | Mentioned in README but not in workspace.json |
-| **Admin Service** | Not generated | Mentioned in README but not in workspace.json |
+| **Auth Service** | Basic structure | Database schema defined, Dockerfile |
+| **User Service** | Basic structure | Database schema defined, Dockerfile |
+| **Vendor Service** | Basic structure | Database schema defined, Dockerfile |
+| **Event Service** | Basic structure | Database schema defined, Dockerfile |
+| **Booking Service** | Basic structure | Database schema defined, Dockerfile |
+| **Search Service** | Basic structure | NestJS app with Dockerfile |
+| **Notification Service** | Not generated | Placeholder DB only (no service code) |
+| **Analytics Service** | Not generated | Placeholder DB only (no service code) |
+| **Admin Service** | Not generated | Placeholder DB only (no service code) |
+| **Agent Service** | Basic structure | NestJS app with pgvector, Dockerfile |
 | **Python workers** | Basic structure | ML training, inference, Kafka consumers stubs |
 | **Shared libraries** | Mostly stub implementations | See `LIBRARY_AUDIT.md` for details |
-| **Database schemas** | Defined per service | May need expansion for full functionality |
+| **Database schemas** | Defined per service | 11 databases, 7 with active schemas |
 | **Kubernetes manifests** | Complete | Production, staging, and local dev overlays with all services + infrastructure |
-| **Docker Compose** | Complete | All dependencies (PostgreSQL, MongoDB, Redis, Kafka, Elasticsearch, etc.) |
-| **Monitoring** | Configured | Prometheus/Grafana in Docker Compose |
+| **Docker Compose** | Complete | All dependencies + all 7 buildable services |
+| **Dev tooling** | Complete | db-reset.sh for truncating/clearing table data |
 
 **Note**: The `workspace.json` currently lists only `frontend`, `api-gateway`, `auth-service`, `user-service`, `vendor-service`, `event-service`, and shared libraries. Other services mentioned in README need to be generated using NX generators.
 

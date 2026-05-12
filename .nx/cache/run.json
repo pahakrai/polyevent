@@ -1,8 +1,8 @@
 {
   "run": {
-    "command": "nx build api-gateway",
-    "startTime": "2026-05-10T15:50:50.045Z",
-    "endTime": "2026-05-10T15:50:50.147Z",
+    "command": "nx build vendor-service",
+    "startTime": "2026-05-12T15:46:13.970Z",
+    "endTime": "2026-05-12T15:46:14.116Z",
     "inner": false
   },
   "tasks": [
@@ -11,19 +11,30 @@
       "target": "build",
       "projectName": "shared-types",
       "hash": "3576634914032552772",
-      "startTime": "2026-05-10T15:50:50.054Z",
-      "endTime": "2026-05-10T15:50:50.086Z",
+      "startTime": "2026-05-12T15:46:13.982Z",
+      "endTime": "2026-05-12T15:46:14.026Z",
       "params": "",
       "cacheStatus": "local-cache-hit",
       "status": 0
     },
     {
-      "taskId": "kafka-client:build",
+      "taskId": "nats-client:build",
       "target": "build",
-      "projectName": "kafka-client",
-      "hash": "3867947015520859909",
-      "startTime": "2026-05-10T15:50:50.054Z",
-      "endTime": "2026-05-10T15:50:50.091Z",
+      "projectName": "nats-client",
+      "hash": "460106594820177086",
+      "startTime": "2026-05-12T15:46:13.983Z",
+      "endTime": "2026-05-12T15:46:14.035Z",
+      "params": "",
+      "cacheStatus": "local-cache-hit",
+      "status": 0
+    },
+    {
+      "taskId": "database-client:build",
+      "target": "build",
+      "projectName": "database-client",
+      "hash": "10120406900214414703",
+      "startTime": "2026-05-12T15:46:13.983Z",
+      "endTime": "2026-05-12T15:46:14.042Z",
       "params": "",
       "cacheStatus": "local-cache-hit",
       "status": 0
@@ -33,19 +44,19 @@
       "target": "build",
       "projectName": "auth",
       "hash": "15467833041470705389",
-      "startTime": "2026-05-10T15:50:50.100Z",
-      "endTime": "2026-05-10T15:50:50.114Z",
+      "startTime": "2026-05-12T15:46:14.057Z",
+      "endTime": "2026-05-12T15:46:14.087Z",
       "params": "",
       "cacheStatus": "local-cache-hit",
       "status": 0
     },
     {
-      "taskId": "api-gateway:build",
+      "taskId": "vendor-service:build",
       "target": "build",
-      "projectName": "api-gateway",
-      "hash": "17287582593766996910",
-      "startTime": "2026-05-10T15:50:50.123Z",
-      "endTime": "2026-05-10T15:50:50.130Z",
+      "projectName": "vendor-service",
+      "hash": "8875105663114857257",
+      "startTime": "2026-05-12T15:46:14.099Z",
+      "endTime": "2026-05-12T15:46:14.106Z",
       "params": "",
       "cacheStatus": "local-cache-hit",
       "status": 0

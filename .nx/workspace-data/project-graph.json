@@ -1,5 +1,141 @@
 {
   "nodes": {
+    "booking-service": {
+      "name": "booking-service",
+      "type": "lib",
+      "data": {
+        "root": "apps/nestjs-services/booking-service",
+        "sourceRoot": "apps/nestjs-services/booking-service",
+        "name": "booking-service",
+        "tags": [
+          "npm:private"
+        ],
+        "metadata": {
+          "targetGroups": {
+            "NPM Scripts": [
+              "start",
+              "start:dev",
+              "build",
+              "test",
+              "db:generate",
+              "db:migrate",
+              "db:push",
+              "db:seed"
+            ]
+          }
+        },
+        "targets": {
+          "start": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "start"
+            },
+            "metadata": {
+              "scriptContent": "ts-node -r tsconfig-paths/register --project tsconfig.json src/main.ts",
+              "runCommand": "npm run start"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "start:dev": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "start:dev"
+            },
+            "metadata": {
+              "scriptContent": "ts-node-dev --respawn --transpile-only -r tsconfig-paths/register --project tsconfig.json src/main.ts",
+              "runCommand": "npm run start:dev"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "build": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "build"
+            },
+            "metadata": {
+              "scriptContent": "nest build",
+              "runCommand": "npm run build"
+            },
+            "configurations": {},
+            "parallelism": true,
+            "dependsOn": [
+              "^build"
+            ],
+            "inputs": [
+              "production",
+              "^production"
+            ]
+          },
+          "test": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "test"
+            },
+            "metadata": {
+              "scriptContent": "jest",
+              "runCommand": "npm run test"
+            },
+            "configurations": {},
+            "parallelism": true,
+            "inputs": [
+              "default",
+              "^production"
+            ]
+          },
+          "db:generate": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "db:generate"
+            },
+            "metadata": {
+              "scriptContent": "drizzle-kit generate --config=src/database/drizzle.config.ts",
+              "runCommand": "npm run db:generate"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "db:migrate": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "db:migrate"
+            },
+            "metadata": {
+              "scriptContent": "drizzle-kit migrate --config=src/database/drizzle.config.ts",
+              "runCommand": "npm run db:migrate"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "db:push": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "db:push"
+            },
+            "metadata": {
+              "scriptContent": "drizzle-kit push --config=src/database/drizzle.config.ts",
+              "runCommand": "npm run db:push"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "db:seed": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "db:seed"
+            },
+            "metadata": {
+              "scriptContent": "tsx src/database/seed.ts",
+              "runCommand": "npm run db:seed"
+            },
+            "configurations": {},
+            "parallelism": true
+          }
+        },
+        "implicitDependencies": []
+      }
+    },
     "search-service": {
       "name": "search-service",
       "type": "app",
@@ -17657,6 +17793,98 @@
     }
   },
   "dependencies": {
+    "booking-service": [
+      {
+        "source": "booking-service",
+        "target": "npm:@nestjs/schematics",
+        "type": "static"
+      },
+      {
+        "source": "booking-service",
+        "target": "npm:@nestjs/testing",
+        "type": "static"
+      },
+      {
+        "source": "booking-service",
+        "target": "npm:@types/node",
+        "type": "static"
+      },
+      {
+        "source": "booking-service",
+        "target": "npm:drizzle-kit",
+        "type": "static"
+      },
+      {
+        "source": "booking-service",
+        "target": "npm:jest",
+        "type": "static"
+      },
+      {
+        "source": "booking-service",
+        "target": "npm:tsx",
+        "type": "static"
+      },
+      {
+        "source": "booking-service",
+        "target": "npm:typescript",
+        "type": "static"
+      },
+      {
+        "source": "booking-service",
+        "target": "npm:@nestjs/common",
+        "type": "static"
+      },
+      {
+        "source": "booking-service",
+        "target": "npm:@nestjs/config",
+        "type": "static"
+      },
+      {
+        "source": "booking-service",
+        "target": "npm:@nestjs/core",
+        "type": "static"
+      },
+      {
+        "source": "booking-service",
+        "target": "database-client",
+        "type": "static"
+      },
+      {
+        "source": "booking-service",
+        "target": "kafka-client",
+        "type": "static"
+      },
+      {
+        "source": "booking-service",
+        "target": "npm:dotenv",
+        "type": "static"
+      },
+      {
+        "source": "booking-service",
+        "target": "npm:drizzle-orm",
+        "type": "static"
+      },
+      {
+        "source": "booking-service",
+        "target": "npm:reflect-metadata",
+        "type": "static"
+      },
+      {
+        "source": "booking-service",
+        "target": "npm:rxjs",
+        "type": "static"
+      },
+      {
+        "source": "booking-service",
+        "target": "npm:webpack-node-externals",
+        "type": "static"
+      },
+      {
+        "source": "booking-service",
+        "target": "npm:webpack",
+        "type": "static"
+      }
+    ],
     "search-service": [
       {
         "source": "search-service",

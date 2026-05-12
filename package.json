@@ -81,7 +81,16 @@
     "db:generate:agent": "cd apps/nestjs-services/agent-service && npm run db:generate",
     "db:migrate:agent": "cd apps/nestjs-services/agent-service && npm run db:migrate",
     "db:seed:agent": "cd apps/nestjs-services/agent-service && npm run db:seed",
-    "db:push:agent": "cd apps/nestjs-services/agent-service && npm run db:push"
+    "db:push:agent": "cd apps/nestjs-services/agent-service && npm run db:push",
+    "db:truncate:docker": "bash scripts/db-reset.sh docker",
+    "db:truncate:k8s": "bash scripts/db-reset.sh k8s",
+    "db:reset:docker": "bash scripts/db-reset.sh docker --migrate",
+    "db:reset:k8s": "bash scripts/db-reset.sh k8s --migrate",
+    "sample-data:migrate": "npx tsx scripts/sample-data/master-seed.ts",
+    "sample-data:docker:migrate": "bash scripts/sample-data/seed-local-docker.sh",
+    "sample-data:k8s:migrate": "bash scripts/sample-data/seed-local-k8s.sh",
+    "sample-data:kafka": "python scripts/sample-data/generate_kafka_events.py",
+    "sample-data:kafka:stream": "python scripts/sample-data/generate_kafka_events.py --stream --count 20 --delay 10"
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.9.0",
