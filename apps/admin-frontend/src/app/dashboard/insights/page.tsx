@@ -6,6 +6,7 @@ import { api } from '@/lib/api';
 import {
   startInvestigation,
   continueInvestigation,
+  cancelInvestigation,
   redirectInvestigation,
   type InvestigationSession,
   type InvestigationStep,
@@ -109,6 +110,16 @@ export default function InsightsPage() {
       setState({ phase: 'error', message: err?.message || 'Investigation step failed.' });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCancel = async () => {
+    if (state.phase !== 'investigating') return;
+    try {
+      const session = await cancelInvestigation(state.session.sessionId);
+      setState({ phase: 'investigating', session, redirectInput: state.redirectInput });
+    } catch (err: any) {
+      setState({ phase: 'error', message: err?.message || 'Cancel failed.' });
     }
   };
 
@@ -282,6 +293,12 @@ export default function InsightsPage() {
                 >
                   Continue Investigation
                 </button>
+                <button
+                  onClick={handleCancel}
+                  className="rounded-md border border-red-200 px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                >
+                  Cancel
+                </button>
               </div>
 
               <div className="flex gap-2">
@@ -305,6 +322,17 @@ export default function InsightsPage() {
                   Redirect
                 </button>
               </div>
+            </div>
+          )}
+
+          {session.status === 'in_progress' && loading && (
+            <div className="flex justify-center">
+              <button
+                onClick={handleCancel}
+                className="rounded-md border border-red-200 px-6 py-2 text-sm text-red-600 hover:bg-red-50"
+              >
+                Stop Investigation
+              </button>
             </div>
           )}
         </div>

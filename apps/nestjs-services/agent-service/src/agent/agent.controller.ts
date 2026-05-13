@@ -4,19 +4,25 @@ import {
   Get,
   Param,
   Body,
+  Sse,
   HttpException,
   HttpStatus,
   UseInterceptors,
 } from '@nestjs/common';
+import { Observable } from 'rxjs';
+import { v4 as uuid } from 'uuid';
 import { InvestigationService } from './investigation.service';
+import { InvestigationQueue } from './investigation-queue.service';
+import { SessionStore } from './session-store.service';
+import { InvestigationEventBus } from './investigation-event.bus';
 import { SqlSanitizerInterceptor } from './sql-sanitizer.interceptor';
 import type { InvestigationMode } from './investigation.service';
 
 export class InvestigateDto {
   goal!: string;
   vendorId!: string;
-  mode?: InvestigationMode; // 'auto' (default) or 'manual'
-  role?: string;            // 'superadmin' bypasses vendor scoping (default: scoped)
+  mode?: InvestigationMode;
+  role?: string;
 }
 
 export class RedirectDto {
@@ -26,11 +32,16 @@ export class RedirectDto {
 @Controller('agent')
 @UseInterceptors(SqlSanitizerInterceptor)
 export class AgentController {
-  constructor(private readonly investigationService: InvestigationService) {}
+  constructor(
+    private readonly investigationService: InvestigationService,
+    private readonly queue: InvestigationQueue,
+    private readonly sessionStore: SessionStore,
+    private readonly eventBus: InvestigationEventBus,
+  ) {}
 
-  /** Start a new investigation. Mode defaults to 'auto'. Role defaults to scoped vendor. */
+  /** Start a new investigation. Mode defaults to 'auto'. */
   @Post('investigate')
-  investigate(@Body() dto: InvestigateDto) {
+  async investigate(@Body() dto: InvestigateDto) {
     if (!dto.goal || !dto.vendorId) {
       throw new HttpException(
         'goal and vendorId are required',
@@ -39,68 +50,135 @@ export class AgentController {
     }
 
     const isSuperadmin = dto.role === 'superadmin';
+    const mode = dto.mode || 'auto';
 
-    const session = this.investigationService.startInvestigation(
+    const { jobId, sessionId } = await this.queue.enqueue(
       dto.vendorId,
       dto.goal,
-      dto.mode || 'auto',
+      mode,
       isSuperadmin,
     );
 
+    const session = this.investigationService.createSession(
+      dto.vendorId,
+      dto.goal,
+      mode,
+      isSuperadmin,
+    );
+    session.id = sessionId;
+    await this.sessionStore.save(session);
+
+    this.eventBus.emit(sessionId, { status: session.status });
+
     return {
-      sessionId: session.id,
-      mode: session.mode,
-      isSuperadmin: session.isSuperadmin,
+      sessionId,
+      jobId,
+      mode,
+      isSuperadmin,
       status: session.status,
       steps: session.steps,
       createdAt: session.createdAt,
     };
   }
 
-  /** Manual mode: advance one ReAct step. Only works when mode='manual'. */
+  /** SSE stream for real-time investigation progress. */
+  @Sse('investigate/:sessionId/stream')
+  stream(
+    @Param('sessionId') sessionId: string,
+  ): Observable<{ data: unknown }> {
+    return new Observable((observer) => {
+      const sub = this.eventBus.stream(sessionId).subscribe({
+        next: (event) => observer.next({ data: JSON.stringify(event.data) }),
+        error: (err) => observer.error(err),
+      });
+      return () => sub.unsubscribe();
+    });
+  }
+
+  /** Manual mode: advance one ReAct step. */
   @Post('investigate/:sessionId/continue')
   async continue(@Param('sessionId') sessionId: string) {
-    try {
-      const session =
-        await this.investigationService.continueInvestigation(sessionId);
-      return {
-        sessionId: session.id,
-        mode: session.mode,
-        status: session.status,
-        steps: session.steps,
-        error: session.error,
-      };
-    } catch (error) {
+    const session = await this.sessionStore.get(sessionId);
+    if (!session) {
+      throw new HttpException('Session not found', HttpStatus.NOT_FOUND);
+    }
+    if (session.mode !== 'manual') {
       throw new HttpException(
-        (error as Error).message,
+        'Continue is only available in manual mode',
         HttpStatus.BAD_REQUEST,
       );
     }
+    if (session.status === 'completed') {
+      throw new HttpException(
+        'Investigation already completed',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    if (session.status === 'cancelled') {
+      throw new HttpException(
+        'Investigation was cancelled',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    await this.sessionStore.clearCancelled(sessionId);
+
+    const { jobId } = await this.queue.enqueueContinue(
+      sessionId,
+      session.vendorId,
+      session.goal,
+      session.isSuperadmin,
+    );
+
+    return {
+      sessionId,
+      jobId,
+      mode: session.mode,
+      status: 'in_progress',
+      steps: session.steps,
+    };
   }
 
   /** Cancel a running investigation. Works for both modes. */
   @Post('investigate/:sessionId/cancel')
-  cancel(@Param('sessionId') sessionId: string) {
-    try {
-      const session = this.investigationService.cancelInvestigation(sessionId);
-      return {
-        sessionId: session.id,
-        mode: session.mode,
-        status: session.status,
-        steps: session.steps,
-        error: session.error,
-      };
-    } catch (error) {
+  async cancel(@Param('sessionId') sessionId: string) {
+    const session = await this.sessionStore.get(sessionId);
+    if (!session) {
+      throw new HttpException('Session not found', HttpStatus.NOT_FOUND);
+    }
+    if (session.status === 'completed') {
       throw new HttpException(
-        (error as Error).message,
+        'Investigation already completed',
         HttpStatus.BAD_REQUEST,
       );
     }
+    if (session.status === 'cancelled') {
+      throw new HttpException(
+        'Investigation already cancelled',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    await this.sessionStore.setCancelled(sessionId);
+    await this.queue.removeSessionJobs(sessionId);
+
+    session.status = 'cancelled';
+    session.cancelled = true;
+    await this.sessionStore.save(session);
+
+    this.eventBus.emit(sessionId, { status: 'cancelled' });
+
+    return {
+      sessionId,
+      mode: session.mode,
+      status: session.status,
+      steps: session.steps,
+    };
   }
 
-  /** Vendor provides guidance/redirection mid-investigation. Works for both modes. */
+  /** Vendor provides guidance mid-investigation. Works for both modes. */
   @Post('investigate/:sessionId/redirect')
-  redirect(
+  async redirect(
     @Param('sessionId') sessionId: string,
     @Body() dto: RedirectDto,
   ) {
@@ -111,30 +189,50 @@ export class AgentController {
       );
     }
 
-    try {
-      const session = this.investigationService.redirectInvestigation(
-        sessionId,
-        dto.instruction,
-      );
-      return {
-        sessionId: session.id,
-        mode: session.mode,
-        status: session.status,
-        steps: session.steps,
-        error: session.error,
-      };
-    } catch (error) {
+    const session = await this.sessionStore.get(sessionId);
+    if (!session) {
+      throw new HttpException('Session not found', HttpStatus.NOT_FOUND);
+    }
+    if (session.status === 'completed') {
       throw new HttpException(
-        (error as Error).message,
+        'Investigation already completed',
         HttpStatus.BAD_REQUEST,
       );
     }
+    if (session.status === 'cancelled') {
+      throw new HttpException(
+        'Investigation was cancelled',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    session.steps.push({
+      id: uuid(),
+      stepNumber: session.steps.length + 1,
+      type: 'redirected',
+      content: `Vendor redirected: "${dto.instruction}"`,
+      timestamp: new Date().toISOString(),
+    });
+
+    session.messages.push({
+      role: 'user',
+      content: `[VENDOR GUIDANCE] ${dto.instruction}. Continue the investigation, taking this into account.`,
+    });
+
+    await this.sessionStore.save(session);
+
+    return {
+      sessionId,
+      mode: session.mode,
+      status: session.status,
+      steps: session.steps,
+    };
   }
 
-  /** Get the full investigation session with all steps. */
+  /** Get the full investigation session. */
   @Get('investigate/:sessionId')
-  getSession(@Param('sessionId') sessionId: string) {
-    const session = this.investigationService.getSession(sessionId);
+  async getSession(@Param('sessionId') sessionId: string) {
+    const session = await this.sessionStore.get(sessionId);
     if (!session) {
       throw new HttpException('Session not found', HttpStatus.NOT_FOUND);
     }

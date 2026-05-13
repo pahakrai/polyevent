@@ -30,6 +30,9 @@ export default function ChatPage() {
     setMessages((prev) => [...prev, { role: 'user', content: question }]);
     setLoading(true);
 
+    const controller = new AbortController();
+    abortRef.current = controller;
+
     let assistantContent = '';
     let assistantSources: ChatResult['sources'] = [];
 
@@ -63,6 +66,7 @@ export default function ChatPage() {
         },
         () => {
           setLoading(false);
+          abortRef.current = null;
         },
         (err) => {
           setMessages((prev) => {
@@ -74,11 +78,20 @@ export default function ChatPage() {
             return updated;
           });
           setLoading(false);
+          abortRef.current = null;
         },
+        controller.signal,
       );
     } catch {
       setLoading(false);
+      abortRef.current = null;
     }
+  };
+
+  const handleStop = () => {
+    abortRef.current?.abort();
+    abortRef.current = null;
+    setLoading(false);
   };
 
   if (!isAuthenticated) {
@@ -174,18 +187,27 @@ export default function ChatPage() {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+          onKeyDown={(e) => e.key === 'Enter' && !loading && handleSend()}
           placeholder="Ask about company policies, rules..."
           className="flex-1 rounded-md border bg-background px-4 py-2 text-sm"
           disabled={loading}
         />
-        <button
-          onClick={handleSend}
-          disabled={loading || !input.trim()}
-          className="rounded-md bg-primary px-6 py-2 text-sm text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
-        >
-          Send
-        </button>
+        {loading ? (
+          <button
+            onClick={handleStop}
+            className="rounded-md border border-red-200 px-6 py-2 text-sm text-red-600 hover:bg-red-50"
+          >
+            Stop
+          </button>
+        ) : (
+          <button
+            onClick={handleSend}
+            disabled={loading || !input.trim()}
+            className="rounded-md bg-primary px-6 py-2 text-sm text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+          >
+            Send
+          </button>
+        )}
       </div>
     </div>
   );

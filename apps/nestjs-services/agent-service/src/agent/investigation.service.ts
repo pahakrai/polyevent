@@ -5,6 +5,7 @@ import { AnthropicProvider } from './anthropic-provider';
 import type { LlmMessage, LlmProvider } from './llm-provider.interface';
 import { BusinessSkillsProvider } from './skills/business-skills.provider';
 import { ToolExecutorService, ToolContext } from './tool-executor.service';
+import type { McpConnection } from '../mcp/mcp-client.factory';
 import { VENDOR_INVESTIGATION_TOOLS } from './tools';
 import type { ToolDefinition } from './tools';
 
@@ -78,8 +79,8 @@ FINAL REPORT FORMAT:
 @Injectable()
 export class InvestigationService {
   private readonly logger = new Logger(InvestigationService.name);
-  private readonly sessions = new Map<string, InvestigationSession>();
   private readonly llmProvider: LlmProvider;
+  private readonly systemPrompt: string;
 
   constructor(
     configService: ConfigService,
@@ -88,26 +89,22 @@ export class InvestigationService {
     anthropicProvider: AnthropicProvider,
   ) {
     this.llmProvider = anthropicProvider;
+    this.systemPrompt =
+      AGENT_SYSTEM_PROMPT + '\n\n' + this.businessSkills.getAllBusinessSkills();
     this.logger.log(
-      `InvestigationService initialized with AnthropicProvider (LLM_API_URL=${configService.get<string>('LLM_API_URL') || 'default'})`,
+      `InvestigationService initialized (LLM_API_URL=${configService.get<string>('LLM_API_URL') || 'default'})`,
     );
   }
 
-  // ── Public API ──────────────────────────────────────────────────────
+  // ── Session factory ────────────────────────────────────────────────
 
-  /** Start a new investigation. Mode: 'auto' runs full loop async, 'manual' runs one step at a time. */
-  startInvestigation(
+  createSession(
     vendorId: string,
     goal: string,
-    mode: InvestigationMode = 'auto',
-    isSuperadmin = false,
+    mode: InvestigationMode,
+    isSuperadmin: boolean,
   ): InvestigationSession {
-    const fullSystemPrompt =
-      AGENT_SYSTEM_PROMPT +
-      '\n\n' +
-      this.businessSkills.getAllBusinessSkills();
-
-    const session: InvestigationSession = {
+    return {
       id: uuid(),
       vendorId,
       goal,
@@ -115,120 +112,59 @@ export class InvestigationService {
       isSuperadmin,
       steps: [],
       messages: [
-        { role: 'system', content: fullSystemPrompt },
-        { role: 'user', content: `Investigate this question about my business: "${goal}"` },
+        { role: 'system', content: this.systemPrompt },
+        {
+          role: 'user',
+          content: `Investigate this question about my business: "${goal}"`,
+        },
       ],
       status: 'in_progress',
       cancelled: false,
       createdAt: new Date().toISOString(),
     };
-
-    this.sessions.set(session.id, session);
-    this.logger.log(`Investigation ${session.id} started [${mode}] for vendor ${vendorId}: "${goal}"`);
-
-    if (mode === 'auto') {
-      this.runAutoLoop(session).catch((err) => {
-        this.logger.error(`Investigation ${session.id} background loop failed`, err);
-        if (session.status === 'in_progress') {
-          session.status = 'error';
-          session.error = (err as Error).message;
-        }
-      });
-    } else {
-      this.runSingleStep(session).catch((err) => {
-        this.logger.error(`Investigation ${session.id} step failed`, err);
-        session.status = 'error';
-        session.error = (err as Error).message;
-      });
-    }
-
-    return session;
-  }
-
-  /** Manual mode: advance one ReAct step (LLM call + tool execution). */
-  async continueInvestigation(sessionId: string): Promise<InvestigationSession> {
-    const session = this.sessions.get(sessionId);
-    if (!session) throw new Error(`Session ${sessionId} not found`);
-    if (session.mode !== 'manual') throw new Error('Continue is only available in manual mode');
-    if (session.status === 'completed') throw new Error('Investigation already completed');
-    if (session.status === 'cancelled') throw new Error('Investigation was cancelled');
-
-    session.status = 'in_progress';
-    await this.runSingleStep(session);
-    return session;
-  }
-
-  /** Cancel a running investigation. Works for both auto and manual modes. */
-  cancelInvestigation(sessionId: string): InvestigationSession {
-    const session = this.sessions.get(sessionId);
-    if (!session) throw new Error(`Session ${sessionId} not found`);
-    if (session.status === 'completed') throw new Error('Investigation already completed');
-    if (session.status === 'cancelled') throw new Error('Investigation already cancelled');
-
-    session.cancelled = true;
-    this.logger.log(`Investigation ${sessionId} cancelled by frontend`);
-    return session;
-  }
-
-  /** Vendor provides guidance mid-investigation. Works for both modes. */
-  redirectInvestigation(sessionId: string, instruction: string): InvestigationSession {
-    const session = this.sessions.get(sessionId);
-    if (!session) throw new Error(`Session ${sessionId} not found`);
-    if (session.status === 'completed') throw new Error('Investigation already completed');
-    if (session.status === 'cancelled') throw new Error('Investigation was cancelled');
-
-    const step: InvestigationStep = {
-      id: uuid(),
-      stepNumber: session.steps.length + 1,
-      type: 'redirected',
-      content: `Vendor redirected: "${instruction}"`,
-      timestamp: new Date().toISOString(),
-    };
-    session.steps.push(step);
-    this.logger.log(`Investigation ${sessionId} redirected: "${instruction}"`);
-
-    session.messages.push({
-      role: 'user',
-      content: `[VENDOR GUIDANCE] ${instruction}. Continue the investigation, taking this into account.`,
-    });
-
-    return session;
-  }
-
-  getSession(sessionId: string): InvestigationSession | undefined {
-    return this.sessions.get(sessionId);
   }
 
   // ── Tool list (passed to LLM) ───────────────────────────────────────
 
-  /** Build the combined tool list passed to the LLM. */
-  private getLlmTools(): ToolDefinition[] {
-    return VENDOR_INVESTIGATION_TOOLS;
+  getLlmTools(nativeTools: ToolDefinition[]): ToolDefinition[] {
+    return [...VENDOR_INVESTIGATION_TOOLS, ...nativeTools];
   }
 
-  // ── Core step logic (shared by both modes) ──────────────────────────
+  // ── Core step logic ─────────────────────────────────────────────────
 
-  private async runSingleStep(session: InvestigationSession): Promise<void> {
+  /**
+   * Run one ReAct step (LLM call + tool execution).
+   * Mutates `session` in place. Caller is responsible for persisting.
+   * `mcpConnection` is the per-investigation MCP connection.
+   * `nativeTools` are the MCP native tools (cached from connection).
+   * Returns `true` if the investigation should stop (completed, cancelled, maxed out).
+   */
+  async runSingleStep(
+    session: InvestigationSession,
+    mcpConnection: McpConnection,
+    nativeTools: ToolDefinition[],
+  ): Promise<boolean> {
     if (session.cancelled) {
       session.status = 'cancelled';
-      return;
+      return true;
     }
 
-    // Safety: max 10 LLM calls (each LLM call counts as a reasoning step)
     const maxLlmCalls = 10;
-    const llmCallCount = session.steps.filter(s => s.type === 'reasoning').length;
+    const llmCallCount = session.steps.filter(
+      (s) => s.type === 'reasoning',
+    ).length;
     if (llmCallCount >= maxLlmCalls) {
       session.status = 'completed';
-      this.logger.warn(`Investigation ${session.id} hit max LLM calls (${maxLlmCalls})`);
-      return;
+      this.logger.warn(`Investigation ${session.id} hit max LLM calls`);
+      return true;
     }
 
-    const llmTools = this.getLlmTools();
+    const llmTools = this.getLlmTools(nativeTools);
     const response = await this.llmProvider.chat(session.messages, llmTools);
 
     if (session.cancelled) {
       session.status = 'cancelled';
-      return;
+      return true;
     }
 
     // Record reasoning text
@@ -243,7 +179,6 @@ export class InvestigationService {
     }
 
     if (response.toolCalls.length > 0) {
-      // Feed assistant message back into conversation
       session.messages.push({
         role: 'assistant',
         content: response.text,
@@ -254,7 +189,7 @@ export class InvestigationService {
       for (const tc of response.toolCalls) {
         if (session.cancelled) {
           session.status = 'cancelled';
-          return;
+          return true;
         }
 
         this.logger.log(
@@ -271,12 +206,16 @@ export class InvestigationService {
           timestamp: new Date().toISOString(),
         });
 
-        // Execute via ToolExecutorService — with vendor scope enforcement
         const ctx: ToolContext = {
           vendorId: session.vendorId,
           isSuperadmin: session.isSuperadmin,
         };
-        const result = await this.toolExecutor.execute(tc.name, tc.arguments, ctx);
+        const result = await this.toolExecutor.execute(
+          tc.name,
+          tc.arguments,
+          ctx,
+          mcpConnection,
+        );
 
         session.steps.push({
           id: uuid(),
@@ -304,7 +243,10 @@ export class InvestigationService {
           content: 'Ready for next step. Click Continue to proceed.',
           timestamp: new Date().toISOString(),
         });
+        return true; // Stop after one step in manual mode
       }
+
+      return false; // Auto mode: continue loop
     } else {
       // No tool calls — final report
       session.messages.push({
@@ -322,21 +264,32 @@ export class InvestigationService {
 
       session.status = 'completed';
       this.logger.log(`Investigation ${session.id} completed`);
+      return true;
     }
   }
 
   // ── Auto mode: tight loop ───────────────────────────────────────────
 
-  private async runAutoLoop(session: InvestigationSession): Promise<void> {
+  async runAutoLoop(
+    session: InvestigationSession,
+    mcpConnection: McpConnection,
+    nativeTools: ToolDefinition[],
+  ): Promise<void> {
     const maxLlmCalls = 10;
 
     while (
       !session.cancelled &&
-      session.steps.filter(s => s.type === 'reasoning').length < maxLlmCalls &&
+      session.steps.filter((s) => s.type === 'reasoning').length <
+        maxLlmCalls &&
       session.status === 'in_progress'
     ) {
       try {
-        await this.runSingleStep(session);
+        const stopped = await this.runSingleStep(
+          session,
+          mcpConnection,
+          nativeTools,
+        );
+        if (stopped) break;
       } catch (error) {
         this.logger.error(`Investigation ${session.id} failed`, error);
         session.status = 'error';
@@ -357,7 +310,7 @@ export class InvestigationService {
       this.logger.log(`Investigation ${session.id} cancelled`);
     } else if (session.status === 'in_progress') {
       session.status = 'completed';
-      this.logger.warn(`Investigation ${session.id} hit max LLM calls (${maxLlmCalls})`);
+      this.logger.warn(`Investigation ${session.id} hit max LLM calls`);
     }
   }
 
@@ -374,8 +327,10 @@ export class InvestigationService {
           .map((c: { text: string }) => {
             try {
               const inner = JSON.parse(c.text);
-              if (inner.rows) return `${inner.row_count || inner.rows.length} rows returned.`;
-              if (inner.tables) return `${inner.tables.length} tables found.`;
+              if (inner.rows)
+                return `${inner.row_count || inner.rows.length} rows returned.`;
+              if (inner.tables)
+                return `${inner.tables.length} tables found.`;
               if (inner.columns) {
                 const dbInfo = inner.found ? ` in ${inner.table_name}` : '';
                 return `${inner.columns.length} columns${dbInfo}.`;

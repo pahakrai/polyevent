@@ -32,12 +32,16 @@ try {
 type SSEClientTransportCtor = new (url: URL) => unknown;
 
 /**
- * MCP client that connects to an external PostgreSQL MCP server
+ * Thin MCP client wrapper that connects to an external PostgreSQL MCP server
  * (crystaldba/postgres-mcp Docker container) via SSE transport.
  *
- * The crystal MCP server exposes a `query` tool for read-only SQL execution.
- * This service translates our internal tool names to the crystal server's
- * `query` tool, so skills can use semantic names like `db_list_tables`.
+ * Responsibilities:
+ *   - Connection lifecycle (connect, retry, disconnect)
+ *   - Tool discovery — fetches native tools from the crystal server
+ *   - SQL validation — blocks dangerous statements before execution
+ *   - Forwarding — passes tool calls through to the crystal server via JSON-RPC
+ *
+ * Domain-level translation and vendor scoping live in ToolExecutorService.
  */
 @Injectable()
 export class McpClientService implements OnModuleInit, OnModuleDestroy {
@@ -47,6 +51,7 @@ export class McpClientService implements OnModuleInit, OnModuleDestroy {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private transport: any = null;
   private connected = false;
+  private cachedNativeTools: ToolDefinition[] = [];
 
   constructor(private readonly configService: ConfigService) {}
 
@@ -80,12 +85,13 @@ export class McpClientService implements OnModuleInit, OnModuleDestroy {
         await this.client.connect(this.transport);
         this.connected = true;
 
-        const tools = await this.discoverTools();
+        this.cachedNativeTools = await this.discoverTools();
         this.logger.log(
           `MCP client connected to crystal-postgres-mcp at ${mcpHost}:${mcpPort}, ` +
-          `discovered ${tools.length} native tool(s)`,
+          `discovered ${this.cachedNativeTools.length} native tool(s): ` +
+          `${this.cachedNativeTools.map((t) => t.name).join(', ') || '(none)'}`,
         );
-        return; // success — exit retry loop
+        return;
       } catch (error) {
         const isLast = attempt === maxRetries;
         if (isLast) {
@@ -98,7 +104,7 @@ export class McpClientService implements OnModuleInit, OnModuleDestroy {
             error as Error,
           );
         } else {
-          const delay = baseDelayMs * Math.pow(2, attempt - 1); // 1s, 2s, 4s, 8s, 16s
+          const delay = baseDelayMs * Math.pow(2, attempt - 1);
           this.logger.warn(
             `MCP connection attempt ${attempt}/${maxRetries} failed, ` +
             `retrying in ${delay}ms...`,
@@ -121,7 +127,9 @@ export class McpClientService implements OnModuleInit, OnModuleDestroy {
     }
   }
 
-  /** Return native tools from the MCP server (prefixed with db_) */
+  // ── Native tool discovery ─────────────────────────────────────────
+
+  /** Return native tools from the crystal MCP server (prefixed with `db_`). */
   async discoverTools(): Promise<ToolDefinition[]> {
     if (!this.client) return [];
     const result = await this.client.listTools();
@@ -134,7 +142,12 @@ export class McpClientService implements OnModuleInit, OnModuleDestroy {
     }));
   }
 
-  // ── SQL sanitization patterns (treat agent SQL as untrusted input) ──
+  /** Native crystal tools (prefixed with `db_`), cached after connect. */
+  getNativeTools(): ToolDefinition[] {
+    return this.cachedNativeTools;
+  }
+
+  // ── SQL sanitization ──────────────────────────────────────────────
 
   private static readonly DANGEROUS_SQL = [
     { regex: /\bDROP\s+/i, name: 'DROP' },
@@ -161,27 +174,42 @@ export class McpClientService implements OnModuleInit, OnModuleDestroy {
     }
   }
 
+  // ── Tool execution ────────────────────────────────────────────────
+
   /**
-   * Call a tool on the MCP server.
-   *
-   * Translates our internal tool names to the crystal server's `query` tool:
-   *   db_run_select_query → query(sql)
-   *   db_list_tables       → query("SELECT ... FROM information_schema.tables ...")
-   *   db_describe_table    → query("SELECT ... FROM information_schema.columns ...")
+   * Execute a validated SQL statement against the crystal server.
+   * Domain tools should use this after building and scoping their SQL.
+   */
+  async executeSql(sql: string): Promise<string> {
+    if (!this.client) throw new Error('MCP client not connected');
+
+    this.validateSql(sql);
+
+    const result = await this.client.callTool({
+      name: 'execute_sql',
+      arguments: { sql },
+    });
+
+    return JSON.stringify((result as { content: unknown }).content);
+  }
+
+  /**
+   * Forward a native tool call to the crystal MCP server.
+   * Strips the `db_` prefix from tool names before forwarding.
    */
   async callTool(name: string, args: Record<string, unknown>): Promise<string> {
     if (!this.client) throw new Error('MCP client not connected');
 
-    const translated = this.translateTool(name, args);
+    const nativeName = name.startsWith('db_') ? name.slice(3) : name;
 
-    // Gateway-level sanitization: treat agent-generated SQL as untrusted input
-    if (translated.name === 'execute_sql' && typeof translated.args.sql === 'string') {
-      this.validateSql(translated.args.sql);
+    // Gateway-level sanitization for SQL-bearing tools
+    if (nativeName === 'execute_sql' && typeof args.sql === 'string') {
+      this.validateSql(args.sql);
     }
 
     const result = await this.client.callTool({
-      name: translated.name,
-      arguments: translated.args,
+      name: nativeName,
+      arguments: args,
     });
 
     return JSON.stringify((result as { content: unknown }).content);
@@ -189,57 +217,5 @@ export class McpClientService implements OnModuleInit, OnModuleDestroy {
 
   isConnected(): boolean {
     return this.connected;
-  }
-
-  // ── Tool name translation ──────────────────────────────────────────
-
-  private translateTool(
-    name: string,
-    args: Record<string, unknown>,
-  ): { name: string; args: Record<string, unknown> } {
-    const toolName = name.startsWith('db_') ? name.slice(3) : name;
-
-    switch (toolName) {
-      case 'run_select_query':
-        // Pass SQL through to the crystal server's query tool
-        return { name: 'execute_sql', args: { sql: args.sql as string } };
-
-      case 'list_tables':
-        return {
-          name: 'execute_sql',
-          args: {
-            sql: `
-              SELECT
-                t.table_schema AS schema,
-                t.table_name AS name,
-                t.table_type AS type,
-                COALESCE(s.n_live_tup, 0)::integer AS estimated_rows
-              FROM information_schema.tables t
-              LEFT JOIN pg_stat_user_tables s
-                ON s.schemaname = t.table_schema
-                AND s.relname = t.table_name
-              WHERE t.table_schema NOT IN ('pg_catalog', 'information_schema')
-              ORDER BY t.table_type, t.table_name
-            `.trim(),
-          },
-        };
-
-      case 'describe_table':
-        return {
-          name: 'execute_sql',
-          args: {
-            sql: `
-              SELECT column_name, data_type, is_nullable, column_default
-              FROM information_schema.columns
-              WHERE table_name = '${(args.table_name as string).replace(/'/g, "''")}'
-              ORDER BY ordinal_position
-            `.trim(),
-          },
-        };
-
-      default:
-        // Pass through unknown tool names directly
-        return { name: toolName, args };
-    }
   }
 }

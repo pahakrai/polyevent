@@ -29,6 +29,11 @@ export async function continueInvestigation(sessionId: string): Promise<Investig
   return data;
 }
 
+export async function cancelInvestigation(sessionId: string): Promise<InvestigationSession> {
+  const { data } = await api.post(`/agent/investigate/${sessionId}/cancel`);
+  return data;
+}
+
 export async function redirectInvestigation(sessionId: string, instruction: string): Promise<InvestigationSession> {
   const { data } = await api.post(`/agent/investigate/${sessionId}/redirect`, { instruction });
   return data;

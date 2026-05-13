@@ -1,0 +1,17 @@
+> nest build --webpack
+
+[1m[31mERROR[39m[22m in [1m./src/agent/agent-worker.processor.ts:11:2[39m[22m
+[90mTS2769: [39mNo overload matches this call.
+  Overload 1 of 4, '(queueName: string, workerOptions: NestWorkerOptions): ClassDecorator', gave the following error.
+    Object literal may only specify known properties, and 'group' does not exist in type 'NestWorkerOptions'.
+  Overload 2 of 4, '(processorOptions: ProcessorOptions, workerOptions: NestWorkerOptions): ClassDecorator', gave the following error.
+    Type '"investigation-queue"' has no properties in common with type 'ProcessorOptions'.
+  [0m [90m  9 |[39m [36mimport[39m type { [33mInvestigationSession[39m } [36mfrom[39m [32m'./investigation.service'[39m[33m;[39m
+   [90m 10 |[39m
+  [31m[1m>[22m[39m[90m 11 |[39m [33m@[39m[33mProcessor[39m([32m'investigation-queue'[39m[33m,[39m {
+   [90m    |[39m  [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 12 |[39m   concurrency[33m:[39m [35m50[39m[33m,[39m
+   [90m 13 |[39m   group[33m:[39m { concurrency[33m:[39m [35m3[39m }[33m,[39m
+   [90m 14 |[39m })[0m
+
+webpack 5.97.1 compiled with [1m[31m1 error[39m[22m in 9094 ms

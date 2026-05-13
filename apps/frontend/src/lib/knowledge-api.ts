@@ -24,6 +24,7 @@ export async function chatStream(
   onSources: (sources: ChatResult['sources']) => void,
   onDone: () => void,
   onError: (err: string) => void,
+  signal?: AbortSignal,
 ): Promise<void> {
   const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
@@ -36,6 +37,7 @@ export async function chatStream(
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
       body: JSON.stringify({ question }),
+      signal,
     });
 
     if (!response.ok) {
@@ -90,6 +92,10 @@ export async function chatStream(
 
     onDone();
   } catch (err) {
+    if (err instanceof DOMException && err.name === 'AbortError') {
+      onDone();
+      return;
+    }
     onError(err instanceof Error ? err.message : 'Stream failed');
   }
 }

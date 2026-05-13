@@ -1,0 +1,594 @@
+
+[0m[7m[1m[33m NX [39m[22m[27m[0m  [33mworkspace.json is ignored[39m
+
+Nx no longer reads configuration from workspace.json.
+Run "nx g @nx/workspace:fix-configuration" to split workspace.json into individual project.json files.
+
+
+[0m[7m[1m[36m NX [39m[22m[27m[0m  [36mRunning target [1mbuild[22m for project vendor-service and [1m4[22m tasks it depends on:[39m
+
+
+
+[2m> [22m[2mnx run[22m shared-types:build  [2m[existing outputs match the cache, left as is][22m
+
+
+[2m> [22m[2mnx run[22m database-client:build  [2m[existing outputs match the cache, left as is][22m
+
+
+[2m> [22m[2mnx run[22m nats-client:build  [2m[existing outputs match the cache, left as is][22m
+
+
+[2m> [22m[2mnx run[22m auth:build  [2m[existing outputs match the cache, left as is][22m
+
+
+[2m> [22m[2mnx run[22m vendor-service:build  [2m[existing outputs match the cache, left as is][22m
+
+> nest build --webpack
+
+webpack 5.97.1 compiled [1m[32msuccessfully[39m[22m in 12190 ms
+
+
+
+[0m[7m[1m[32m NX [39m[22m[27m[0m  [32mSuccessfully ran target [1mbuild[22m for project vendor-service and [1m4[22m tasks it depends on[39m
+
+[2mNx read the output from the cache instead of running the command for 5 out of 5 tasks.[22m
+
+[1m[31mDebugger listening on ws://localhost:3000/ebe65cbe-6865-4172-ac9c-f5793610baf9[39m[22m
+[1m[31mDebugger listening on ws://localhost:3000/ebe65cbe-6865-4172-ac9c-f5793610baf9[39m[22m
+[1m[31mFor help, see: https://nodejs.org/en/docs/inspector[39m[22m
+[1m[31m[39m[22m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[PostgresClient] [39m[32mPostgreSQL client initialized[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m[38;5;3m +57ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtAuthModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mVenueModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTimeslotModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mVendorModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mHealthController {/health}:[39m[38;5;3m +5ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/health, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/health/ready, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mVendorController {/vendors}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/user/:userId, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id/verify, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id/stats, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mVendorInternalController {/internal/vendors}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/internal/vendors, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/internal/vendors/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/internal/vendors/by-user/:userId, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mVenueController {/}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:vendorId/venues, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:vendorId/venues, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTimeslotController {/}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:venueId/timeslots, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:venueId/timeslots/bulk, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:venueId/timeslots, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/timeslots/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/timeslots/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/timeslots/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/timeslots/:id/block, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 31948  - [39m05/12/2026, 11:07:24 AM [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +1ms[39m
+Vendor service running on port 3000
+
+[7m[1m[36m NX [39m[22m[27m [1mFile change detected. Restarting...[22m
+
+
+[0m[7m[1m[33m NX [39m[22m[27m[0m  [33mworkspace.json is ignored[39m
+
+Nx no longer reads configuration from workspace.json.
+Run "nx g @nx/workspace:fix-configuration" to split workspace.json into individual project.json files.
+
+
+[0m[7m[1m[36m NX [39m[22m[27m[0m  [36mRunning target [1mbuild[22m for project vendor-service and [1m4[22m tasks it depends on:[39m
+
+
+
+[2m> [22m[2mnx run[22m nats-client:build  [2m[existing outputs match the cache, left as is][22m
+
+
+[2m> [22m[2mnx run[22m database-client:build  [2m[existing outputs match the cache, left as is][22m
+
+
+[2m> [22m[2mnx run[22m shared-types:build  [2m[existing outputs match the cache, left as is][22m
+
+
+[2m> [22m[2mnx run[22m auth:build  [2m[existing outputs match the cache, left as is][22m
+
+
+[2m> [22m[2mnx run[22m vendor-service:build
+
+[2m> [22mnest build --webpack
+
+webpack 5.97.1 compiled [1m[32msuccessfully[39m[22m in 3918 ms
+
+
+
+[0m[7m[1m[32m NX [39m[22m[27m[0m  [32mSuccessfully ran target [1mbuild[22m for project vendor-service and [1m4[22m tasks it depends on[39m
+
+[2mNx read the output from the cache instead of running the command for 4 out of 5 tasks.[22m
+
+[1m[31mDebugger listening on ws://localhost:3000/ad98d321-3eb7-4a44-9d36-b34ce2d153fd[39m[22m
+[1m[31mDebugger listening on ws://localhost:3000/ad98d321-3eb7-4a44-9d36-b34ce2d153fd[39m[22m
+[1m[31mFor help, see: https://nodejs.org/en/docs/inspector[39m[22m
+[1m[31m[39m[22m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[PostgresClient] [39m[32mPostgreSQL client initialized[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m[38;5;3m +57ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +11ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtAuthModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mVenueModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTimeslotModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mVendorModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mHealthController {/health}:[39m[38;5;3m +4ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/health, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/health/ready, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mVendorController {/vendors}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/user/:userId, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id/verify, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id/stats, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mVendorInternalController {/internal/vendors}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/internal/vendors, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/internal/vendors/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/internal/vendors/by-user/:userId, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mVenueController {/}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:vendorId/venues, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:vendorId/venues, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:id, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTimeslotController {/}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:venueId/timeslots, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:venueId/timeslots/bulk, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:venueId/timeslots, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/timeslots/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/timeslots/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/timeslots/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/timeslots/:id/block, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 25460  - [39m05/12/2026, 3:51:54 PM [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +1ms[39m
+Vendor service running on port 3000
+
+[7m[1m[36m NX [39m[22m[27m [1mFile change detected. Restarting...[22m
+
+
+[0m[7m[1m[33m NX [39m[22m[27m[0m  [33mworkspace.json is ignored[39m
+
+Nx no longer reads configuration from workspace.json.
+Run "nx g @nx/workspace:fix-configuration" to split workspace.json into individual project.json files.
+
+
+[0m[7m[1m[36m NX [39m[22m[27m[0m  [36mRunning target [1mbuild[22m for project vendor-service and [1m4[22m tasks it depends on:[39m
+
+
+
+[2m> [22m[2mnx run[22m shared-types:build  [2m[existing outputs match the cache, left as is][22m
+
+
+[2m> [22m[2mnx run[22m nats-client:build  [2m[existing outputs match the cache, left as is][22m
+
+
+[2m> [22m[2mnx run[22m database-client:build  [2m[existing outputs match the cache, left as is][22m
+
+
+[2m> [22m[2mnx run[22m auth:build  [2m[existing outputs match the cache, left as is][22m
+
+
+[2m> [22m[2mnx run[22m vendor-service:build  [2m[local cache][22m
+
+> nest build --webpack
+
+webpack 5.97.1 compiled [1m[32msuccessfully[39m[22m in 12190 ms
+
+
+
+[0m[7m[1m[32m NX [39m[22m[27m[0m  [32mSuccessfully ran target [1mbuild[22m for project vendor-service and [1m4[22m tasks it depends on[39m
+
+[2mNx read the output from the cache instead of running the command for 5 out of 5 tasks.[22m
+
+[1m[31mDebugger listening on ws://localhost:3000/e00ca2fd-bb3f-471f-a1ae-0c4a85943c03[39m[22m
+[1m[31mDebugger listening on ws://localhost:3000/e00ca2fd-bb3f-471f-a1ae-0c4a85943c03[39m[22m
+[1m[31mFor help, see: https://nodejs.org/en/docs/inspector[39m[22m
+[1m[31m[39m[22m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[PostgresClient] [39m[32mPostgreSQL client initialized[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m[38;5;3m +53ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtAuthModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mVenueModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTimeslotModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mVendorModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mHealthController {/health}:[39m[38;5;3m +5ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/health, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/health/ready, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mVendorController {/vendors}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/user/:userId, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id/verify, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id/stats, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mVendorInternalController {/internal/vendors}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/internal/vendors, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/internal/vendors/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/internal/vendors/by-user/:userId, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mVenueController {/}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:vendorId/venues, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:vendorId/venues, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:id, DELETE} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTimeslotController {/}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:venueId/timeslots, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:venueId/timeslots/bulk, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:venueId/timeslots, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/timeslots/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/timeslots/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/timeslots/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/timeslots/:id/block, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 8404  - [39m05/12/2026, 3:55:32 PM [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +1ms[39m
+Vendor service running on port 3000
+
+[7m[1m[36m NX [39m[22m[27m [1mFile change detected. Restarting...[22m
+
+
+[0m[7m[1m[33m NX [39m[22m[27m[0m  [33mworkspace.json is ignored[39m
+
+Nx no longer reads configuration from workspace.json.
+Run "nx g @nx/workspace:fix-configuration" to split workspace.json into individual project.json files.
+
+
+[0m[7m[1m[36m NX [39m[22m[27m[0m  [36mRunning target [1mbuild[22m for project vendor-service and [1m4[22m tasks it depends on:[39m
+
+
+
+[2m> [22m[2mnx run[22m database-client:build  [2m[existing outputs match the cache, left as is][22m
+
+
+[2m> [22m[2mnx run[22m shared-types:build  [2m[existing outputs match the cache, left as is][22m
+
+
+[2m> [22m[2mnx run[22m nats-client:build  [2m[existing outputs match the cache, left as is][22m
+
+
+[2m> [22m[2mnx run[22m auth:build  [2m[existing outputs match the cache, left as is][22m
+
+
+[2m> [22m[2mnx run[22m vendor-service:build
+
+[2m> [22mnest build --webpack
+
+webpack 5.97.1 compiled [1m[32msuccessfully[39m[22m in 3493 ms
+
+
+
+[0m[7m[1m[32m NX [39m[22m[27m[0m  [32mSuccessfully ran target [1mbuild[22m for project vendor-service and [1m4[22m tasks it depends on[39m
+
+[2mNx read the output from the cache instead of running the command for 4 out of 5 tasks.[22m
+
+[1m[31mDebugger listening on ws://localhost:3000/a2ca234d-6093-444f-813f-7d3461657b8e[39m[22m
+[1m[31mDebugger listening on ws://localhost:3000/a2ca234d-6093-444f-813f-7d3461657b8e[39m[22m
+[1m[31mFor help, see: https://nodejs.org/en/docs/inspector[39m[22m
+[1m[31m[39m[22m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[PostgresClient] [39m[32mPostgreSQL client initialized[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m[38;5;3m +51ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +8ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtAuthModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mVenueModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTimeslotModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mVendorModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mHealthController {/health}:[39m[38;5;3m +3ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/health, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/health/ready, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mVendorController {/vendors}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/user/:userId, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id/verify, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id/stats, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mVendorInternalController {/internal/vendors}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/internal/vendors, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/internal/vendors/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/internal/vendors/by-user/:userId, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mVenueController {/}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:vendorId/venues, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:vendorId/venues, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:id, DELETE} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTimeslotController {/}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:venueId/timeslots, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:venueId/timeslots/bulk, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:venueId/timeslots, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/timeslots/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/timeslots/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/timeslots/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/timeslots/:id/block, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 26416  - [39m05/12/2026, 4:12:22 PM [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +1ms[39m
+Vendor service running on port 3000
+
+[7m[1m[36m NX [39m[22m[27m [1mFile change detected. Restarting...[22m
+
+
+[0m[7m[1m[33m NX [39m[22m[27m[0m  [33mworkspace.json is ignored[39m
+
+Nx no longer reads configuration from workspace.json.
+Run "nx g @nx/workspace:fix-configuration" to split workspace.json into individual project.json files.
+
+
+[0m[7m[1m[36m NX [39m[22m[27m[0m  [36mRunning target [1mbuild[22m for project vendor-service and [1m4[22m tasks it depends on:[39m
+
+
+
+[2m> [22m[2mnx run[22m shared-types:build  [2m[existing outputs match the cache, left as is][22m
+
+
+[2m> [22m[2mnx run[22m nats-client:build  [2m[existing outputs match the cache, left as is][22m
+
+
+[2m> [22m[2mnx run[22m database-client:build  [2m[existing outputs match the cache, left as is][22m
+
+
+[2m> [22m[2mnx run[22m auth:build  [2m[existing outputs match the cache, left as is][22m
+
+
+[2m> [22m[2mnx run[22m vendor-service:build
+
+[2m> [22mnest build --webpack
+
+webpack 5.97.1 compiled [1m[32msuccessfully[39m[22m in 3442 ms
+
+
+
+[0m[7m[1m[32m NX [39m[22m[27m[0m  [32mSuccessfully ran target [1mbuild[22m for project vendor-service and [1m4[22m tasks it depends on[39m
+
+[2mNx read the output from the cache instead of running the command for 4 out of 5 tasks.[22m
+
+[1m[31mDebugger listening on ws://localhost:3000/fdd23774-32e2-4c68-ad4d-1c89550db390[39m[22m
+[1m[31mDebugger listening on ws://localhost:3000/fdd23774-32e2-4c68-ad4d-1c89550db390[39m[22m
+[1m[31mFor help, see: https://nodejs.org/en/docs/inspector[39m[22m
+[1m[31m[39m[22m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[PostgresClient] [39m[32mPostgreSQL client initialized[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m[38;5;3m +52ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +9ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtAuthModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mVenueModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTimeslotModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mVendorModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mHealthController {/health}:[39m[38;5;3m +3ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/health, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/health/ready, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mVendorController {/vendors}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/user/:userId, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id/verify, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id/stats, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mVendorInternalController {/internal/vendors}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/internal/vendors, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/internal/vendors/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/internal/vendors/by-user/:userId, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mVenueController {/}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:vendorId/venues, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:vendorId/venues, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTimeslotController {/}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:venueId/timeslots, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:venueId/timeslots/bulk, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:venueId/timeslots, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/timeslots/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/timeslots/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/timeslots/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/timeslots/:id/block, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 16532  - [39m05/12/2026, 4:16:05 PM [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +1ms[39m
+Vendor service running on port 3000
+
+[7m[1m[36m NX [39m[22m[27m [1mFile change detected. Restarting...[22m
+
+
+[7m[1m[36m NX [39m[22m[27m [1mFile change detected. Restarting...[22m
+
+
+
+[0m[7m[1m[33m NX [39m[22m[27m[0m  [33mworkspace.json is ignored[39m
+
+Nx no longer reads configuration from workspace.json.
+Run "nx g @nx/workspace:fix-configuration" to split workspace.json into individual project.json files.
+
+[0m[7m[1m[33m NX [39m[22m[27m[0m  [33mworkspace.json is ignored[39m
+
+Nx no longer reads configuration from workspace.json.
+Run "nx g @nx/workspace:fix-configuration" to split workspace.json into individual project.json files.
+
+
+[0m[7m[1m[36m NX [39m[22m[27m[0m  [36mRunning target [1mbuild[22m for project vendor-service and [1m4[22m tasks it depends on:[39m
+
+
+
+[0m[7m[1m[36m NX [39m[22m[27m[0m  [36mRunning target [1mbuild[22m for project vendor-service and [1m4[22m tasks it depends on:[39m
+
+
+
+[2m> [22m[2mnx run[22m database-client:build  [2m[existing outputs match the cache, left as is][22m
+
+
+[2m> [22m[2mnx run[22m shared-types:build  [2m[existing outputs match the cache, left as is][22m
+
+
+[2m> [22m[2mnx run[22m shared-types:build  [2m[existing outputs match the cache, left as is][22m
+
+
+[2m> [22m[2mnx run[22m database-client:build  [2m[existing outputs match the cache, left as is][22m
+
+
+[2m> [22m[2mnx run[22m nats-client:build  [2m[existing outputs match the cache, left as is][22m
+
+
+[2m> [22m[2mnx run[22m nats-client:build  [2m[existing outputs match the cache, left as is][22m
+
+
+[2m> [22m[2mnx run[22m auth:build  [2m[existing outputs match the cache, left as is][22m
+
+
+[2m> [22m[2mnx run[22m auth:build  [2m[existing outputs match the cache, left as is][22m
+
+
+[2m> [22m[2mnx run[22m vendor-service:build
+
+[2m> [22mnest build --webpack
+
+
+[2m> [22m[2mnx run[22m vendor-service:build
+
+[2m> [22mnest build --webpack
+
+webpack 5.97.1 compiled [1m[32msuccessfully[39m[22m in 16409 ms
+webpack 5.97.1 compiled [1m[32msuccessfully[39m[22m in 16426 ms
+
+
+
+[0m[7m[1m[32m NX [39m[22m[27m[0m  [32mSuccessfully ran target [1mbuild[22m for project vendor-service and [1m4[22m tasks it depends on[39m
+
+[2mNx read the output from the cache instead of running the command for 4 out of 5 tasks.[22m
+
+
+
+
+[0m[7m[1m[32m NX [39m[22m[27m[0m  [32mSuccessfully ran target [1mbuild[22m for project vendor-service and [1m4[22m tasks it depends on[39m
+
+[2mNx read the output from the cache instead of running the command for 4 out of 5 tasks.[22m
+
+[1m[31mDebugger listening on ws://localhost:3000/fc07f702-b24d-4ae1-942f-5197f9a2cba1[39m[22m
+[1m[31mDebugger listening on ws://localhost:3000/fc07f702-b24d-4ae1-942f-5197f9a2cba1[39m[22m
+[1m[31mFor help, see: https://nodejs.org/en/docs/inspector[39m[22m
+[1m[31m[39m[22m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[PostgresClient] [39m[32mPostgreSQL client initialized[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m[38;5;3m +64ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +10ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtAuthModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mVenueModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTimeslotModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mVendorModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mHealthController {/health}:[39m[38;5;3m +6ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/health, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/health/ready, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mVendorController {/vendors}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/user/:userId, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id/verify, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:id/stats, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mVendorInternalController {/internal/vendors}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/internal/vendors, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/internal/vendors/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/internal/vendors/by-user/:userId, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mVenueController {/}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:vendorId/venues, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/vendors/:vendorId/venues, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTimeslotController {/}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:venueId/timeslots, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:venueId/timeslots/bulk, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/venues/:venueId/timeslots, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/timeslots/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/timeslots/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/timeslots/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/timeslots/:id/block, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 38072  - [39m05/12/2026, 9:30:16 PM [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +1ms[39m
+Vendor service running on port 3000
+
+[7m[1m[36m NX [39m[22m[27m [1mFile change detected. Restarting...[22m
+
+
+[0m[7m[1m[33m NX [39m[22m[27m[0m  [33mworkspace.json is ignored[39m
+
+Nx no longer reads configuration from workspace.json.
+Run "nx g @nx/workspace:fix-configuration" to split workspace.json into individual project.json files.
+
+
+[0m[7m[1m[36m NX [39m[22m[27m[0m  [36mRunning target [1mbuild[22m for project vendor-service and [1m4[22m tasks it depends on:[39m
+
+
+
+[2m> [22m[2mnx run[22m shared-types:build  [2m[existing outputs match the cache, left as is][22m
+
+
+[2m> [22m[2mnx run[22m nats-client:build  [2m[existing outputs match the cache, left as is][22m
+
+
+[2m> [22m[2mnx run[22m database-client:build  [2m[existing outputs match the cache, left as is][22m
+
+
+[2m> [22m[2mnx run[22m auth:build  [2m[existing outputs match the cache, left as is][22m
+
+
+[2m> [22m[2mnx run[22m vendor-service:build
+
+[2m> [22mnest build --webpack
+
+[1m[31mDebugger listening on ws://localhost:3000/c242dfce-a2f4-4bcd-8cab-32e61a8ffe78[39m[22m
+[1m[31mDebugger listening on ws://localhost:3000/c242dfce-a2f4-4bcd-8cab-32e61a8ffe78[39m[22m
+[1m[31mFor help, see: https://nodejs.org/en/docs/inspector[39m[22m
+[1m[31m[39m[22m
+[1m[31mError: Cannot find module 'C:\Users\user\repo\polydom\apps\nestjs-services\vendor-service\dist\main.js'[39m[22m
+[1m[31m    at Function.Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)[39m[22m
+[1m[31m    at Function.Module._load (node:internal/modules/cjs/loader:1038:27)[39m[22m
+[1m[31m    at Function.Module._load (C:\Users\user\repo\polydom\node_modules\@nx\js\src\executors\node\node-with-require-overrides.js:10:31)[39m[22m
+[1m[31m    at cjsLoader (node:internal/modules/esm/translators:298:15)[39m[22m
+[1m[31m    at ModuleWrap.<anonymous> (node:internal/modules/esm/translators:240:7)[39m[22m
+[1m[31m    at ModuleJob.run (node:internal/modules/esm/module_job:325:25)[39m[22m
+[1m[31m    at ModuleLoader.import (node:internal/modules/esm/loader:606:24)[39m[22m
+[1m[31m[39m[22m
+
+[7m[1m[36m NX [39m[22m[27m [1mProcess exited with code 1, waiting for changes to restart...[22m
+
+webpack 5.97.1 compiled [1m[32msuccessfully[39m[22m in 4926 ms
+
+
+
+[0m[7m[1m[32m NX [39m[22m[27m[0m  [32mSuccessfully ran target [1mbuild[22m for project vendor-service and [1m4[22m tasks it depends on[39m
+
+[2mNx read the output from the cache instead of running the command for 4 out of 5 tasks.[22m
+
+[1m[31mWatch error: Daemon closed the connection[39m[22m

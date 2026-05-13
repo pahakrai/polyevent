@@ -1,8 +1,8 @@
 {
   "run": {
-    "command": "nx build vendor-service",
-    "startTime": "2026-05-12T15:46:13.970Z",
-    "endTime": "2026-05-12T15:46:14.116Z",
+    "command": "nx build agent-service",
+    "startTime": "2026-05-13T05:46:55.265Z",
+    "endTime": "2026-05-13T05:47:30.115Z",
     "inner": false
   },
   "tasks": [
@@ -10,31 +10,9 @@
       "taskId": "shared-types:build",
       "target": "build",
       "projectName": "shared-types",
-      "hash": "3576634914032552772",
-      "startTime": "2026-05-12T15:46:13.982Z",
-      "endTime": "2026-05-12T15:46:14.026Z",
-      "params": "",
-      "cacheStatus": "local-cache-hit",
-      "status": 0
-    },
-    {
-      "taskId": "nats-client:build",
-      "target": "build",
-      "projectName": "nats-client",
-      "hash": "460106594820177086",
-      "startTime": "2026-05-12T15:46:13.983Z",
-      "endTime": "2026-05-12T15:46:14.035Z",
-      "params": "",
-      "cacheStatus": "local-cache-hit",
-      "status": 0
-    },
-    {
-      "taskId": "database-client:build",
-      "target": "build",
-      "projectName": "database-client",
-      "hash": "10120406900214414703",
-      "startTime": "2026-05-12T15:46:13.983Z",
-      "endTime": "2026-05-12T15:46:14.042Z",
+      "hash": "1848551448729007958",
+      "startTime": "2026-05-13T05:46:55.291Z",
+      "endTime": "2026-05-13T05:46:55.455Z",
       "params": "",
       "cacheStatus": "local-cache-hit",
       "status": 0
@@ -43,22 +21,22 @@
       "taskId": "auth:build",
       "target": "build",
       "projectName": "auth",
-      "hash": "15467833041470705389",
-      "startTime": "2026-05-12T15:46:14.057Z",
-      "endTime": "2026-05-12T15:46:14.087Z",
+      "hash": "16640339245025098030",
+      "startTime": "2026-05-13T05:46:55.482Z",
+      "endTime": "2026-05-13T05:46:55.533Z",
       "params": "",
       "cacheStatus": "local-cache-hit",
       "status": 0
     },
     {
-      "taskId": "vendor-service:build",
+      "taskId": "agent-service:build",
       "target": "build",
-      "projectName": "vendor-service",
-      "hash": "8875105663114857257",
-      "startTime": "2026-05-12T15:46:14.099Z",
-      "endTime": "2026-05-12T15:46:14.106Z",
+      "projectName": "agent-service",
+      "hash": "11333638654799397880",
+      "startTime": "2026-05-13T05:46:55.554Z",
+      "endTime": "2026-05-13T05:47:30.114Z",
       "params": "",
-      "cacheStatus": "local-cache-hit",
+      "cacheStatus": "cache-miss",
       "status": 0
     }
   ]

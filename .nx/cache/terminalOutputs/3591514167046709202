@@ -1,0 +1,57 @@
+> nest build --webpack
+
+[1m[31mERROR[39m[22m in [1m./src/agent/agent-worker.processor.ts:9:2[39m[22m
+[90mTS2769: [39mNo overload matches this call.
+  Overload 1 of 4, '(queueName: string, workerOptions: NestWorkerOptions): ClassDecorator', gave the following error.
+    Object literal may only specify known properties, and 'group' does not exist in type 'NestWorkerOptions'.
+  Overload 2 of 4, '(processorOptions: ProcessorOptions, workerOptions: NestWorkerOptions): ClassDecorator', gave the following error.
+    Type '"investigation-queue"' has no properties in common with type 'ProcessorOptions'.
+  [0m [90m  7 |[39m [36mimport[39m type { [33mInvestigationJobData[39m } [36mfrom[39m [32m'./investigation-queue.service'[39m[33m;[39m
+   [90m  8 |[39m
+  [31m[1m>[22m[39m[90m  9 |[39m [33m@[39m[33mProcessor[39m([32m'investigation-queue'[39m[33m,[39m {
+   [90m    |[39m  [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 10 |[39m   concurrency[33m:[39m [35m50[39m[33m,[39m
+   [90m 11 |[39m   group[33m:[39m { concurrency[33m:[39m [35m3[39m }[33m,[39m
+   [90m 12 |[39m })[0m
+
+[1m[31mERROR[39m[22m in [1m./src/agent/agent-worker.processor.ts:85:11[39m[22m
+[90mTS2367: [39mThis comparison appears to be unintentional because the types '"in_progress"' and '"cancelled"' have no overlap.
+  [0m [90m 83 |[39m
+   [90m 84 |[39m       [90m// Clear cancel flag on clean completion[39m
+  [31m[1m>[22m[39m[90m 85 |[39m       [36mif[39m (session[33m.[39mstatus [33m!==[39m [32m'cancelled'[39m) {
+   [90m    |[39m           [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 86 |[39m         [36mawait[39m [36mthis[39m[33m.[39msessionStore[33m.[39mclearCancelled(sessionId)[33m;[39m
+   [90m 87 |[39m       }
+   [90m 88 |[39m       [36mawait[39m [36mthis[39m[33m.[39msessionStore[33m.[39msave(session)[33m;[39m[0m
+
+[1m[31mERROR[39m[22m in [1m./src/agent/investigation-queue.service.ts:49:9[39m[22m
+[90mTS2353: [39mObject literal may only specify known properties, and 'group' does not exist in type 'JobsOptions'.
+  [0m [90m 47 |[39m       } satisfies [33mInvestigationJobData[39m[33m,[39m
+   [90m 48 |[39m       {
+  [31m[1m>[22m[39m[90m 49 |[39m         group[33m:[39m { id[33m:[39m vendorId }[33m,[39m
+   [90m    |[39m         [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 50 |[39m       }[33m,[39m
+   [90m 51 |[39m     )[33m;[39m
+   [90m 52 |[39m[0m
+
+[1m[31mERROR[39m[22m in [1m./src/agent/investigation-queue.service.ts:80:9[39m[22m
+[90mTS2353: [39mObject literal may only specify known properties, and 'group' does not exist in type 'JobsOptions'.
+  [0m [90m 78 |[39m       } satisfies [33mInvestigationJobData[39m[33m,[39m
+   [90m 79 |[39m       {
+  [31m[1m>[22m[39m[90m 80 |[39m         group[33m:[39m { id[33m:[39m vendorId }[33m,[39m
+   [90m    |[39m         [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 81 |[39m       }[33m,[39m
+   [90m 82 |[39m     )[33m;[39m
+   [90m 83 |[39m[0m
+
+[1m[31mERROR[39m[22m in [1m./src/agent/tool-executor.service.ts:95:11[39m[22m
+[90mTS6133: [39m'resolveMcp' is declared but its value is never read.
+  [0m [90m 93 |[39m
+   [90m 94 |[39m   [90m/** MCP interface — union of McpConnection and McpClientService call signatures. */[39m
+  [31m[1m>[22m[39m[90m 95 |[39m   [36mprivate[39m resolveMcp(mcp[33m:[39m [33mMcpConnection[39m [33m|[39m [33mMcpClientService[39m) {
+   [90m    |[39m           [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 96 |[39m     [36mreturn[39m mcp[33m;[39m
+   [90m 97 |[39m   }
+   [90m 98 |[39m[0m
+
+webpack 5.97.1 compiled with [1m[31m5 errors[39m[22m in 37756 ms
