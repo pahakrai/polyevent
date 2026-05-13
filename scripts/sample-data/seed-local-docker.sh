@@ -5,7 +5,7 @@
 # Sample data is now included in 0001_sample_data.sql migration files.
 # Running migrations seeds the database automatically.
 #
-# Prerequisites: npm run dev:infra (running PostgreSQL on localhost:5432)
+# Prerequisites: yarn dev:infra (running PostgreSQL on localhost:5432)
 #
 # Usage:
 #   bash scripts/sample-data/seed-local-docker.sh           # All services
@@ -47,7 +47,7 @@ echo ""
 # Check if PostgreSQL is running
 if ! docker ps --format '{{.Names}}' 2>/dev/null | grep -q "postgres"; then
     warn "PostgreSQL container not found. Starting infra..."
-    npm run dev:infra
+    yarn dev:infra
     log "Waiting for PostgreSQL to be ready..."
     sleep 5
 fi
@@ -67,7 +67,7 @@ echo ""
 
 for svc in "${SERVICES[@]}"; do
     log "Migrating $svc-service..."
-    npm run "db:migrate:$svc" 2>&1 | sed 's/^/    /' || {
+    yarn workspace $svc-service db:migrate 2>&1 | sed 's/^/    /' || {
         fail "Migration failed for $svc-service"
         exit 1
     }
@@ -93,7 +93,7 @@ echo "  User:       user@example.com       / user123"
 echo "  Vendor:     vendor@example.com     / vendor123"
 echo ""
 echo "Next steps:"
-echo "  - Start services:   npm run dev"
-echo "  - Or K8s mode:      npm run skaffold:dev"
+echo "  - Start services:   yarn dev"
+echo "  - Or K8s mode:      yarn skaffold:dev"
 echo "  - Generate ML data: python scripts/sample-data/generate_kafka_events.py --stream"
 echo ""

@@ -176,7 +176,7 @@ services:
       - .:/app
       - /app/node_modules
       - /app/apps/nestjs-services/api-gateway/node_modules
-    command: npx nest start --watch
+    command: yarn nest start --watch
     working_dir: /app/apps/nestjs-services/api-gateway
 
   auth-service:
@@ -200,7 +200,7 @@ services:
       - .:/app
       - /app/node_modules
       - /app/apps/nestjs-services/auth-service/node_modules
-    command: npx nest start --watch
+    command: yarn nest start --watch
     working_dir: /app/apps/nestjs-services/auth-service
 
   user-service:
@@ -225,7 +225,7 @@ services:
       - .:/app
       - /app/node_modules
       - /app/apps/nestjs-services/user-service/node_modules
-    command: npx nest start --watch
+    command: yarn nest start --watch
     working_dir: /app/apps/nestjs-services/user-service
 
   vendor-service:
@@ -248,7 +248,7 @@ services:
       - .:/app
       - /app/node_modules
       - /app/apps/nestjs-services/vendor-service/node_modules
-    command: npx nest start --watch
+    command: yarn nest start --watch
     working_dir: /app/apps/nestjs-services/vendor-service
 
   event-service:
@@ -274,7 +274,7 @@ services:
       - .:/app
       - /app/node_modules
       - /app/apps/nestjs-services/event-service/node_modules
-    command: npx nest start --watch
+    command: yarn nest start --watch
     working_dir: /app/apps/nestjs-services/event-service
 
   agent-service:
@@ -301,7 +301,7 @@ services:
       - .:/app
       - /app/node_modules
       - /app/apps/nestjs-services/agent-service/node_modules
-    command: npx nest start --watch
+    command: yarn nest start --watch
     working_dir: /app/apps/nestjs-services/agent-service
 
   frontend:
@@ -318,7 +318,7 @@ services:
       - /app/node_modules
       - /app/apps/frontend/node_modules
       - /app/apps/frontend/.next
-    command: npx next dev
+    command: yarn next dev
     working_dir: /app/apps/frontend
 
   admin-frontend:
@@ -338,7 +338,7 @@ services:
       - /app/node_modules
       - /app/apps/admin-frontend/node_modules
       - /app/apps/admin-frontend/.next
-    command: npx next dev
+    command: yarn next dev
     working_dir: /app/apps/admin-frontend
 
   # =========================================================================
@@ -440,7 +440,7 @@ services:
       - .:/app
       - /app/node_modules
       - /app/apps/nestjs-services/search-service/node_modules
-    command: npx nest start --watch
+    command: yarn nest start --watch
     working_dir: /app/apps/nestjs-services/search-service
 
 volumes:

@@ -5,16 +5,37 @@
 # Requires output: 'standalone' in next.config.js.
 # ============================================================
 
+# syntax=docker/dockerfile:1
+
 # ---- Stage 1: Install dependencies ----
 FROM node:20-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Copy workspace root files for npm ci
-COPY package.json package-lock.json nx.json tsconfig.base.json workspace.json ./
+COPY .yarnrc.yml ./
+COPY package.json yarn.lock nx.json tsconfig.base.json workspace.json ./
+COPY libs/auth/package.json libs/auth/
+COPY libs/database-client/package.json libs/database-client/
+COPY libs/elasticsearch-client/package.json libs/elasticsearch-client/
+COPY libs/kafka-client/package.json libs/kafka-client/
+COPY libs/nats-client/package.json libs/nats-client/
+COPY libs/shared-types/package.json libs/shared-types/
+COPY libs/utils/package.json libs/utils/
 COPY apps/frontend/package.json apps/frontend/
+COPY apps/admin-frontend/package.json apps/admin-frontend/
+COPY apps/nestjs-services/api-gateway/package.json apps/nestjs-services/api-gateway/
+COPY apps/nestjs-services/auth-service/package.json apps/nestjs-services/auth-service/
+COPY apps/nestjs-services/user-service/package.json apps/nestjs-services/user-service/
+COPY apps/nestjs-services/vendor-service/package.json apps/nestjs-services/vendor-service/
+COPY apps/nestjs-services/event-service/package.json apps/nestjs-services/event-service/
+COPY apps/nestjs-services/booking-service/package.json apps/nestjs-services/booking-service/
+COPY apps/nestjs-services/agent-service/package.json apps/nestjs-services/agent-service/
+COPY apps/nestjs-services/search-service/package.json apps/nestjs-services/search-service/
 
-RUN npm ci --no-audit --no-fund && npm cache clean --force && rm -rf /tmp/* /root/.npm /root/.cache
+RUN --mount=type=cache,target=/root/.yarn,id=yarn \
+    corepack enable && \
+    yarn install && \
+    rm -rf /tmp/* /root/.cache
 
 # ---- Stage 2: Development (hot reload) ----
 FROM node:20-alpine AS development
@@ -23,30 +44,48 @@ WORKDIR /app
 RUN addgroup -g 1001 -S appgroup && \
     adduser -u 1001 -S appuser -G appgroup
 
-COPY package.json package-lock.json nx.json tsconfig.base.json workspace.json ./
+COPY .yarnrc.yml ./
+COPY package.json yarn.lock nx.json tsconfig.base.json workspace.json ./
+COPY libs/auth/package.json libs/auth/
+COPY libs/database-client/package.json libs/database-client/
+COPY libs/elasticsearch-client/package.json libs/elasticsearch-client/
+COPY libs/kafka-client/package.json libs/kafka-client/
+COPY libs/nats-client/package.json libs/nats-client/
+COPY libs/shared-types/package.json libs/shared-types/
+COPY libs/utils/package.json libs/utils/
 COPY apps/frontend/package.json apps/frontend/
+COPY apps/admin-frontend/package.json apps/admin-frontend/
+COPY apps/nestjs-services/api-gateway/package.json apps/nestjs-services/api-gateway/
+COPY apps/nestjs-services/auth-service/package.json apps/nestjs-services/auth-service/
+COPY apps/nestjs-services/user-service/package.json apps/nestjs-services/user-service/
+COPY apps/nestjs-services/vendor-service/package.json apps/nestjs-services/vendor-service/
+COPY apps/nestjs-services/event-service/package.json apps/nestjs-services/event-service/
+COPY apps/nestjs-services/booking-service/package.json apps/nestjs-services/booking-service/
+COPY apps/nestjs-services/agent-service/package.json apps/nestjs-services/agent-service/
+COPY apps/nestjs-services/search-service/package.json apps/nestjs-services/search-service/
 
-RUN npm ci --no-audit --no-fund && npm cache clean --force && rm -rf /tmp/* /root/.npm /root/.cache
+RUN --mount=type=cache,target=/root/.yarn,id=yarn \
+    corepack enable && \
+    yarn install && \
+    rm -rf /tmp/* /root/.cache
 
 COPY apps/frontend/ apps/frontend/
 
 ENV NODE_ENV=development
 EXPOSE 3000
 
-CMD ["npx", "nx", "run", "frontend:serve"]
+CMD ["yarn", "nx", "run", "frontend:serve"]
 
 # ---- Stage 3: Build Next.js with NX ----
 FROM deps AS builder
 WORKDIR /app
 
-# Copy frontend source (libs/ not needed — frontend has no workspace deps yet;
-# add COPY libs/ here when workspace packages are adopted)
 COPY apps/frontend/ apps/frontend/
 
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 
-RUN npx nx build frontend
+RUN yarn nx build frontend
 
 # ---- Stage 4: Production runtime ----
 FROM node:20-alpine AS runner
@@ -61,13 +100,11 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 
-# Copy standalone output (requires output: 'standalone' in next.config.js)
 COPY --from=builder --chown=nextjs:nodejs /app/apps/frontend/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/apps/frontend/.next/static ./apps/frontend/.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/apps/frontend/public ./apps/frontend/public
 
-# Security hardening
-RUN rm -rf /tmp/* /root/.npm /root/.cache
+RUN rm -rf /tmp/* /root/.yarn /root/.cache
 
 USER nextjs
 

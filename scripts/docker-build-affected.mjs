@@ -7,7 +7,7 @@
  *   node scripts/docker-build-affected.mjs --push       # build + push
  *   node scripts/docker-build-affected.mjs --tag=latest # custom tag (default: git SHA)
  *
- * Requires: node, npm ci already run at root, Docker daemon running.
+ * Requires: node, yarn install already run at root, Docker daemon running.
  */
 
 import { execSync } from "node:child_process";
@@ -18,12 +18,15 @@ import { existsSync } from "node:fs";
 // ---------------------------------------------------------------------------
 // Only NestJS services + frontend (no python-workers — those are deployed separately)
 const SERVICE_MAP = {
-  "frontend":       { dockerfile: "apps/frontend/Dockerfile", target: "runner" },
-  "api-gateway":    { dockerfile: "apps/nestjs-services/api-gateway/Dockerfile", target: "production" },
-  "auth-service":   { dockerfile: "apps/nestjs-services/auth-service/Dockerfile", target: "production" },
-  "user-service":   { dockerfile: "apps/nestjs-services/user-service/Dockerfile", target: "production" },
-  "vendor-service": { dockerfile: "apps/nestjs-services/vendor-service/Dockerfile", target: "production" },
-  "event-service":  { dockerfile: "apps/nestjs-services/event-service/Dockerfile", target: "production" },
+  "frontend":       { dockerfile: "apps/frontend/Dockerfile", target: "development" },
+  "admin-frontend": { dockerfile: "apps/admin-frontend/Dockerfile", target: "development" },
+  "api-gateway":    { dockerfile: "apps/nestjs-services/api-gateway/Dockerfile", target: "development" },
+  "auth-service":   { dockerfile: "apps/nestjs-services/auth-service/Dockerfile", target: "development" },
+  "user-service":   { dockerfile: "apps/nestjs-services/user-service/Dockerfile", target: "development" },
+  "vendor-service": { dockerfile: "apps/nestjs-services/vendor-service/Dockerfile", target: "development" },
+  "event-service":  { dockerfile: "apps/nestjs-services/event-service/Dockerfile", target: "development" },
+  "agent-service":  { dockerfile: "apps/nestjs-services/agent-service/Dockerfile", target: "development" },
+  "search-service": { dockerfile: "apps/nestjs-services/search-service/Dockerfile", target: "development" },
 };
 
 const DEPLOYABLE = Object.keys(SERVICE_MAP);
@@ -48,7 +51,7 @@ function getTag() {
 }
 
 function getAffectedServices() {
-  const raw = execSync("npx nx show projects --affected --base=main --head=HEAD --json", {
+  const raw = execSync("yarn nx show projects --affected --base=main --head=HEAD --json", {
     encoding: "utf8",
   });
   const allAffected = JSON.parse(raw);

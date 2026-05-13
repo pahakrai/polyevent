@@ -8,17 +8,17 @@ build:
       context: .
       docker:
         dockerfile: apps/nestjs-services/api-gateway/Dockerfile
-        target: production
+        target: development
     - image: polydom/auth-service
       context: .
       docker:
         dockerfile: apps/nestjs-services/auth-service/Dockerfile
-        target: production
+        target: development
     - image: polydom/frontend
       context: .
       docker:
         dockerfile: apps/frontend/Dockerfile
-        target: runner
+        target: development
   local:
     push: false
     concurrency: 1

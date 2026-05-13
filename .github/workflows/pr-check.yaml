@@ -25,11 +25,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
+          cache: 'yarn'
 
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run test
+      - run: corepack enable && yarn install --immutable
+      - run: yarn lint
+      - run: yarn test
 
   # ------------------------------------------------------------------
   # Detect which deployable services changed
@@ -47,16 +47,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
+          cache: 'yarn'
 
-      - run: npm ci
+      - run: corepack enable && yarn install --immutable
 
       - name: Compute affected services
         id: affected
         run: |
           DEPLOYABLE='["api-gateway","auth-service","user-service","vendor-service","event-service","frontend"]'
 
-          AFFECTED=$(npx nx show projects --affected --base=origin/main --head=HEAD --json)
+          AFFECTED=$(yarn nx show projects --affected --base=origin/main --head=HEAD --json)
           echo "All NX-affected projects: $AFFECTED"
 
           FILTERED=$(echo "$AFFECTED" | jq -c "[.[] | select(. as \$p | $DEPLOYABLE | index(\$p))]")

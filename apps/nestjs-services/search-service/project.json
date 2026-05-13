@@ -3,20 +3,24 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/nestjs-services/search-service/src",
   "projectType": "application",
+  "implicitDependencies": [
+    "shared-types",
+    "utils"
+  ],
   "targets": {
     "build": {
       "executor": "nx:run-commands",
       "outputs": ["{projectRoot}/dist"],
       "options": {
-        "command": "nest build --webpack",
+        "command": "nest build",
         "cwd": "apps/nestjs-services/search-service"
       },
       "configurations": {
         "production": {
-          "command": "nest build --webpack"
+          "command": "nest build"
         },
         "development": {
-          "command": "nest build --webpack"
+          "command": "nest build"
         }
       }
     },

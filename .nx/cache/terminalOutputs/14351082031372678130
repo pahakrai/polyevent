@@ -1,0 +1,8 @@
+[1mNo tests found, exiting with code 1[22m
+Run with `--passWithNoTests` to exit with code 0
+In [1mC:\Users\user\repo\polydom\apps\nestjs-services\booking-service[22m
+  9 files checked.
+  testMatch: [33m**/__tests__/**/*.[jt]s?(x), **/?(*.)+(spec|test).[tj]s?(x)[39m - 0 matches
+  testPathIgnorePatterns: [33m\\node_modules\\[39m - 9 matches
+  testRegex:  - 0 matches
+Pattern:  - 0 matches

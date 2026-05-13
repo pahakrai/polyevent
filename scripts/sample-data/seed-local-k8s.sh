@@ -63,7 +63,7 @@ if ! kubectl get namespace "$NAMESPACE" &> /dev/null; then
     warn "Namespace '$NAMESPACE' not found."
     log "Available namespaces:"
     kubectl get namespaces
-    log "Deploy the stack first: npm run skaffold:dev"
+    log "Deploy the stack first: yarn skaffold:dev"
     exit 1
 fi
 ok "Namespace '$NAMESPACE' found"
@@ -72,7 +72,7 @@ ok "Namespace '$NAMESPACE' found"
 POSTGRES_POD=$(kubectl get pods -n "$NAMESPACE" -l app=postgres -o jsonpath='{.items[0].metadata.name}' 2>/dev/null || echo "")
 if [ -z "$POSTGRES_POD" ]; then
     fail "PostgreSQL pod not found in namespace '$NAMESPACE'."
-    log "Deploy the stack first: npm run skaffold:dev"
+    log "Deploy the stack first: yarn skaffold:dev"
     exit 1
 fi
 ok "PostgreSQL pod found: $POSTGRES_POD"
@@ -130,7 +130,7 @@ log "Running migrations (schema + sample data)..."
 echo ""
 for svc in "${ALL_SERVICES[@]}"; do
     log "Migrating $svc-service..."
-    npm run "db:migrate:$svc" 2>&1 | sed 's/^/    /' || {
+    yarn workspace $svc-service db:migrate 2>&1 | sed 's/^/    /' || {
         warn "Migration for $svc-service failed (may already be up to date)"
     }
     ok "  $svc-service migrated"

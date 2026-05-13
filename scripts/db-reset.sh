@@ -53,7 +53,7 @@ fi
 if [ "$MODE" = "docker" ]; then
     # Check if postgres container is running
     if ! docker ps --format '{{.Names}}' 2>/dev/null | grep -q "postgres"; then
-        fail "PostgreSQL container not running. Start it with: npm run dev:infra"
+        fail "PostgreSQL container not running. Start it with: yarn dev:infra"
         exit 1
     fi
 
@@ -69,7 +69,7 @@ if [ "$MODE" = "docker" ]; then
         log "Re-running migrations to re-populate sample data..."
         for svc in "${ALL_SERVICES[@]}"; do
             log "  Migrating $svc-service..."
-            npm run "db:migrate:$svc" 2>&1 | sed 's/^/    /' || warn "Migration for $svc-service failed"
+            yarn workspace $svc-service db:migrate 2>&1 | sed 's/^/    /' || warn "Migration for $svc-service failed"
         done
         ok "Migrations complete — sample data re-populated"
     fi
@@ -94,7 +94,7 @@ elif [ "$MODE" = "k8s" ]; then
         log "Re-running migrations to re-populate sample data..."
         for svc in "${ALL_SERVICES[@]}"; do
             log "  Migrating $svc-service..."
-            npm run "db:migrate:$svc" 2>&1 | sed 's/^/    /' || warn "Migration for $svc-service failed"
+            yarn workspace $svc-service db:migrate 2>&1 | sed 's/^/    /' || warn "Migration for $svc-service failed"
         done
         ok "Migrations complete — sample data re-populated"
     fi

@@ -9,14 +9,14 @@
 # Development (hybrid workflow — minimal memory/network):
 #   Frontend (Next.js): file sync → hot reload on save, no rebuild.
 #   Backend (NestJS):  rebuilds on file change via Docker layer cache
-#     + npm cache mount + NX cache mount for fast incremental builds.
+#     + yarn cache mount + NX cache mount for fast incremental builds.
 #   Tags: sha256 content-addressable (no registry push needed).
 #   Prune: enabled (--no-prune=false) to keep local disk usage low.
 #
 # Usage:
-#   npm run skaffold:dev           Dev mode: port-forward + watch
-#   npm run skaffold:run           One-shot local deploy
-#   npm run skaffold:build         Build images only
+#   yarn skaffold:dev           Dev mode: port-forward + watch
+#   yarn skaffold:run           One-shot local deploy
+#   yarn skaffold:build         Build images only
 #
 # For production / staging, use Kustomize directly:
 #   kubectl apply -k kubernetes/overlays/production
@@ -89,8 +89,9 @@ build:
           - src: 'libs/**/src/**/*.{ts,tsx}'
             dest: /app/libs/
   local:
+    useBuildkit: true
     push: false
-    concurrency: 1
+    concurrency: 0
 
 manifests:
   rawYaml:

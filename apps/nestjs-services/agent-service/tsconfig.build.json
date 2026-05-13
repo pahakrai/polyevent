@@ -1,4 +1,15 @@
 {
   "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@polydom/shared-types": ["../../../libs/shared-types/dist/index.d.ts"],
+      "@polydom/kafka-client": ["../../../libs/kafka-client/dist/index.d.ts"],
+      "@polydom/nats-client": ["../../../libs/nats-client/dist/index.d.ts"],
+      "@polydom/database-client": ["../../../libs/database-client/dist/index.d.ts"],
+      "@polydom/elasticsearch-client": ["../../../libs/elasticsearch-client/dist/index.d.ts"],
+      "@polydom/utils": ["../../../libs/utils/dist/index.d.ts"],
+      "@polydom/auth": ["../../../libs/auth/dist/index.d.ts"]
+    }
+  },
   "exclude": ["node_modules", "dist", "test", "**/*.spec.ts", "**/*.test.ts"]
 }

@@ -11,7 +11,7 @@ echo "=== $SERVICE: Starting (development mode) ==="
 
 # Wait for PostgreSQL to be ready
 echo "[$SERVICE] Waiting for PostgreSQL..."
-for i in $(seq 1 30); do
+for i in $(seq 1 20); do
   DB_VAR=$(echo "$SERVICE" | sed 's/-service//' | tr '[:lower:]-' '[:upper:]_')_DATABASE_URL
   eval "DB_URL=\${$DB_VAR:-\${DATABASE_URL:-}}"
   if [ -z "$DB_URL" ]; then
@@ -22,14 +22,14 @@ for i in $(seq 1 30); do
     echo "[$SERVICE] PostgreSQL ready."
     break
   fi
-  echo "[$SERVICE] Waiting for PostgreSQL ($i/30)..."
+  echo "[$SERVICE] Waiting for PostgreSQL ($i/20)..."
   sleep 2
 done
 
 # Create pgvector extension for agent-service
 if [ "$SERVICE" = "agent-service" ]; then
-  echo "[agent-service] Creating pgvector extension (retry up to 15 times)..."
-  for i in $(seq 1 15); do
+  echo "[agent-service] Creating pgvector extension (retry up to 5 times)..."
+  for i in $(seq 1 5); do
     if node -e "
       const { Client } = require('pg');
       const client = new Client({ connectionString: '$DB_URL', connectionTimeoutMillis: 10000 });
@@ -51,11 +51,11 @@ if [ "$SERVICE" = "agent-service" ]; then
       echo "[agent-service] pgvector extension ready."
       break
     fi
-    echo "[agent-service] Retrying pgvector setup ($i/15)..."
-    sleep 4
+    echo "[agent-service] Retrying pgvector setup ($i/5)..."
+    sleep 2
   done || { echo "[agent-service] ERROR: pgvector extension creation failed after retries"; exit 1; }
 fi
 
 echo "[$SERVICE] Starting NestJS server..."
 cd /app
-exec npx nx run "$SERVICE:serve" --configuration=debug
+exec yarn nx run "$SERVICE:serve" --configuration=debug

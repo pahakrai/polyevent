@@ -5,24 +5,24 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Common Development Commands
 
 ### Root-level commands (from `package.json`)
-- `npm start` - Start all services (via NX `run-many --target=serve --all`)
-- `npm run build` - Build all projects
-- `npm run test` - Run tests for all projects
-- `npm run lint` - Lint all projects
-- `npm run format` - Format code with Prettier
-- `npm run docker:up` - Start all Docker Compose services (databases + apps with hot reload)
-- `npm run docker:down` - Stop all Docker Compose services
-- `npm run dev:infra` - Start Docker Compose **infrastructure only** (databases, message queues, search) — for running services natively
-- `npm run dev:infra:down` - Stop infrastructure-only Docker Compose
-- `npm run skaffold:dev` - Skaffold watch mode: build + deploy all services to local Kubernetes with port-forward
-- `npm run skaffold:dev:debug` - Skaffold watch mode with sequential builds (`--build-concurrency=1`) — prevents resource contention during builds
-- `npm run skaffold:run` - Skaffold one-shot: build + deploy all services to local Kubernetes once
-- `npm run skaffold:build` - Skaffold build only (no deploy)
-- `npm run k8s:apply` - Apply Kubernetes manifests
-- `npm run k8s:delete` - Delete Kubernetes resources
+- `yarn start` - Start all services (via NX `run-many --target=serve --all`)
+- `yarn build` - Build all projects
+- `yarn test` - Run tests for all projects
+- `yarn lint` - Lint all projects
+- `yarn format` - Format code with Prettier
+- `yarn docker:up` - Start all Docker Compose services (databases + apps with hot reload)
+- `yarn docker:down` - Stop all Docker Compose services
+- `yarn dev:infra` - Start Docker Compose **infrastructure only** (databases, message queues, search) — for running services natively
+- `yarn dev:infra:down` - Stop infrastructure-only Docker Compose
+- `yarn skaffold:dev` - Skaffold watch mode: build + deploy all services to local Kubernetes with port-forward
+- `yarn skaffold:dev:debug` - Skaffold watch mode with sequential builds (`--build-concurrency=1`) — prevents resource contention during builds
+- `yarn skaffold:run` - Skaffold one-shot: build + deploy all services to local Kubernetes once
+- `yarn skaffold:build` - Skaffold build only (no deploy)
+- `yarn k8s:apply` - Apply Kubernetes manifests
+- `yarn k8s:delete` - Delete Kubernetes resources
 
 ### Database operations (per service)
-Each NestJS service has its own database. Use `npm run db:<action>:<service>` where `<service>` is `auth`, `user`, `vendor`, `event`, `booking`, `notification`, `analytics`, `admin`, `agent`. Actions:
+Each NestJS service has its own database. Use `yarn db:<action>:<service>` where `<service>` is `auth`, `user`, `vendor`, `event`, `booking`, `notification`, `analytics`, `admin`, `agent`. Actions:
 - `db:generate` - Generate Drizzle migrations
 - `db:migrate` - Run migrations
 - `db:seed` - Seed database
@@ -31,10 +31,10 @@ Each NestJS service has its own database. Use `npm run db:<action>:<service>` wh
 
 ### Database reset (truncate all tables)
 During development, you can wipe all table records while keeping schemas intact:
-- `npm run db:truncate:docker` - Truncate all tables in Docker PostgreSQL
-- `npm run db:truncate:k8s` - Truncate all tables in K8s PostgreSQL
-- `npm run db:reset:docker` - Truncate + re-migrate (Docker)
-- `npm run db:reset:k8s` - Truncate + re-migrate (K8s)
+- `yarn db:truncate:docker` - Truncate all tables in Docker PostgreSQL
+- `yarn db:truncate:k8s` - Truncate all tables in K8s PostgreSQL
+- `yarn db:reset:docker` - Truncate + re-migrate (Docker)
+- `yarn db:reset:k8s` - Truncate + re-migrate (K8s)
 - `bash scripts/db-reset.sh docker --migrate` - Manual control with `--migrate` flag
 
 ### NX commands
@@ -44,8 +44,8 @@ During development, you can wipe all table records while keeping schemas intact:
 - `nx lint <project>` - Lint a single project
 
 ### Service-specific commands
-- **Frontend**: `cd apps/frontend && npm run dev` (Next.js dev server)
-- **NestJS services**: `cd apps/nestjs-services/<service> && npm run start:dev` (watch mode)
+- **Frontend**: `cd apps/frontend && yarn dev` (Next.js dev server)
+- **NestJS services**: `cd apps/nestjs-services/<service> && yarn start:dev` (watch mode)
 - **Python workers**: See `apps/python-workers/`
 
 ## Architecture Overview
@@ -114,9 +114,9 @@ Databases are created automatically via `docker-entrypoint-initdb.d` mechanism:
 
 ### Setup steps
 1. Copy `.env.example` to `.env` and adjust database URLs
-2. `npm run docker:up` - Start PostgreSQL and other dependencies
-3. Run migrations per service: `npm run db:migrate:auth`, etc.
-4. Seed databases: `npm run db:seed:auth`, etc.
+2. `yarn docker:up` - Start PostgreSQL and other dependencies
+3. Run migrations per service: `yarn db:migrate:auth`, etc.
+4. Seed databases: `yarn db:seed:auth`, etc.
 
 See `DATABASE_SETUP.md` for detailed instructions.
 
@@ -129,15 +129,15 @@ Two local development options are available:
 Run infrastructure in Docker, run services natively on the host. Best for rapid iteration on individual services.
 
 ```bash
-npm run dev:infra          # Start PostgreSQL, MongoDB, Redis, Kafka, Elasticsearch, etc.
-                           # All with named volumes for persistence across restarts
+yarn dev:infra          # Start PostgreSQL, MongoDB, Redis, Kafka, Elasticsearch, etc.
+                        # All with named volumes for persistence across restarts
 
 # Run services natively in separate terminals:
-cd apps/nestjs-services/auth-service && npm run start:dev
-cd apps/frontend && npm run dev
+cd apps/nestjs-services/auth-service && yarn start:dev
+cd apps/frontend && yarn dev
 
 # Or start multiple at once:
-nx run-many --target=serve --projects=frontend,api-gateway,auth-service
+yarn nx run-many --target=serve --projects=frontend,api-gateway,auth-service
 ```
 
 **pgAdmin** is included in both Docker Compose setups. Login at http://localhost:5050 with:
@@ -162,8 +162,8 @@ nx run-many --target=serve --projects=frontend,api-gateway,auth-service
 All microservices, frontend, and Python workers run in a local Kubernetes cluster with persistent volumes. Requires: Docker Desktop K8s, minikube, or kind.
 
 ```bash
-npm run skaffold:dev       # Watch mode: rebuilds + redeploys on file changes with port-forward
-npm run skaffold:run       # One-shot: build + deploy, then exit
+yarn skaffold:dev       # Watch mode: rebuilds + redeploys on file changes with port-forward
+yarn skaffold:run       # One-shot: build + deploy, then exit
 ```
 
 This deploys everything to the `polydom-dev` namespace:
@@ -228,7 +228,7 @@ See `README.md` for detailed descriptions of each service (Auth, User, Vendor, E
 - **Service dependencies**: Each NestJS service has its own `package.json` with NestJS dependencies
 - **Library dependencies**: Shared libraries assume peer dependencies (e.g., `@nestjs/common`) provided by consuming services
 - **Python dependencies**: `requirements.txt` in `apps/python-workers/`
-- **Development**: Use `npm install` at root; service-specific dependencies are hoisted via workspaces
+- **Development**: Use `yarn install` at root; service-specific dependencies are hoisted via workspaces
 
 ### Claude Code settings
 - Custom permissions are configured in `.claude/settings.local.json` allowing Bash commands for directory operations, PowerShell, find, and xargs grep.
@@ -271,9 +271,9 @@ No Cursor rules (`.cursorrules` or `.cursor/rules/`) or GitHub Copilot instructi
 Consider framework coupling: If a library is marked "NestJS-coupled", it uses `@Injectable()` and assumes `@nestjs/common` is available. This is acceptable for current monorepo but limits reuse outside NestJS.
 
 ### Testing
-- Run all tests: `npm run test`
-- Run specific service tests: `nx test <project>`
-- Test coverage: `nx test <project> --coverage`
+- Run all tests: `yarn test`
+- Run specific service tests: `yarn nx test <project>`
+- Test coverage: `yarn nx test <project> --coverage`
 
 ### Deployment
 - Docker images defined per service
