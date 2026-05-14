@@ -33,6 +33,7 @@ export class VectorService implements OnModuleInit, OnModuleDestroy {
         connectionString,
         max: 10,
         idleTimeoutMillis: 30000,
+        connectionTimeoutMillis: 5000,
       });
 
       // Test connection
@@ -46,6 +47,10 @@ export class VectorService implements OnModuleInit, OnModuleDestroy {
       );
       this.pool = null;
     }
+  }
+
+  get isConnected(): boolean {
+    return this.pool !== null;
   }
 
   async onModuleDestroy() {

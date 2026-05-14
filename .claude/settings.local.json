@@ -325,7 +325,8 @@
       "Bash(yarn nx *)",
       "Bash(xargs -r docker rmi -f)",
       "Bash(yarn skaffold:dev:debug)",
-      "Bash(yarn skaffold:run *)"
+      "Bash(yarn skaffold:run *)",
+      "mcp__ide__getDiagnostics"
     ]
   },
   "enableAllProjectMcpServers": true,

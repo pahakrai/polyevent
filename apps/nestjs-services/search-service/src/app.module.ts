@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { SearchModule } from './search/search.module';
+import { VectorModule } from './vector/vector.module';
 import { HealthController } from './health.controller';
 
 const imports: any[] = [
@@ -9,6 +10,7 @@ const imports: any[] = [
     envFilePath: ['.env', '../../../.env'],
   }),
   SearchModule,
+  VectorModule,
 ];
 
 @Module({
