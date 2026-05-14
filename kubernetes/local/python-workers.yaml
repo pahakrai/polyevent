@@ -1,0 +1,184 @@
+# Python workers — FastAPI inference + Celery training worker
+# Only deployed when Skaffold --profile ml is active
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: training-data-pvc
+  namespace: polydom-dev
+  labels:
+    skaffold.dev/cleanup: "false"
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inference
+  namespace: polydom-dev
+  labels:
+    app: inference
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inference
+  template:
+    metadata:
+      labels:
+        app: inference
+    spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: inference
+        image: polydom/python-workers:dev
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
+        env:
+        - name: VECTOR_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database-secrets
+              key: vector-database-url
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: redis-secrets
+              key: redis-url
+        - name: ELASTICSEARCH_HOSTS
+          value: http://elasticsearch:9200
+        command:
+        - uvicorn
+        - inference.api:app
+        - --host
+        - "0.0.0.0"
+        - --port
+        - "8000"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        startupProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          failureThreshold: 30
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: inference
+  namespace: polydom-dev
+spec:
+  selector:
+    app: inference
+  ports:
+  - port: 8000
+    targetPort: 8000
+---
+# Celery worker for on-demand ML training
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery-worker
+  namespace: polydom-dev
+  labels:
+    app: celery-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: celery-worker
+  template:
+    metadata:
+      labels:
+        app: celery-worker
+    spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: celery-worker
+        image: polydom/python-workers:dev
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
+        env:
+        - name: VECTOR_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database-secrets
+              key: vector-database-url
+        - name: SOURCE_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database-secrets
+              key: source-database-url
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: redis-secrets
+              key: redis-url
+        - name: FEATURE_STORE_URL
+          valueFrom:
+            secretKeyRef:
+              name: redis-secrets
+              key: redis-url
+        - name: PIPELINE_MODE
+          value: "incremental"
+        - name: PIPELINE_WINDOW_DAYS
+          value: "7"
+        - name: TRAINING_DATA_PATH
+          value: "/data/training"
+        - name: BULK_LOAD_PGVECTOR
+          value: "1"
+        - name: EXPORT_EVENT_CATALOG
+          value: "1"
+        command:
+        - celery
+        - -A
+        - config.celery_app
+        - worker
+        - --loglevel=info
+        - --concurrency=1
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "4Gi"
+            cpu: "2000m"
+        volumeMounts:
+        - name: training-data
+          mountPath: /data/training
+      volumes:
+      - name: training-data
+        persistentVolumeClaim:
+          claimName: training-data-pvc

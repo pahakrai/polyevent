@@ -189,3 +189,22 @@ portForward:
     namespace: polydom-dev
     port: 3000
     localPort: 3060
+
+# ── Profiles: opt-in extras activated with --profile ──────────────────────
+profiles:
+  - name: ml
+    build:
+      artifacts:
+        - image: polydom/python-workers
+          context: .
+          docker:
+            dockerfile: apps/python-workers/Dockerfile
+    manifests:
+      rawYaml:
+        - kubernetes/local/python-workers.yaml
+    portForward:
+      - resourceType: service
+        resourceName: inference
+        namespace: polydom-dev
+        port: 8000
+        localPort: 8000

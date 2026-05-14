@@ -436,6 +436,60 @@ class InferenceVectorResponse(BaseModel):
     ttl_seconds: int = 1800
 
 
+class TrainRequest(BaseModel):
+    mode: str = Field(default="incremental", pattern="^(full|incremental)$")
+    window_days: int = Field(default=7, ge=1, le=365)
+
+
+class TrainResponse(BaseModel):
+    status: str
+    task_id: str
+    poll_url: str
+
+
+class TrainStatusResponse(BaseModel):
+    task_id: str
+    state: str
+    progress: dict = {}
+
+
+@app.post("/api/v1/train", response_model=TrainResponse, status_code=202)
+async def trigger_training(payload: TrainRequest):
+    """
+    Submit an on-demand ML training job.
+
+    The job is dispatched to a Celery worker via Redis and runs in an
+    isolated OS process — training never blocks the inference API.
+    """
+    from tasks import execute_training
+
+    task = execute_training.delay(payload.mode, payload.window_days)
+    return TrainResponse(
+        status="accepted",
+        task_id=task.id,
+        poll_url=f"/api/v1/train/status/{task.id}",
+    )
+
+
+@app.get("/api/v1/train/status/{task_id}", response_model=TrainStatusResponse)
+async def check_training_status(task_id: str):
+    """Poll training job progress by Celery task ID."""
+    from config import celery_app
+
+    result = celery_app.AsyncResult(task_id)
+    response = TrainStatusResponse(
+        task_id=task_id,
+        state=result.state,
+    )
+    if result.state == "IN_PROGRESS" and result.info:
+        response.progress = result.info if isinstance(result.info, dict) else {}
+    elif result.state == "SUCCESS":
+        response.progress = result.result if isinstance(result.result, dict) else {}
+    elif result.state == "FAILURE":
+        response.progress = {"error": str(result.info)}
+    return response
+
+
 @app.post("/inference-vector", response_model=InferenceVectorResponse)
 async def compute_inference_vector(request: InferenceVectorRequest):
     """
