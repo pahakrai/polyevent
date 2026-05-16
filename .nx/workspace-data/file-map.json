@@ -77,7 +77,7 @@
       },
       {
         "file": ".claude/settings.local.json",
-        "hash": "16921381086933622576"
+        "hash": "17068328803288783551"
       },
       {
         "file": ".env.example",
@@ -261,7 +261,11 @@
       },
       {
         "file": "apps/python-workers/Dockerfile",
-        "hash": "7895341341777054176"
+        "hash": "17011602506899815309"
+      },
+      {
+        "file": "apps/python-workers/config.py",
+        "hash": "16892174435780974111"
       },
       {
         "file": "apps/python-workers/docs/ARCHITECTURE.md",
@@ -273,7 +277,7 @@
       },
       {
         "file": "apps/python-workers/inference/api.py",
-        "hash": "9738441029242732631"
+        "hash": "18365539606771101668"
       },
       {
         "file": "apps/python-workers/inference/candidate_generator.py",
@@ -325,7 +329,7 @@
       },
       {
         "file": "apps/python-workers/requirements.txt",
-        "hash": "9211908279842462251"
+        "hash": "3866246534423402244"
       },
       {
         "file": "apps/python-workers/schemas/__init__.py",
@@ -354,6 +358,10 @@
       {
         "file": "apps/python-workers/schemas/user_activity.py",
         "hash": "15436265223252279212"
+      },
+      {
+        "file": "apps/python-workers/tasks.py",
+        "hash": "4518299593327707786"
       },
       {
         "file": "docker-compose.infra.yml",
@@ -760,8 +768,12 @@
         "hash": "16673031772899362500"
       },
       {
+        "file": "kubernetes/local/python-workers.yaml",
+        "hash": "10860454764513166765"
+      },
+      {
         "file": "kubernetes/local/services.yaml",
-        "hash": "3308367554913587531"
+        "hash": "2664323187837788305"
       },
       {
         "file": "kubernetes/overlays/production/kustomization.yaml",
@@ -861,7 +873,7 @@
       },
       {
         "file": "skaffold.yaml",
-        "hash": "9199057589108131359"
+        "hash": "6181030372193321271"
       },
       {
         "file": "tools/pgadmin/servers-k8s.json",
@@ -921,10 +933,300 @@
       }
     ],
     "projectFileMap": {
+      "utils": [
+        {
+          "file": "libs/utils/README.md",
+          "hash": "738884875471645193"
+        },
+        {
+          "file": "libs/utils/package.json",
+          "hash": "15136892635826253942",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "libs/utils/project.json",
+          "hash": "8768187055503794773"
+        },
+        {
+          "file": "libs/utils/src/index.ts",
+          "hash": "10128229876940829604"
+        },
+        {
+          "file": "libs/utils/src/logger/console.logger.ts",
+          "hash": "7737896131579695934"
+        },
+        {
+          "file": "libs/utils/src/logger/logger.interface.ts",
+          "hash": "9633930139258311075"
+        },
+        {
+          "file": "libs/utils/src/logger/logger.service.ts",
+          "hash": "17703441166086423484",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "libs/utils/src/logger/nest-logger.adapter.ts",
+          "hash": "6743283142485387148",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "libs/utils/src/transformers/date.transformer.ts",
+          "hash": "3262416956447932244",
+          "deps": [
+            "npm:class-transformer"
+          ]
+        },
+        {
+          "file": "libs/utils/src/validators/email.validator.ts",
+          "hash": "8637096156353865468",
+          "deps": [
+            "npm:class-validator"
+          ]
+        },
+        {
+          "file": "libs/utils/tsconfig.json",
+          "hash": "14910574388472849694"
+        },
+        {
+          "file": "libs/utils/tsconfig.lib.json",
+          "hash": "4693710514456808669"
+        }
+      ],
+      "auth": [
+        {
+          "file": "libs/auth/package.json",
+          "hash": "3419048319342661401",
+          "deps": [
+            "npm:@types/passport-jwt",
+            "npm:@nestjs/common",
+            "npm:@nestjs/core",
+            "npm:@nestjs/jwt",
+            "npm:@nestjs/passport",
+            "npm:passport-jwt"
+          ]
+        },
+        {
+          "file": "libs/auth/project.json",
+          "hash": "17796888602999702623"
+        },
+        {
+          "file": "libs/auth/src/decorators/current-user.decorator.ts",
+          "hash": "11782018244450826406",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "libs/auth/src/guards/resource-owner.guard.ts",
+          "hash": "8376457780766108244",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/core"
+          ]
+        },
+        {
+          "file": "libs/auth/src/guards/roles.guard.ts",
+          "hash": "18286115982808989793",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/core"
+          ]
+        },
+        {
+          "file": "libs/auth/src/index.ts",
+          "hash": "10698624243493100486"
+        },
+        {
+          "file": "libs/auth/src/jwt-auth.module.ts",
+          "hash": "11307848362585411152",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/jwt",
+            "npm:@nestjs/passport"
+          ]
+        },
+        {
+          "file": "libs/auth/src/jwt.strategy.ts",
+          "hash": "11783595442791557143",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/passport",
+            "npm:passport-jwt",
+            "shared-types"
+          ]
+        },
+        {
+          "file": "libs/auth/tsconfig.json",
+          "hash": "634795086719220447"
+        },
+        {
+          "file": "libs/auth/tsconfig.lib.json",
+          "hash": "2583700499102873687"
+        }
+      ],
+      "search-service": [
+        {
+          "file": "apps/nestjs-services/search-service/Dockerfile",
+          "hash": "7316788878390937501"
+        },
+        {
+          "file": "apps/nestjs-services/search-service/jest.config.ts",
+          "hash": "13315808545460995759",
+          "deps": [
+            "npm:jest"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/search-service/nest-cli.json",
+          "hash": "13333204323507668515"
+        },
+        {
+          "file": "apps/nestjs-services/search-service/package.json",
+          "hash": "13818167788340228201",
+          "deps": [
+            "npm:@nestjs/cli",
+            "npm:@nestjs/schematics",
+            "npm:@nestjs/testing",
+            "npm:@types/jest",
+            "npm:@types/node",
+            "npm:jest",
+            "npm:ts-jest",
+            "npm:typescript@5.7.2",
+            "npm:@nestjs/common",
+            "npm:@nestjs/config",
+            "npm:@nestjs/core",
+            "npm:@nestjs/platform-express",
+            "elasticsearch-client",
+            "npm:class-transformer",
+            "npm:class-validator",
+            "npm:dotenv",
+            "npm:ioredis",
+            "npm:pg",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/search-service/project.json",
+          "hash": "3393999552695516817"
+        },
+        {
+          "file": "apps/nestjs-services/search-service/src/app.module.ts",
+          "hash": "18083847689644963839",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/config"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/search-service/src/health.controller.spec.ts",
+          "hash": "789890712981732758",
+          "deps": [
+            "npm:@nestjs/testing"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/search-service/src/health.controller.ts",
+          "hash": "13751576956508779522",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/search-service/src/main.ts",
+          "hash": "785195667800606850",
+          "deps": [
+            "npm:@nestjs/core",
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/search-service/src/search/search.controller.spec.ts",
+          "hash": "10265260048168674225",
+          "deps": [
+            "npm:@nestjs/testing"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/search-service/src/search/search.controller.ts",
+          "hash": "8557029124251436142",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/search-service/src/search/search.module.ts",
+          "hash": "3327437356521399074",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/search-service/src/search/search.service.ts",
+          "hash": "12672701714252193823",
+          "deps": [
+            "npm:@nestjs/common",
+            [
+              "npm:ioredis",
+              "dynamic"
+            ],
+            [
+              "elasticsearch-client",
+              "dynamic"
+            ]
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/search-service/src/vector/vector.module.ts",
+          "hash": "4129655104921688707",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/search-service/src/vector/vector.service.ts",
+          "hash": "16168398383601960480",
+          "deps": [
+            "npm:@nestjs/common",
+            [
+              "npm:pg",
+              "dynamic"
+            ]
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/search-service/tsconfig.build.json",
+          "hash": "5286818590182626525"
+        },
+        {
+          "file": "apps/nestjs-services/search-service/tsconfig.json",
+          "hash": "18342541384458465567"
+        },
+        {
+          "file": "apps/nestjs-services/search-service/webpack.config.js",
+          "hash": "5761133112294047706",
+          "deps": [
+            "npm:webpack-node-externals",
+            "npm:webpack@5.97.1"
+          ]
+        }
+      ],
       "auth-service": [
         {
           "file": "apps/nestjs-services/auth-service/Dockerfile",
           "hash": "5165688407008004142"
+        },
+        {
+          "file": "apps/nestjs-services/auth-service/jest.config.ts",
+          "hash": "13699109551735350231",
+          "deps": [
+            "npm:jest"
+          ]
         },
         {
           "file": "apps/nestjs-services/auth-service/nest-cli.json",
@@ -972,7 +1274,7 @@
         },
         {
           "file": "apps/nestjs-services/auth-service/project.json",
-          "hash": "8021758319943204395"
+          "hash": "15016480927798358921"
         },
         {
           "file": "apps/nestjs-services/auth-service/src/app.module.ts",
@@ -981,6 +1283,13 @@
             "npm:@nestjs/common",
             "npm:@nestjs/config",
             "kafka-client"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/auth-service/src/auth/auth.controller.spec.ts",
+          "hash": "12178924051975963157",
+          "deps": [
+            "npm:@nestjs/testing"
           ]
         },
         {
@@ -1124,6 +1433,13 @@
           ]
         },
         {
+          "file": "apps/nestjs-services/auth-service/src/health.controller.spec.ts",
+          "hash": "710460496315931230",
+          "deps": [
+            "npm:@nestjs/testing"
+          ]
+        },
+        {
           "file": "apps/nestjs-services/auth-service/src/health.controller.ts",
           "hash": "13828337141647182534",
           "deps": [
@@ -1165,1909 +1481,17 @@
           ]
         }
       ],
-      "search-service": [
-        {
-          "file": "apps/nestjs-services/search-service/Dockerfile",
-          "hash": "7316788878390937501"
-        },
-        {
-          "file": "apps/nestjs-services/search-service/nest-cli.json",
-          "hash": "13333204323507668515"
-        },
-        {
-          "file": "apps/nestjs-services/search-service/package.json",
-          "hash": "13818167788340228201",
-          "deps": [
-            "npm:@nestjs/cli",
-            "npm:@nestjs/schematics",
-            "npm:@nestjs/testing",
-            "npm:@types/jest",
-            "npm:@types/node",
-            "npm:jest",
-            "npm:ts-jest",
-            "npm:typescript@5.7.2",
-            "npm:@nestjs/common",
-            "npm:@nestjs/config",
-            "npm:@nestjs/core",
-            "npm:@nestjs/platform-express",
-            "elasticsearch-client",
-            "npm:class-transformer",
-            "npm:class-validator",
-            "npm:dotenv",
-            "npm:ioredis",
-            "npm:pg",
-            "npm:rxjs"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/search-service/project.json",
-          "hash": "15183358450874692784"
-        },
-        {
-          "file": "apps/nestjs-services/search-service/src/app.module.ts",
-          "hash": "13589379347513838817",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:@nestjs/config"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/search-service/src/health.controller.ts",
-          "hash": "9492843926444754740",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/search-service/src/main.ts",
-          "hash": "785195667800606850",
-          "deps": [
-            "npm:@nestjs/core",
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/search-service/src/search/search.controller.ts",
-          "hash": "8557029124251436142",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/search-service/src/search/search.module.ts",
-          "hash": "3327437356521399074",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/search-service/src/search/search.service.ts",
-          "hash": "12672701714252193823",
-          "deps": [
-            "npm:@nestjs/common",
-            [
-              "npm:ioredis",
-              "dynamic"
-            ],
-            [
-              "elasticsearch-client",
-              "dynamic"
-            ]
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/search-service/src/vector/vector.module.ts",
-          "hash": "4129655104921688707",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/search-service/src/vector/vector.service.ts",
-          "hash": "16229598123221680521",
-          "deps": [
-            "npm:@nestjs/common",
-            [
-              "npm:pg",
-              "dynamic"
-            ]
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/search-service/tsconfig.build.json",
-          "hash": "5286818590182626525"
-        },
-        {
-          "file": "apps/nestjs-services/search-service/tsconfig.json",
-          "hash": "18342541384458465567"
-        },
-        {
-          "file": "apps/nestjs-services/search-service/webpack.config.js",
-          "hash": "5761133112294047706",
-          "deps": [
-            "npm:webpack-node-externals",
-            "npm:webpack@5.97.1"
-          ]
-        }
-      ],
-      "event-service": [
-        {
-          "file": "apps/nestjs-services/event-service/Dockerfile",
-          "hash": "15958268941802041584"
-        },
-        {
-          "file": "apps/nestjs-services/event-service/nest-cli.json",
-          "hash": "5977972196143888440"
-        },
-        {
-          "file": "apps/nestjs-services/event-service/package.json",
-          "hash": "15269109717816337146",
-          "deps": [
-            "npm:@nestjs/cli",
-            "npm:@nestjs/schematics",
-            "npm:@nestjs/testing",
-            "npm:@types/jest",
-            "npm:@types/node",
-            "npm:drizzle-kit",
-            "npm:jest",
-            "npm:ts-jest",
-            "npm:tsx",
-            "npm:typescript@5.7.2",
-            "npm:@neondatabase/serverless",
-            "npm:@nestjs/common",
-            "npm:@nestjs/config",
-            "npm:@nestjs/core",
-            "npm:@nestjs/platform-express",
-            "kafka-client",
-            "npm:class-transformer",
-            "npm:class-validator",
-            "npm:dotenv",
-            "npm:drizzle-orm",
-            "npm:rxjs"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/event-service/project.json",
-          "hash": "5929045653111166874"
-        },
-        {
-          "file": "apps/nestjs-services/event-service/src/app.module.ts",
-          "hash": "11483573768785383184",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:@nestjs/config",
-            "kafka-client",
-            "nats-client"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/event-service/src/database/client.ts",
-          "hash": "4597308061630797096",
-          "deps": [
-            "database-client",
-            "npm:dotenv"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/event-service/src/database/drizzle.config.ts",
-          "hash": "3677508816506302849",
-          "deps": [
-            "npm:drizzle-kit",
-            "npm:dotenv"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/event-service/src/database/migrations/0000_bouncy_the_stranger.sql",
-          "hash": "15863155378189634764"
-        },
-        {
-          "file": "apps/nestjs-services/event-service/src/database/migrations/0001_sample_data.sql",
-          "hash": "3144073520758319410"
-        },
-        {
-          "file": "apps/nestjs-services/event-service/src/database/migrations/meta/0000_snapshot.json",
-          "hash": "2297580362063506231"
-        },
-        {
-          "file": "apps/nestjs-services/event-service/src/database/migrations/meta/_journal.json",
-          "hash": "7267039127085989789"
-        },
-        {
-          "file": "apps/nestjs-services/event-service/src/database/schema.ts",
-          "hash": "15386267118110763846",
-          "deps": [
-            "npm:drizzle-orm"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/event-service/src/database/seed.ts",
-          "hash": "15721874059230078484"
-        },
-        {
-          "file": "apps/nestjs-services/event-service/src/event/dto/create-event.dto.ts",
-          "hash": "1124956440236762665",
-          "deps": [
-            "npm:class-validator"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/event-service/src/event/dto/index.ts",
-          "hash": "1534880637751061771"
-        },
-        {
-          "file": "apps/nestjs-services/event-service/src/event/dto/search-event.dto.ts",
-          "hash": "8510416034789495304",
-          "deps": [
-            "npm:class-validator",
-            "npm:class-transformer"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/event-service/src/event/dto/update-event.dto.ts",
-          "hash": "7150754755175106730",
-          "deps": [
-            "npm:class-validator"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/event-service/src/event/event-search.controller.ts",
-          "hash": "12116338228743775157",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/event-service/src/event/event.controller.ts",
-          "hash": "40872203302550006",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/event-service/src/event/event.module.ts",
-          "hash": "4888266232493295310",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/event-service/src/event/event.service.ts",
-          "hash": "13901965114039413051",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:drizzle-orm",
-            "kafka-client",
-            "nats-client"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/event-service/src/health.controller.ts",
-          "hash": "8062495403989386636",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/event-service/src/main.ts",
-          "hash": "269503011647854583",
-          "deps": [
-            "npm:@nestjs/core",
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/event-service/tsconfig.build.json",
-          "hash": "18226327615299451984"
-        },
-        {
-          "file": "apps/nestjs-services/event-service/tsconfig.json",
-          "hash": "17880755948990127816"
-        },
-        {
-          "file": "apps/nestjs-services/event-service/webpack.config.js",
-          "hash": "5761133112294047706",
-          "deps": [
-            "npm:webpack-node-externals",
-            "npm:webpack@5.97.1"
-          ]
-        }
-      ],
-      "user-service": [
-        {
-          "file": "apps/nestjs-services/user-service/Dockerfile",
-          "hash": "8629967006717070956"
-        },
-        {
-          "file": "apps/nestjs-services/user-service/nest-cli.json",
-          "hash": "5977972196143888440"
-        },
-        {
-          "file": "apps/nestjs-services/user-service/package.json",
-          "hash": "17562528260240384126",
-          "deps": [
-            "npm:@nestjs/cli",
-            "npm:@nestjs/schematics",
-            "npm:@nestjs/testing",
-            "npm:@types/jest",
-            "npm:@types/node",
-            "npm:drizzle-kit",
-            "npm:jest",
-            "npm:ts-jest",
-            "npm:tsx",
-            "npm:typescript@5.7.2",
-            "npm:@neondatabase/serverless",
-            "npm:@nestjs/common",
-            "npm:@nestjs/config",
-            "npm:@nestjs/core",
-            "npm:@nestjs/microservices",
-            "npm:@nestjs/platform-express",
-            "npm:class-transformer",
-            "npm:class-validator",
-            "npm:dotenv",
-            "npm:drizzle-orm",
-            "npm:rxjs"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/user-service/project.json",
-          "hash": "16137123228859888834"
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/app.module.ts",
-          "hash": "644368151112929766",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:@nestjs/config",
-            "nats-client"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/application/dto/create-user-profile.dto.ts",
-          "hash": "5811455404924561710",
-          "deps": [
-            "shared-types"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/application/use-cases/create-user-profile.use-case.ts",
-          "hash": "3672186781818962408",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/config/database/database.config.ts",
-          "hash": "11675060396835396932",
-          "deps": [
-            "npm:@nestjs/config"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/config/modules/persistence.module.ts",
-          "hash": "4259060446655770482",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:@nestjs/config"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/database/client.ts",
-          "hash": "10621440763564005942",
-          "deps": [
-            "database-client",
-            "npm:dotenv"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/database/drizzle.config.ts",
-          "hash": "9309748837568214773",
-          "deps": [
-            "npm:drizzle-kit",
-            "npm:dotenv"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/database/migrations/0000_silky_shinobi_shaw.sql",
-          "hash": "17037654265021722343"
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/database/migrations/0001_sample_data.sql",
-          "hash": "4098547649547182133"
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/database/migrations/meta/0000_snapshot.json",
-          "hash": "11370135689446089010"
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/database/migrations/meta/_journal.json",
-          "hash": "6039821872281832287"
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/database/schema.ts",
-          "hash": "8929088357971650002",
-          "deps": [
-            "npm:drizzle-orm"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/database/seed.ts",
-          "hash": "1569421463303442500"
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/domain/entities/user-profile.entity.ts",
-          "hash": "3685604000180013651",
-          "deps": [
-            "shared-types"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/domain/index.ts",
-          "hash": "13601074584727032276"
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/domain/repositories/tokens.ts",
-          "hash": "5693649355748383575"
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/domain/repositories/user-profile-repository.factory.ts",
-          "hash": "8752510121623374681"
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/domain/repositories/user-profile.repository.ts",
-          "hash": "1270030089535696123",
-          "deps": [
-            "shared-types"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/group/dto/create-group.dto.ts",
-          "hash": "859310011231282974",
-          "deps": [
-            "npm:class-validator"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/group/dto/index.ts",
-          "hash": "16395074975706314298"
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/group/dto/update-group.dto.ts",
-          "hash": "6086787343294962958",
-          "deps": [
-            "npm:class-validator"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/group/group.controller.ts",
-          "hash": "14905414714879300409",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/group/group.module.ts",
-          "hash": "4010326418372579641",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/group/group.service.ts",
-          "hash": "8551727241611464927",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:drizzle-orm"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/health.controller.ts",
-          "hash": "12458437865751486971",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/infrastructure/persistence/adapters/mongo.adapter.ts",
-          "hash": "4379636487364640030",
-          "deps": [
-            "npm:@nestjs/common",
-            "shared-types",
-            "database-client"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/infrastructure/persistence/adapters/postgres.adapter.ts",
-          "hash": "1245263607277495581",
-          "deps": [
-            "npm:@nestjs/common",
-            "shared-types",
-            "database-client"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/infrastructure/persistence/adapters/redis.adapter.ts",
-          "hash": "461503876126491388",
-          "deps": [
-            "npm:@nestjs/common",
-            "shared-types",
-            "database-client"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/infrastructure/persistence/database.manager.ts",
-          "hash": "12862089949107925443",
-          "deps": [
-            "npm:@nestjs/common",
-            "shared-types"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/infrastructure/persistence/factories/postgres-user-profile-repository.factory.ts",
-          "hash": "7752893459997802368",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/infrastructure/persistence/mappers/user-profile.mapper.ts",
-          "hash": "11749251214491333298",
-          "deps": [
-            "shared-types"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/infrastructure/persistence/repositories/postgres-user-profile.repository.ts",
-          "hash": "12999709418819734778",
-          "deps": [
-            "npm:@nestjs/common",
-            "shared-types",
-            "npm:drizzle-orm"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/main.ts",
-          "hash": "17982590890219244375",
-          "deps": [
-            "npm:@nestjs/core",
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/user/dto/index.ts",
-          "hash": "16562524097794983379"
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/user/dto/update-profile.dto.ts",
-          "hash": "1590609103843913656",
-          "deps": [
-            "npm:class-validator"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/user/user.controller.ts",
-          "hash": "6073021754092280982",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/user/user.module.ts",
-          "hash": "4609787990613019532",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/user-service/src/user/user.service.ts",
-          "hash": "15269653172074062908",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:drizzle-orm",
-            "nats-client"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/user-service/tsconfig.build.json",
-          "hash": "9717903506663159030"
-        },
-        {
-          "file": "apps/nestjs-services/user-service/tsconfig.json",
-          "hash": "2029852287283198647"
-        },
-        {
-          "file": "apps/nestjs-services/user-service/webpack.config.js",
-          "hash": "5761133112294047706",
-          "deps": [
-            "npm:webpack-node-externals",
-            "npm:webpack@5.97.1"
-          ]
-        }
-      ],
-      "auth": [
-        {
-          "file": "libs/auth/package.json",
-          "hash": "3419048319342661401",
-          "deps": [
-            "npm:@types/passport-jwt",
-            "npm:@nestjs/common",
-            "npm:@nestjs/core",
-            "npm:@nestjs/jwt",
-            "npm:@nestjs/passport",
-            "npm:passport-jwt"
-          ]
-        },
-        {
-          "file": "libs/auth/project.json",
-          "hash": "17796888602999702623"
-        },
-        {
-          "file": "libs/auth/src/decorators/current-user.decorator.ts",
-          "hash": "11782018244450826406",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "libs/auth/src/guards/resource-owner.guard.ts",
-          "hash": "8376457780766108244",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:@nestjs/core"
-          ]
-        },
-        {
-          "file": "libs/auth/src/guards/roles.guard.ts",
-          "hash": "18286115982808989793",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:@nestjs/core"
-          ]
-        },
-        {
-          "file": "libs/auth/src/index.ts",
-          "hash": "10698624243493100486"
-        },
-        {
-          "file": "libs/auth/src/jwt-auth.module.ts",
-          "hash": "11307848362585411152",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:@nestjs/jwt",
-            "npm:@nestjs/passport"
-          ]
-        },
-        {
-          "file": "libs/auth/src/jwt.strategy.ts",
-          "hash": "11783595442791557143",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:@nestjs/passport",
-            "npm:passport-jwt",
-            "shared-types"
-          ]
-        },
-        {
-          "file": "libs/auth/tsconfig.json",
-          "hash": "634795086719220447"
-        },
-        {
-          "file": "libs/auth/tsconfig.lib.json",
-          "hash": "2583700499102873687"
-        }
-      ],
-      "booking-service": [
-        {
-          "file": "apps/nestjs-services/booking-service/package.json",
-          "hash": "5021494602609897334",
-          "deps": [
-            "npm:@nestjs/schematics",
-            "npm:@nestjs/testing",
-            "npm:@types/node",
-            "npm:drizzle-kit",
-            "npm:jest",
-            "npm:tsx",
-            "npm:typescript",
-            "npm:@nestjs/common",
-            "npm:@nestjs/config",
-            "npm:@nestjs/core",
-            "database-client",
-            "kafka-client",
-            "npm:dotenv",
-            "npm:drizzle-orm",
-            "npm:reflect-metadata",
-            "npm:rxjs"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/booking-service/src/database/client.ts",
-          "hash": "14843383199080872423",
-          "deps": [
-            "database-client",
-            "npm:dotenv"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/booking-service/src/database/database.module.ts",
-          "hash": "1152458248223859685",
-          "deps": [
-            "npm:@nestjs/common",
-            "database-client",
-            "npm:dotenv"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/booking-service/src/database/drizzle.config.ts",
-          "hash": "4148222318752909420",
-          "deps": [
-            "npm:drizzle-kit",
-            "npm:dotenv"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/booking-service/src/database/migrations/0000_flawless_stonewall.sql",
-          "hash": "3373092191084952531"
-        },
-        {
-          "file": "apps/nestjs-services/booking-service/src/database/migrations/0001_sample_data.sql",
-          "hash": "16694295105310924127"
-        },
-        {
-          "file": "apps/nestjs-services/booking-service/src/database/migrations/meta/_journal.json",
-          "hash": "9057041745301081199"
-        },
-        {
-          "file": "apps/nestjs-services/booking-service/src/database/schema.ts",
-          "hash": "13267545963822027213",
-          "deps": [
-            "npm:drizzle-orm"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/booking-service/src/database/seed.ts",
-          "hash": "10351574765606277154"
-        },
-        {
-          "file": "apps/nestjs-services/booking-service/tsconfig.json",
-          "hash": "3520735666754676523"
-        },
-        {
-          "file": "apps/nestjs-services/booking-service/webpack.config.js",
-          "hash": "5761133112294047706",
-          "deps": [
-            "npm:webpack-node-externals",
-            "npm:webpack"
-          ]
-        }
-      ],
-      "nats-client": [
-        {
-          "file": "libs/nats-client/package.json",
-          "hash": "13177122801145929556",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:nats"
-          ]
-        },
-        {
-          "file": "libs/nats-client/project.json",
-          "hash": "4405873860083594964"
-        },
-        {
-          "file": "libs/nats-client/src/index.ts",
-          "hash": "7878022415557378487"
-        },
-        {
-          "file": "libs/nats-client/src/nats.consumer.ts",
-          "hash": "5637805182642843880",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:nats"
-          ]
-        },
-        {
-          "file": "libs/nats-client/src/nats.module.ts",
-          "hash": "16200228427852802623",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "libs/nats-client/src/nats.producer.ts",
-          "hash": "1160226481332477801",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:nats"
-          ]
-        },
-        {
-          "file": "libs/nats-client/tsconfig.json",
-          "hash": "634795086719220447"
-        },
-        {
-          "file": "libs/nats-client/tsconfig.lib.json",
-          "hash": "16305345665319783484"
-        }
-      ],
-      "admin-frontend": [
-        {
-          "file": "apps/admin-frontend/Dockerfile",
-          "hash": "9711510263749484020"
-        },
-        {
-          "file": "apps/admin-frontend/components.json",
-          "hash": "11991600666611588451"
-        },
-        {
-          "file": "apps/admin-frontend/next-env.d.ts",
-          "hash": "10054213917412045845"
-        },
-        {
-          "file": "apps/admin-frontend/next.config.js",
-          "hash": "17705925596211682455"
-        },
-        {
-          "file": "apps/admin-frontend/package.json",
-          "hash": "16825688186453770133",
-          "deps": [
-            "npm:@types/node",
-            "npm:@types/react",
-            "npm:@types/react-dom",
-            "npm:autoprefixer",
-            "npm:postcss",
-            "npm:typescript",
-            "npm:@tanstack/react-query",
-            "npm:axios",
-            "npm:class-variance-authority",
-            "npm:clsx",
-            "npm:lucide-react",
-            "npm:next",
-            "npm:next-themes",
-            "npm:react",
-            "npm:react-day-picker",
-            "npm:react-dom",
-            "npm:sonner",
-            "npm:tailwind-merge",
-            "npm:tailwindcss",
-            "npm:tailwindcss-animate",
-            "npm:zustand"
-          ]
-        },
-        {
-          "file": "apps/admin-frontend/postcss.config.mjs",
-          "hash": "9334535520284521497"
-        },
-        {
-          "file": "apps/admin-frontend/project.json",
-          "hash": "15840118348114424635"
-        },
-        {
-          "file": "apps/admin-frontend/src/app/dashboard/bookings/page.tsx",
-          "hash": "5491848669085284560",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/admin-frontend/src/app/dashboard/events/page.tsx",
-          "hash": "14402160311382253236",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/admin-frontend/src/app/dashboard/insights/page.tsx",
-          "hash": "66751420426636517",
-          "deps": [
-            "npm:react",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/admin-frontend/src/app/dashboard/knowledge/chat/page.tsx",
-          "hash": "8607132536161565203",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/admin-frontend/src/app/dashboard/knowledge/page.tsx",
-          "hash": "9834270343631669855",
-          "deps": [
-            "npm:react",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/admin-frontend/src/app/dashboard/layout.tsx",
-          "hash": "4644192380192795316",
-          "deps": [
-            "npm:react",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/admin-frontend/src/app/dashboard/page.tsx",
-          "hash": "11003396525997166475",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/admin-frontend/src/app/dashboard/settings/page.tsx",
-          "hash": "2159810603018684678",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/admin-frontend/src/app/dashboard/venues/[venueId]/timeslots/page.tsx",
-          "hash": "17628360772340119516",
-          "deps": [
-            "npm:react",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/admin-frontend/src/app/dashboard/venues/page.tsx",
-          "hash": "6580925461316260102",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/admin-frontend/src/app/globals.css",
-          "hash": "1900841667424987979"
-        },
-        {
-          "file": "apps/admin-frontend/src/app/layout.tsx",
-          "hash": "8380667474912741978",
-          "deps": [
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/admin-frontend/src/app/login/page.tsx",
-          "hash": "15537771911692777494",
-          "deps": [
-            "npm:react",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/admin-frontend/src/app/onboarding/complete/page.tsx",
-          "hash": "17023821247168175825",
-          "deps": [
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/admin-frontend/src/app/onboarding/layout.tsx",
-          "hash": "16296688885869270030",
-          "deps": [
-            "npm:react",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/admin-frontend/src/app/onboarding/profile/page.tsx",
-          "hash": "2691120504131921031",
-          "deps": [
-            "npm:react",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/admin-frontend/src/app/onboarding/timeslots/page.tsx",
-          "hash": "18327451431869415019",
-          "deps": [
-            "npm:react",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/admin-frontend/src/app/onboarding/venues/page.tsx",
-          "hash": "4369533724402796659",
-          "deps": [
-            "npm:react",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/admin-frontend/src/app/page.tsx",
-          "hash": "7200785799293766954",
-          "deps": [
-            "npm:react",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/admin-frontend/src/app/register/page.tsx",
-          "hash": "16971770808222403367",
-          "deps": [
-            "npm:react",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/admin-frontend/src/lib/agent-api.ts",
-          "hash": "16692375457943442455"
-        },
-        {
-          "file": "apps/admin-frontend/src/lib/api.ts",
-          "hash": "11473973974677868046",
-          "deps": [
-            "npm:axios"
-          ]
-        },
-        {
-          "file": "apps/admin-frontend/src/lib/knowledge-api.ts",
-          "hash": "15488224942052708288"
-        },
-        {
-          "file": "apps/admin-frontend/src/lib/query-client.tsx",
-          "hash": "9957127114413752600",
-          "deps": [
-            "npm:@tanstack/react-query",
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/admin-frontend/src/lib/utils.ts",
-          "hash": "4398841608861978635",
-          "deps": [
-            "npm:clsx",
-            "npm:tailwind-merge"
-          ]
-        },
-        {
-          "file": "apps/admin-frontend/src/stores/admin-auth-store.ts",
-          "hash": "9709783727125027459",
-          "deps": [
-            "npm:zustand"
-          ]
-        },
-        {
-          "file": "apps/admin-frontend/src/stores/onboarding-store.ts",
-          "hash": "4929206094208374595",
-          "deps": [
-            "npm:zustand"
-          ]
-        },
-        {
-          "file": "apps/admin-frontend/tailwind.config.ts",
-          "hash": "16858375715855457276",
-          "deps": [
-            "npm:tailwindcss",
-            "npm:tailwindcss-animate"
-          ]
-        },
-        {
-          "file": "apps/admin-frontend/tsconfig.json",
-          "hash": "17564387835875178089"
-        },
-        {
-          "file": "apps/admin-frontend/tsconfig.tsbuildinfo",
-          "hash": "12193118249978545742"
-        }
-      ],
-      "kafka-client": [
-        {
-          "file": "libs/kafka-client/README.md",
-          "hash": "2195129752643027704"
-        },
-        {
-          "file": "libs/kafka-client/package.json",
-          "hash": "3622132425503705770",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:kafkajs"
-          ]
-        },
-        {
-          "file": "libs/kafka-client/project.json",
-          "hash": "4933749258097622000"
-        },
-        {
-          "file": "libs/kafka-client/src/consumers/base.consumer.d.ts",
-          "hash": "7902241774493120622",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "libs/kafka-client/src/consumers/base.consumer.js",
-          "hash": "3261925653887372006",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:kafkajs"
-          ]
-        },
-        {
-          "file": "libs/kafka-client/src/consumers/base.consumer.js.map",
-          "hash": "847552624278313400"
-        },
-        {
-          "file": "libs/kafka-client/src/consumers/base.consumer.ts",
-          "hash": "263024642246510659",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:kafkajs"
-          ]
-        },
-        {
-          "file": "libs/kafka-client/src/index.d.ts",
-          "hash": "16109790922662386239"
-        },
-        {
-          "file": "libs/kafka-client/src/index.js",
-          "hash": "803539801382449002"
-        },
-        {
-          "file": "libs/kafka-client/src/index.js.map",
-          "hash": "4514152013308553287"
-        },
-        {
-          "file": "libs/kafka-client/src/index.ts",
-          "hash": "16109790922662386239"
-        },
-        {
-          "file": "libs/kafka-client/src/kafka.module.d.ts",
-          "hash": "2949468851098558619",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "libs/kafka-client/src/kafka.module.js",
-          "hash": "1533215344819983660",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "libs/kafka-client/src/kafka.module.js.map",
-          "hash": "8644071202443702447"
-        },
-        {
-          "file": "libs/kafka-client/src/kafka.module.ts",
-          "hash": "17101965017858427351",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "libs/kafka-client/src/producers/base.producer.d.ts",
-          "hash": "10204775103357915992",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:kafkajs"
-          ]
-        },
-        {
-          "file": "libs/kafka-client/src/producers/base.producer.js",
-          "hash": "18142858400129760947",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:kafkajs"
-          ]
-        },
-        {
-          "file": "libs/kafka-client/src/producers/base.producer.js.map",
-          "hash": "14679805067006266094"
-        },
-        {
-          "file": "libs/kafka-client/src/producers/base.producer.ts",
-          "hash": "675015047019440002",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:kafkajs"
-          ]
-        },
-        {
-          "file": "libs/kafka-client/src/schemas/booking-events.schema.d.ts",
-          "hash": "11088354142147823654"
-        },
-        {
-          "file": "libs/kafka-client/src/schemas/booking-events.schema.js",
-          "hash": "12947511221318557687"
-        },
-        {
-          "file": "libs/kafka-client/src/schemas/booking-events.schema.js.map",
-          "hash": "10918789086241461115"
-        },
-        {
-          "file": "libs/kafka-client/src/schemas/booking-events.schema.ts",
-          "hash": "15003519034533628774"
-        },
-        {
-          "file": "libs/kafka-client/src/schemas/event-lifecycle.schema.d.ts",
-          "hash": "690439527452904077"
-        },
-        {
-          "file": "libs/kafka-client/src/schemas/event-lifecycle.schema.js",
-          "hash": "12863490359120285081"
-        },
-        {
-          "file": "libs/kafka-client/src/schemas/event-lifecycle.schema.js.map",
-          "hash": "9786070428912298830"
-        },
-        {
-          "file": "libs/kafka-client/src/schemas/event-lifecycle.schema.ts",
-          "hash": "6887255661101749554"
-        },
-        {
-          "file": "libs/kafka-client/src/schemas/index.d.ts",
-          "hash": "15884459320726344923"
-        },
-        {
-          "file": "libs/kafka-client/src/schemas/index.js",
-          "hash": "11408296672095908954"
-        },
-        {
-          "file": "libs/kafka-client/src/schemas/index.js.map",
-          "hash": "3891501639734407323"
-        },
-        {
-          "file": "libs/kafka-client/src/schemas/index.ts",
-          "hash": "15884459320726344923"
-        },
-        {
-          "file": "libs/kafka-client/src/schemas/location-context.schema.d.ts",
-          "hash": "133008949063493164"
-        },
-        {
-          "file": "libs/kafka-client/src/schemas/location-context.schema.js",
-          "hash": "8994622322964592800"
-        },
-        {
-          "file": "libs/kafka-client/src/schemas/location-context.schema.js.map",
-          "hash": "11191675871240995336"
-        },
-        {
-          "file": "libs/kafka-client/src/schemas/location-context.schema.ts",
-          "hash": "16043910682856625316"
-        },
-        {
-          "file": "libs/kafka-client/src/schemas/recommendation-feedback.schema.d.ts",
-          "hash": "6356642669026560795"
-        },
-        {
-          "file": "libs/kafka-client/src/schemas/recommendation-feedback.schema.js",
-          "hash": "11322047714317814093"
-        },
-        {
-          "file": "libs/kafka-client/src/schemas/recommendation-feedback.schema.js.map",
-          "hash": "15442618998958133999"
-        },
-        {
-          "file": "libs/kafka-client/src/schemas/recommendation-feedback.schema.ts",
-          "hash": "11293148793008255122"
-        },
-        {
-          "file": "libs/kafka-client/src/schemas/search-events.schema.d.ts",
-          "hash": "10311687449756129869"
-        },
-        {
-          "file": "libs/kafka-client/src/schemas/search-events.schema.js",
-          "hash": "17697090749102138125"
-        },
-        {
-          "file": "libs/kafka-client/src/schemas/search-events.schema.js.map",
-          "hash": "2322588696322558972"
-        },
-        {
-          "file": "libs/kafka-client/src/schemas/search-events.schema.ts",
-          "hash": "15065825025568902425"
-        },
-        {
-          "file": "libs/kafka-client/src/schemas/user-activity.schema.d.ts",
-          "hash": "14847703384704619067"
-        },
-        {
-          "file": "libs/kafka-client/src/schemas/user-activity.schema.js",
-          "hash": "17074458987039857318"
-        },
-        {
-          "file": "libs/kafka-client/src/schemas/user-activity.schema.js.map",
-          "hash": "7588122153123810251"
-        },
-        {
-          "file": "libs/kafka-client/src/schemas/user-activity.schema.ts",
-          "hash": "9821026881773079181"
-        },
-        {
-          "file": "libs/kafka-client/tsconfig.json",
-          "hash": "14910574388472849694"
-        },
-        {
-          "file": "libs/kafka-client/tsconfig.lib.json",
-          "hash": "4693710514456808669"
-        }
-      ],
-      "vendor-service": [
-        {
-          "file": "apps/nestjs-services/vendor-service/Dockerfile",
-          "hash": "14227612278686869735"
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/nest-cli.json",
-          "hash": "5977972196143888440"
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/package.json",
-          "hash": "15707232090006383371",
-          "deps": [
-            "npm:@nestjs/cli",
-            "npm:@nestjs/schematics",
-            "npm:@nestjs/testing",
-            "npm:@types/jest",
-            "npm:@types/node",
-            "npm:drizzle-kit",
-            "npm:jest",
-            "npm:ts-jest",
-            "npm:tsx",
-            "npm:typescript",
-            "npm:@neondatabase/serverless",
-            "npm:@nestjs/common",
-            "npm:@nestjs/config",
-            "npm:@nestjs/core",
-            "npm:@nestjs/jwt",
-            "npm:@nestjs/passport",
-            "npm:@nestjs/platform-express",
-            "npm:class-transformer",
-            "npm:class-validator",
-            "npm:dotenv",
-            "npm:drizzle-orm",
-            "npm:passport@0.6.0",
-            "npm:passport-jwt",
-            "npm:rxjs"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/project.json",
-          "hash": "6743574739659877705"
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/src/app.module.ts",
-          "hash": "3472397090328379699",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:@nestjs/config",
-            "nats-client"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/src/database/client.ts",
-          "hash": "5973816318697192627",
-          "deps": [
-            "database-client",
-            "npm:dotenv"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/src/database/drizzle.config.ts",
-          "hash": "3062174586532482385",
-          "deps": [
-            "npm:drizzle-kit",
-            "npm:dotenv"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/src/database/migrations/0000_tranquil_amazoness.sql",
-          "hash": "13988987646428057045"
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/src/database/migrations/0001_sample_data.sql",
-          "hash": "6943033311176593520"
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/src/database/migrations/meta/0000_snapshot.json",
-          "hash": "12858767136036941311"
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/src/database/migrations/meta/_journal.json",
-          "hash": "13734998760492506326"
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/src/database/neon_dump.sql",
-          "hash": "2633552765521884610"
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/src/database/schema.ts",
-          "hash": "11435830948422205520",
-          "deps": [
-            "npm:drizzle-orm"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/src/database/seed.ts",
-          "hash": "13583562765686966243"
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/src/health.controller.ts",
-          "hash": "14184288052965874602",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/src/main.ts",
-          "hash": "10422428798105936420",
-          "deps": [
-            "npm:@nestjs/core",
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/src/timeslot/dto/create-timeslot.dto.ts",
-          "hash": "14756496009340498335",
-          "deps": [
-            "npm:class-validator"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/src/timeslot/dto/index.ts",
-          "hash": "14897928261065087424"
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/src/timeslot/dto/update-timeslot.dto.ts",
-          "hash": "8378237728585239641",
-          "deps": [
-            "npm:class-validator"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/src/timeslot/timeslot.controller.ts",
-          "hash": "6128505390838511075",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/src/timeslot/timeslot.module.ts",
-          "hash": "14093143793523829431",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/src/timeslot/timeslot.service.ts",
-          "hash": "10342678997775650536",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:drizzle-orm"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/src/vendor/dto/create-internal-vendor.dto.ts",
-          "hash": "17942043316792013309",
-          "deps": [
-            "npm:class-validator"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/src/vendor/dto/create-vendor.dto.ts",
-          "hash": "3870308887459471527",
-          "deps": [
-            "npm:class-validator"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/src/vendor/dto/index.ts",
-          "hash": "3357409256644814710"
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/src/vendor/dto/update-vendor.dto.ts",
-          "hash": "6654962965129834370",
-          "deps": [
-            "npm:class-validator"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/src/vendor/vendor-internal.controller.ts",
-          "hash": "10932937495044424796",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/src/vendor/vendor.controller.ts",
-          "hash": "4709235934409262639",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:@nestjs/passport",
-            "auth"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/src/vendor/vendor.module.ts",
-          "hash": "6166432634634499138",
-          "deps": [
-            "npm:@nestjs/common",
-            "auth"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/src/vendor/vendor.service.ts",
-          "hash": "11982022457364171015",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:drizzle-orm",
-            "nats-client"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/src/venue/dto/create-venue.dto.ts",
-          "hash": "3879843270137253167",
-          "deps": [
-            "npm:class-validator"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/src/venue/dto/index.ts",
-          "hash": "1142000150657052913"
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/src/venue/dto/update-venue.dto.ts",
-          "hash": "17604210084049754940",
-          "deps": [
-            "npm:class-validator"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/src/venue/venue.controller.ts",
-          "hash": "16714981346993251881",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/src/venue/venue.module.ts",
-          "hash": "753098848662122641",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/src/venue/venue.service.ts",
-          "hash": "1331093509718234832",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:drizzle-orm"
-          ]
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/tsconfig.build.json",
-          "hash": "18226327615299451984"
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/tsconfig.json",
-          "hash": "17126209161331125569"
-        },
-        {
-          "file": "apps/nestjs-services/vendor-service/webpack.config.js",
-          "hash": "5761133112294047706",
-          "deps": [
-            "npm:webpack-node-externals",
-            "npm:webpack@5.97.1"
-          ]
-        }
-      ],
-      "database-client": [
-        {
-          "file": "libs/database-client/README.md",
-          "hash": "14590027073732409400"
-        },
-        {
-          "file": "libs/database-client/package.json",
-          "hash": "2007375455994520060",
-          "deps": [
-            "npm:@neondatabase/serverless",
-            "npm:@nestjs/common",
-            "npm:drizzle-orm",
-            "npm:ioredis",
-            "npm:mongoose"
-          ]
-        },
-        {
-          "file": "libs/database-client/project.json",
-          "hash": "8921341429710925471"
-        },
-        {
-          "file": "libs/database-client/src/index.d.ts",
-          "hash": "14602334178879536723"
-        },
-        {
-          "file": "libs/database-client/src/index.js",
-          "hash": "1731975323160029787"
-        },
-        {
-          "file": "libs/database-client/src/index.js.map",
-          "hash": "6989786536390657966"
-        },
-        {
-          "file": "libs/database-client/src/index.ts",
-          "hash": "7169575841030353165"
-        },
-        {
-          "file": "libs/database-client/src/mongodb/client.d.ts",
-          "hash": "8913455257743841055"
-        },
-        {
-          "file": "libs/database-client/src/mongodb/client.js",
-          "hash": "11051792547861051443",
-          "deps": [
-            "npm:@nestjs/common",
-            [
-              "npm:mongoose",
-              "dynamic"
-            ]
-          ]
-        },
-        {
-          "file": "libs/database-client/src/mongodb/client.js.map",
-          "hash": "7151939593462435345"
-        },
-        {
-          "file": "libs/database-client/src/mongodb/client.ts",
-          "hash": "17481080713806982581",
-          "deps": [
-            "npm:@nestjs/common",
-            [
-              "npm:mongoose",
-              "dynamic"
-            ]
-          ]
-        },
-        {
-          "file": "libs/database-client/src/postgres/client.d.ts",
-          "hash": "1234250252596936818"
-        },
-        {
-          "file": "libs/database-client/src/postgres/client.js",
-          "hash": "15939647328367710055",
-          "deps": [
-            "npm:@nestjs/common",
-            [
-              "npm:pg",
-              "dynamic"
-            ],
-            [
-              "npm:drizzle-orm",
-              "dynamic"
-            ]
-          ]
-        },
-        {
-          "file": "libs/database-client/src/postgres/client.js.map",
-          "hash": "5049981749257600137"
-        },
-        {
-          "file": "libs/database-client/src/postgres/client.ts",
-          "hash": "13836173616883474825",
-          "deps": [
-            "npm:@nestjs/common",
-            [
-              "npm:pg",
-              "dynamic"
-            ],
-            [
-              "npm:drizzle-orm",
-              "dynamic"
-            ]
-          ]
-        },
-        {
-          "file": "libs/database-client/src/redis/client.d.ts",
-          "hash": "6831978822729958709"
-        },
-        {
-          "file": "libs/database-client/src/redis/client.js",
-          "hash": "15349617561117731825",
-          "deps": [
-            "npm:@nestjs/common",
-            [
-              "npm:ioredis",
-              "dynamic"
-            ]
-          ]
-        },
-        {
-          "file": "libs/database-client/src/redis/client.js.map",
-          "hash": "12591776219618271696"
-        },
-        {
-          "file": "libs/database-client/src/redis/client.ts",
-          "hash": "16253625647451461860",
-          "deps": [
-            "npm:@nestjs/common",
-            "npm:ioredis",
-            [
-              "npm:ioredis",
-              "dynamic"
-            ]
-          ]
-        },
-        {
-          "file": "libs/database-client/tsconfig.json",
-          "hash": "4582496762239985824"
-        },
-        {
-          "file": "libs/database-client/tsconfig.lib.json",
-          "hash": "4693710514456808669"
-        }
-      ],
-      "shared-types": [
-        {
-          "file": "libs/shared-types/README.md",
-          "hash": "14158794989228259769"
-        },
-        {
-          "file": "libs/shared-types/package.json",
-          "hash": "17610309269495376951"
-        },
-        {
-          "file": "libs/shared-types/project.json",
-          "hash": "3338497891613564"
-        },
-        {
-          "file": "libs/shared-types/src/auth.interface.ts",
-          "hash": "12198861979671250773"
-        },
-        {
-          "file": "libs/shared-types/src/booking.interface.ts",
-          "hash": "5662277671908658443"
-        },
-        {
-          "file": "libs/shared-types/src/domain/entities/entity.ts",
-          "hash": "710759051512273416"
-        },
-        {
-          "file": "libs/shared-types/src/domain/entities/user.entity.ts",
-          "hash": "9344335295370911448"
-        },
-        {
-          "file": "libs/shared-types/src/domain/index.ts",
-          "hash": "5917491790301061965"
-        },
-        {
-          "file": "libs/shared-types/src/domain/repositories/base.repository.ts",
-          "hash": "9735710946686483660"
-        },
-        {
-          "file": "libs/shared-types/src/domain/repositories/user.repository.ts",
-          "hash": "13871244392413834186"
-        },
-        {
-          "file": "libs/shared-types/src/domain/value-objects/location.ts",
-          "hash": "13758985644299586429"
-        },
-        {
-          "file": "libs/shared-types/src/domain/value-objects/notification-settings.ts",
-          "hash": "14330363508937135295"
-        },
-        {
-          "file": "libs/shared-types/src/domain/value-objects/user-preferences.ts",
-          "hash": "11987902966479992787"
-        },
-        {
-          "file": "libs/shared-types/src/domain/value-objects/user-role.ts",
-          "hash": "8339183863073944887"
-        },
-        {
-          "file": "libs/shared-types/src/event.interface.ts",
-          "hash": "13586494647808905802"
-        },
-        {
-          "file": "libs/shared-types/src/group.interface.ts",
-          "hash": "852734303957493423"
-        },
-        {
-          "file": "libs/shared-types/src/index.ts",
-          "hash": "65151273374958145"
-        },
-        {
-          "file": "libs/shared-types/src/permissions.interface.ts",
-          "hash": "6257944601156962016"
-        },
-        {
-          "file": "libs/shared-types/src/persistence/index.ts",
-          "hash": "2397628339411841562"
-        },
-        {
-          "file": "libs/shared-types/src/persistence/interfaces/database-adapter.interface.ts",
-          "hash": "16405371118546255684"
-        },
-        {
-          "file": "libs/shared-types/src/persistence/interfaces/database-config.interface.ts",
-          "hash": "9134039248853165430"
-        },
-        {
-          "file": "libs/shared-types/src/persistence/interfaces/repository-factory.interface.ts",
-          "hash": "12951747732697070879"
-        },
-        {
-          "file": "libs/shared-types/src/saga.interface.ts",
-          "hash": "17100905643751717740"
-        },
-        {
-          "file": "libs/shared-types/src/timeslot.interface.ts",
-          "hash": "12700378244967939669"
-        },
-        {
-          "file": "libs/shared-types/src/user.interface.ts",
-          "hash": "18324361849887446403"
-        },
-        {
-          "file": "libs/shared-types/src/vendor.interface.ts",
-          "hash": "953585383429191380"
-        },
-        {
-          "file": "libs/shared-types/src/venue.interface.ts",
-          "hash": "13778099842253689433"
-        },
-        {
-          "file": "libs/shared-types/tsconfig.json",
-          "hash": "14910574388472849694"
-        },
-        {
-          "file": "libs/shared-types/tsconfig.lib.json",
-          "hash": "4693710514456808669"
-        }
-      ],
-      "elasticsearch-client": [
-        {
-          "file": "libs/elasticsearch-client/README.md",
-          "hash": "13498479702770836583"
-        },
-        {
-          "file": "libs/elasticsearch-client/package.json",
-          "hash": "14694772893209461639",
-          "deps": [
-            "npm:@elastic/elasticsearch",
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "libs/elasticsearch-client/project.json",
-          "hash": "9733234970230122580"
-        },
-        {
-          "file": "libs/elasticsearch-client/src/client.ts",
-          "hash": "7453367949983990943",
-          "deps": [
-            "npm:@nestjs/common",
-            [
-              "npm:@elastic/elasticsearch",
-              "dynamic"
-            ]
-          ]
-        },
-        {
-          "file": "libs/elasticsearch-client/src/index.ts",
-          "hash": "11451905655900698995"
-        },
-        {
-          "file": "libs/elasticsearch-client/src/indices/event.index.ts",
-          "hash": "17313020960669719209"
-        },
-        {
-          "file": "libs/elasticsearch-client/src/queries/event.queries.ts",
-          "hash": "14765699366863561524"
-        },
-        {
-          "file": "libs/elasticsearch-client/tsconfig.json",
-          "hash": "14910574388472849694"
-        },
-        {
-          "file": "libs/elasticsearch-client/tsconfig.lib.json",
-          "hash": "4693710514456808669"
-        }
-      ],
       "api-gateway": [
         {
           "file": "apps/nestjs-services/api-gateway/Dockerfile",
           "hash": "7231613381326010549"
+        },
+        {
+          "file": "apps/nestjs-services/api-gateway/jest.config.ts",
+          "hash": "18193379098618094641",
+          "deps": [
+            "npm:jest"
+          ]
         },
         {
           "file": "apps/nestjs-services/api-gateway/nest-cli.json",
@@ -3144,6 +1568,13 @@
           ]
         },
         {
+          "file": "apps/nestjs-services/api-gateway/src/health.controller.spec.ts",
+          "hash": "17134207067909349874",
+          "deps": [
+            "npm:@nestjs/testing"
+          ]
+        },
+        {
           "file": "apps/nestjs-services/api-gateway/src/health.controller.ts",
           "hash": "6853920939794283791",
           "deps": [
@@ -3160,6 +1591,15 @@
           ]
         },
         {
+          "file": "apps/nestjs-services/api-gateway/src/proxy/agent-proxy.controller.spec.ts",
+          "hash": "9960620066642613093",
+          "deps": [
+            "npm:@nestjs/testing",
+            "npm:@nestjs/axios",
+            "npm:rxjs"
+          ]
+        },
+        {
           "file": "apps/nestjs-services/api-gateway/src/proxy/agent-proxy.controller.ts",
           "hash": "11024755387918240754",
           "deps": [
@@ -3168,6 +1608,15 @@
             "npm:express",
             "npm:rxjs",
             "npm:axios"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/api-gateway/src/proxy/auth-proxy.controller.spec.ts",
+          "hash": "3557031128819521598",
+          "deps": [
+            "npm:@nestjs/testing",
+            "npm:@nestjs/axios",
+            "npm:rxjs"
           ]
         },
         {
@@ -3182,6 +1631,15 @@
           ]
         },
         {
+          "file": "apps/nestjs-services/api-gateway/src/proxy/event-proxy.controller.spec.ts",
+          "hash": "6945895629043611108",
+          "deps": [
+            "npm:@nestjs/testing",
+            "npm:@nestjs/axios",
+            "npm:rxjs"
+          ]
+        },
+        {
           "file": "apps/nestjs-services/api-gateway/src/proxy/event-proxy.controller.ts",
           "hash": "9423628961730108641",
           "deps": [
@@ -3190,6 +1648,15 @@
             "npm:express",
             "npm:rxjs",
             "npm:axios"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/api-gateway/src/proxy/user-proxy.controller.spec.ts",
+          "hash": "11634368965142063412",
+          "deps": [
+            "npm:@nestjs/testing",
+            "npm:@nestjs/axios",
+            "npm:rxjs"
           ]
         },
         {
@@ -3204,6 +1671,15 @@
           ]
         },
         {
+          "file": "apps/nestjs-services/api-gateway/src/proxy/vendor-proxy.controller.spec.ts",
+          "hash": "13125518413817381552",
+          "deps": [
+            "npm:@nestjs/testing",
+            "npm:@nestjs/axios",
+            "npm:rxjs"
+          ]
+        },
+        {
           "file": "apps/nestjs-services/api-gateway/src/proxy/vendor-proxy.controller.ts",
           "hash": "6830861945605781886",
           "deps": [
@@ -3212,6 +1688,13 @@
             "npm:express",
             "npm:rxjs",
             "npm:axios"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/api-gateway/src/tracking/tracking.controller.spec.ts",
+          "hash": "18016658697354270249",
+          "deps": [
+            "npm:@nestjs/testing"
           ]
         },
         {
@@ -3245,71 +1728,6 @@
             "npm:webpack-node-externals",
             "npm:webpack@5.97.1"
           ]
-        }
-      ],
-      "utils": [
-        {
-          "file": "libs/utils/README.md",
-          "hash": "738884875471645193"
-        },
-        {
-          "file": "libs/utils/package.json",
-          "hash": "15136892635826253942",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "libs/utils/project.json",
-          "hash": "8768187055503794773"
-        },
-        {
-          "file": "libs/utils/src/index.ts",
-          "hash": "10128229876940829604"
-        },
-        {
-          "file": "libs/utils/src/logger/console.logger.ts",
-          "hash": "7737896131579695934"
-        },
-        {
-          "file": "libs/utils/src/logger/logger.interface.ts",
-          "hash": "9633930139258311075"
-        },
-        {
-          "file": "libs/utils/src/logger/logger.service.ts",
-          "hash": "17703441166086423484",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "libs/utils/src/logger/nest-logger.adapter.ts",
-          "hash": "6743283142485387148",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "libs/utils/src/transformers/date.transformer.ts",
-          "hash": "3262416956447932244",
-          "deps": [
-            "npm:class-transformer"
-          ]
-        },
-        {
-          "file": "libs/utils/src/validators/email.validator.ts",
-          "hash": "8637096156353865468",
-          "deps": [
-            "npm:class-validator"
-          ]
-        },
-        {
-          "file": "libs/utils/tsconfig.json",
-          "hash": "14910574388472849694"
-        },
-        {
-          "file": "libs/utils/tsconfig.lib.json",
-          "hash": "4693710514456808669"
         }
       ],
       "frontend": [
@@ -3690,6 +2108,55 @@
           "hash": "14319825931548479584"
         }
       ],
+      "nats-client": [
+        {
+          "file": "libs/nats-client/package.json",
+          "hash": "13177122801145929556",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:nats"
+          ]
+        },
+        {
+          "file": "libs/nats-client/project.json",
+          "hash": "4405873860083594964"
+        },
+        {
+          "file": "libs/nats-client/src/index.ts",
+          "hash": "7878022415557378487"
+        },
+        {
+          "file": "libs/nats-client/src/nats.consumer.ts",
+          "hash": "5637805182642843880",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:nats"
+          ]
+        },
+        {
+          "file": "libs/nats-client/src/nats.module.ts",
+          "hash": "16200228427852802623",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "libs/nats-client/src/nats.producer.ts",
+          "hash": "1160226481332477801",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:nats"
+          ]
+        },
+        {
+          "file": "libs/nats-client/tsconfig.json",
+          "hash": "634795086719220447"
+        },
+        {
+          "file": "libs/nats-client/tsconfig.lib.json",
+          "hash": "16305345665319783484"
+        }
+      ],
       "agent-service": [
         {
           "file": "apps/nestjs-services/agent-service/.env.example",
@@ -3697,7 +2164,7 @@
         },
         {
           "file": "apps/nestjs-services/agent-service/Dockerfile",
-          "hash": "4051157335514535244"
+          "hash": "4737009598468982984"
         },
         {
           "file": "apps/nestjs-services/agent-service/jest.config.ts",
@@ -3770,6 +2237,15 @@
             "npm:@nestjs/bullmq",
             "npm:@nestjs/common",
             "npm:bullmq"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/agent-service/src/agent/agent.controller.spec.ts",
+          "hash": "10686035551422798349",
+          "deps": [
+            "npm:@nestjs/testing",
+            "npm:@nestjs/common",
+            "npm:rxjs"
           ]
         },
         {
@@ -3913,6 +2389,13 @@
           "hash": "10869327979464329738"
         },
         {
+          "file": "apps/nestjs-services/agent-service/src/health.controller.spec.ts",
+          "hash": "1000397667932593831",
+          "deps": [
+            "npm:@nestjs/testing"
+          ]
+        },
+        {
           "file": "apps/nestjs-services/agent-service/src/health.controller.ts",
           "hash": "4873120035933639651",
           "deps": [
@@ -3939,6 +2422,14 @@
               "npm:@xenova/transformers",
               "dynamic"
             ]
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/agent-service/src/knowledge/knowledge.controller.spec.ts",
+          "hash": "9663392412836291422",
+          "deps": [
+            "npm:@nestjs/testing",
+            "npm:express"
           ]
         },
         {
@@ -4047,6 +2538,1758 @@
             "npm:webpack-node-externals",
             "npm:webpack@5.97.1"
           ]
+        }
+      ],
+      "vendor-service": [
+        {
+          "file": "apps/nestjs-services/vendor-service/Dockerfile",
+          "hash": "1629135084480686856"
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/jest.config.ts",
+          "hash": "7755589476553833559",
+          "deps": [
+            "npm:jest"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/nest-cli.json",
+          "hash": "5977972196143888440"
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/package.json",
+          "hash": "15707232090006383371",
+          "deps": [
+            "npm:@nestjs/cli",
+            "npm:@nestjs/schematics",
+            "npm:@nestjs/testing",
+            "npm:@types/jest",
+            "npm:@types/node",
+            "npm:drizzle-kit",
+            "npm:jest",
+            "npm:ts-jest",
+            "npm:tsx",
+            "npm:typescript",
+            "npm:@neondatabase/serverless",
+            "npm:@nestjs/common",
+            "npm:@nestjs/config",
+            "npm:@nestjs/core",
+            "npm:@nestjs/jwt",
+            "npm:@nestjs/passport",
+            "npm:@nestjs/platform-express",
+            "npm:class-transformer",
+            "npm:class-validator",
+            "npm:dotenv",
+            "npm:drizzle-orm",
+            "npm:passport@0.6.0",
+            "npm:passport-jwt",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/project.json",
+          "hash": "6743574739659877705"
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/app.module.ts",
+          "hash": "3472397090328379699",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/config",
+            "nats-client"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/database/client.ts",
+          "hash": "5973816318697192627",
+          "deps": [
+            "database-client",
+            "npm:dotenv"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/database/drizzle.config.ts",
+          "hash": "3062174586532482385",
+          "deps": [
+            "npm:drizzle-kit",
+            "npm:dotenv"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/database/migrations/0000_tranquil_amazoness.sql",
+          "hash": "13988987646428057045"
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/database/migrations/0001_sample_data.sql",
+          "hash": "6943033311176593520"
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/database/migrations/meta/0000_snapshot.json",
+          "hash": "12858767136036941311"
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/database/migrations/meta/_journal.json",
+          "hash": "13734998760492506326"
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/database/neon_dump.sql",
+          "hash": "2633552765521884610"
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/database/schema.ts",
+          "hash": "11435830948422205520",
+          "deps": [
+            "npm:drizzle-orm"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/database/seed.ts",
+          "hash": "13583562765686966243"
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/health.controller.spec.ts",
+          "hash": "3048282653904497262",
+          "deps": [
+            "npm:@nestjs/testing"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/health.controller.ts",
+          "hash": "14184288052965874602",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/main.ts",
+          "hash": "10422428798105936420",
+          "deps": [
+            "npm:@nestjs/core",
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/timeslot/dto/create-timeslot.dto.ts",
+          "hash": "14756496009340498335",
+          "deps": [
+            "npm:class-validator"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/timeslot/dto/index.ts",
+          "hash": "14897928261065087424"
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/timeslot/dto/update-timeslot.dto.ts",
+          "hash": "8378237728585239641",
+          "deps": [
+            "npm:class-validator"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/timeslot/timeslot.controller.spec.ts",
+          "hash": "8875337465597314517",
+          "deps": [
+            "npm:@nestjs/testing"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/timeslot/timeslot.controller.ts",
+          "hash": "6128505390838511075",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/timeslot/timeslot.module.ts",
+          "hash": "14093143793523829431",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/timeslot/timeslot.service.ts",
+          "hash": "10342678997775650536",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:drizzle-orm"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/vendor/dto/create-internal-vendor.dto.ts",
+          "hash": "17942043316792013309",
+          "deps": [
+            "npm:class-validator"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/vendor/dto/create-vendor.dto.ts",
+          "hash": "3870308887459471527",
+          "deps": [
+            "npm:class-validator"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/vendor/dto/index.ts",
+          "hash": "3357409256644814710"
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/vendor/dto/update-vendor.dto.ts",
+          "hash": "6654962965129834370",
+          "deps": [
+            "npm:class-validator"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/vendor/vendor-internal.controller.spec.ts",
+          "hash": "8988954727669495101",
+          "deps": [
+            "npm:@nestjs/testing",
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/vendor/vendor-internal.controller.ts",
+          "hash": "10932937495044424796",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/vendor/vendor.controller.spec.ts",
+          "hash": "3491632992777760605",
+          "deps": [
+            "npm:@nestjs/testing"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/vendor/vendor.controller.ts",
+          "hash": "4709235934409262639",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/passport",
+            "auth"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/vendor/vendor.module.ts",
+          "hash": "6166432634634499138",
+          "deps": [
+            "npm:@nestjs/common",
+            "auth"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/vendor/vendor.service.ts",
+          "hash": "11982022457364171015",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:drizzle-orm",
+            "nats-client"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/venue/dto/create-venue.dto.ts",
+          "hash": "3879843270137253167",
+          "deps": [
+            "npm:class-validator"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/venue/dto/index.ts",
+          "hash": "1142000150657052913"
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/venue/dto/update-venue.dto.ts",
+          "hash": "17604210084049754940",
+          "deps": [
+            "npm:class-validator"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/venue/venue.controller.spec.ts",
+          "hash": "6828607205424306182",
+          "deps": [
+            "npm:@nestjs/testing"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/venue/venue.controller.ts",
+          "hash": "16714981346993251881",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/venue/venue.module.ts",
+          "hash": "753098848662122641",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/src/venue/venue.service.ts",
+          "hash": "1331093509718234832",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:drizzle-orm"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/tsconfig.build.json",
+          "hash": "18226327615299451984"
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/tsconfig.json",
+          "hash": "17126209161331125569"
+        },
+        {
+          "file": "apps/nestjs-services/vendor-service/webpack.config.js",
+          "hash": "5761133112294047706",
+          "deps": [
+            "npm:webpack-node-externals",
+            "npm:webpack@5.97.1"
+          ]
+        }
+      ],
+      "booking-service": [
+        {
+          "file": "apps/nestjs-services/booking-service/package.json",
+          "hash": "5021494602609897334",
+          "deps": [
+            "npm:@nestjs/schematics",
+            "npm:@nestjs/testing",
+            "npm:@types/node",
+            "npm:drizzle-kit",
+            "npm:jest",
+            "npm:tsx",
+            "npm:typescript",
+            "npm:@nestjs/common",
+            "npm:@nestjs/config",
+            "npm:@nestjs/core",
+            "database-client",
+            "kafka-client",
+            "npm:dotenv",
+            "npm:drizzle-orm",
+            "npm:reflect-metadata",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/booking-service/src/database/client.ts",
+          "hash": "14843383199080872423",
+          "deps": [
+            "database-client",
+            "npm:dotenv"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/booking-service/src/database/database.module.ts",
+          "hash": "1152458248223859685",
+          "deps": [
+            "npm:@nestjs/common",
+            "database-client",
+            "npm:dotenv"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/booking-service/src/database/drizzle.config.ts",
+          "hash": "4148222318752909420",
+          "deps": [
+            "npm:drizzle-kit",
+            "npm:dotenv"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/booking-service/src/database/migrations/0000_flawless_stonewall.sql",
+          "hash": "3373092191084952531"
+        },
+        {
+          "file": "apps/nestjs-services/booking-service/src/database/migrations/0001_sample_data.sql",
+          "hash": "16694295105310924127"
+        },
+        {
+          "file": "apps/nestjs-services/booking-service/src/database/migrations/meta/_journal.json",
+          "hash": "9057041745301081199"
+        },
+        {
+          "file": "apps/nestjs-services/booking-service/src/database/schema.ts",
+          "hash": "13267545963822027213",
+          "deps": [
+            "npm:drizzle-orm"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/booking-service/src/database/seed.ts",
+          "hash": "10351574765606277154"
+        },
+        {
+          "file": "apps/nestjs-services/booking-service/tsconfig.json",
+          "hash": "3520735666754676523"
+        },
+        {
+          "file": "apps/nestjs-services/booking-service/webpack.config.js",
+          "hash": "5761133112294047706",
+          "deps": [
+            "npm:webpack-node-externals",
+            "npm:webpack"
+          ]
+        }
+      ],
+      "elasticsearch-client": [
+        {
+          "file": "libs/elasticsearch-client/README.md",
+          "hash": "13498479702770836583"
+        },
+        {
+          "file": "libs/elasticsearch-client/package.json",
+          "hash": "14694772893209461639",
+          "deps": [
+            "npm:@elastic/elasticsearch",
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "libs/elasticsearch-client/project.json",
+          "hash": "9733234970230122580"
+        },
+        {
+          "file": "libs/elasticsearch-client/src/client.ts",
+          "hash": "7453367949983990943",
+          "deps": [
+            "npm:@nestjs/common",
+            [
+              "npm:@elastic/elasticsearch",
+              "dynamic"
+            ]
+          ]
+        },
+        {
+          "file": "libs/elasticsearch-client/src/index.ts",
+          "hash": "11451905655900698995"
+        },
+        {
+          "file": "libs/elasticsearch-client/src/indices/event.index.ts",
+          "hash": "17313020960669719209"
+        },
+        {
+          "file": "libs/elasticsearch-client/src/queries/event.queries.ts",
+          "hash": "14765699366863561524"
+        },
+        {
+          "file": "libs/elasticsearch-client/tsconfig.json",
+          "hash": "14910574388472849694"
+        },
+        {
+          "file": "libs/elasticsearch-client/tsconfig.lib.json",
+          "hash": "4693710514456808669"
+        }
+      ],
+      "database-client": [
+        {
+          "file": "libs/database-client/README.md",
+          "hash": "14590027073732409400"
+        },
+        {
+          "file": "libs/database-client/package.json",
+          "hash": "2007375455994520060",
+          "deps": [
+            "npm:@neondatabase/serverless",
+            "npm:@nestjs/common",
+            "npm:drizzle-orm",
+            "npm:ioredis",
+            "npm:mongoose"
+          ]
+        },
+        {
+          "file": "libs/database-client/project.json",
+          "hash": "8921341429710925471"
+        },
+        {
+          "file": "libs/database-client/src/index.d.ts",
+          "hash": "14602334178879536723"
+        },
+        {
+          "file": "libs/database-client/src/index.js",
+          "hash": "1731975323160029787"
+        },
+        {
+          "file": "libs/database-client/src/index.js.map",
+          "hash": "6989786536390657966"
+        },
+        {
+          "file": "libs/database-client/src/index.ts",
+          "hash": "7169575841030353165"
+        },
+        {
+          "file": "libs/database-client/src/mongodb/client.d.ts",
+          "hash": "8913455257743841055"
+        },
+        {
+          "file": "libs/database-client/src/mongodb/client.js",
+          "hash": "11051792547861051443",
+          "deps": [
+            "npm:@nestjs/common",
+            [
+              "npm:mongoose",
+              "dynamic"
+            ]
+          ]
+        },
+        {
+          "file": "libs/database-client/src/mongodb/client.js.map",
+          "hash": "7151939593462435345"
+        },
+        {
+          "file": "libs/database-client/src/mongodb/client.ts",
+          "hash": "17481080713806982581",
+          "deps": [
+            "npm:@nestjs/common",
+            [
+              "npm:mongoose",
+              "dynamic"
+            ]
+          ]
+        },
+        {
+          "file": "libs/database-client/src/postgres/client.d.ts",
+          "hash": "1234250252596936818"
+        },
+        {
+          "file": "libs/database-client/src/postgres/client.js",
+          "hash": "15939647328367710055",
+          "deps": [
+            "npm:@nestjs/common",
+            [
+              "npm:pg",
+              "dynamic"
+            ],
+            [
+              "npm:drizzle-orm",
+              "dynamic"
+            ]
+          ]
+        },
+        {
+          "file": "libs/database-client/src/postgres/client.js.map",
+          "hash": "5049981749257600137"
+        },
+        {
+          "file": "libs/database-client/src/postgres/client.ts",
+          "hash": "13836173616883474825",
+          "deps": [
+            "npm:@nestjs/common",
+            [
+              "npm:pg",
+              "dynamic"
+            ],
+            [
+              "npm:drizzle-orm",
+              "dynamic"
+            ]
+          ]
+        },
+        {
+          "file": "libs/database-client/src/redis/client.d.ts",
+          "hash": "6831978822729958709"
+        },
+        {
+          "file": "libs/database-client/src/redis/client.js",
+          "hash": "15349617561117731825",
+          "deps": [
+            "npm:@nestjs/common",
+            [
+              "npm:ioredis",
+              "dynamic"
+            ]
+          ]
+        },
+        {
+          "file": "libs/database-client/src/redis/client.js.map",
+          "hash": "12591776219618271696"
+        },
+        {
+          "file": "libs/database-client/src/redis/client.ts",
+          "hash": "16253625647451461860",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:ioredis",
+            [
+              "npm:ioredis",
+              "dynamic"
+            ]
+          ]
+        },
+        {
+          "file": "libs/database-client/tsconfig.json",
+          "hash": "4582496762239985824"
+        },
+        {
+          "file": "libs/database-client/tsconfig.lib.json",
+          "hash": "4693710514456808669"
+        }
+      ],
+      "kafka-client": [
+        {
+          "file": "libs/kafka-client/README.md",
+          "hash": "2195129752643027704"
+        },
+        {
+          "file": "libs/kafka-client/package.json",
+          "hash": "3622132425503705770",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:kafkajs"
+          ]
+        },
+        {
+          "file": "libs/kafka-client/project.json",
+          "hash": "4933749258097622000"
+        },
+        {
+          "file": "libs/kafka-client/src/consumers/base.consumer.d.ts",
+          "hash": "7902241774493120622",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "libs/kafka-client/src/consumers/base.consumer.js",
+          "hash": "3261925653887372006",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:kafkajs"
+          ]
+        },
+        {
+          "file": "libs/kafka-client/src/consumers/base.consumer.js.map",
+          "hash": "847552624278313400"
+        },
+        {
+          "file": "libs/kafka-client/src/consumers/base.consumer.ts",
+          "hash": "263024642246510659",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:kafkajs"
+          ]
+        },
+        {
+          "file": "libs/kafka-client/src/index.d.ts",
+          "hash": "16109790922662386239"
+        },
+        {
+          "file": "libs/kafka-client/src/index.js",
+          "hash": "803539801382449002"
+        },
+        {
+          "file": "libs/kafka-client/src/index.js.map",
+          "hash": "4514152013308553287"
+        },
+        {
+          "file": "libs/kafka-client/src/index.ts",
+          "hash": "16109790922662386239"
+        },
+        {
+          "file": "libs/kafka-client/src/kafka.module.d.ts",
+          "hash": "2949468851098558619",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "libs/kafka-client/src/kafka.module.js",
+          "hash": "1533215344819983660",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "libs/kafka-client/src/kafka.module.js.map",
+          "hash": "8644071202443702447"
+        },
+        {
+          "file": "libs/kafka-client/src/kafka.module.ts",
+          "hash": "17101965017858427351",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "libs/kafka-client/src/producers/base.producer.d.ts",
+          "hash": "10204775103357915992",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:kafkajs"
+          ]
+        },
+        {
+          "file": "libs/kafka-client/src/producers/base.producer.js",
+          "hash": "18142858400129760947",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:kafkajs"
+          ]
+        },
+        {
+          "file": "libs/kafka-client/src/producers/base.producer.js.map",
+          "hash": "14679805067006266094"
+        },
+        {
+          "file": "libs/kafka-client/src/producers/base.producer.ts",
+          "hash": "675015047019440002",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:kafkajs"
+          ]
+        },
+        {
+          "file": "libs/kafka-client/src/schemas/booking-events.schema.d.ts",
+          "hash": "11088354142147823654"
+        },
+        {
+          "file": "libs/kafka-client/src/schemas/booking-events.schema.js",
+          "hash": "12947511221318557687"
+        },
+        {
+          "file": "libs/kafka-client/src/schemas/booking-events.schema.js.map",
+          "hash": "10918789086241461115"
+        },
+        {
+          "file": "libs/kafka-client/src/schemas/booking-events.schema.ts",
+          "hash": "15003519034533628774"
+        },
+        {
+          "file": "libs/kafka-client/src/schemas/event-lifecycle.schema.d.ts",
+          "hash": "690439527452904077"
+        },
+        {
+          "file": "libs/kafka-client/src/schemas/event-lifecycle.schema.js",
+          "hash": "12863490359120285081"
+        },
+        {
+          "file": "libs/kafka-client/src/schemas/event-lifecycle.schema.js.map",
+          "hash": "9786070428912298830"
+        },
+        {
+          "file": "libs/kafka-client/src/schemas/event-lifecycle.schema.ts",
+          "hash": "6887255661101749554"
+        },
+        {
+          "file": "libs/kafka-client/src/schemas/index.d.ts",
+          "hash": "15884459320726344923"
+        },
+        {
+          "file": "libs/kafka-client/src/schemas/index.js",
+          "hash": "11408296672095908954"
+        },
+        {
+          "file": "libs/kafka-client/src/schemas/index.js.map",
+          "hash": "3891501639734407323"
+        },
+        {
+          "file": "libs/kafka-client/src/schemas/index.ts",
+          "hash": "15884459320726344923"
+        },
+        {
+          "file": "libs/kafka-client/src/schemas/location-context.schema.d.ts",
+          "hash": "133008949063493164"
+        },
+        {
+          "file": "libs/kafka-client/src/schemas/location-context.schema.js",
+          "hash": "8994622322964592800"
+        },
+        {
+          "file": "libs/kafka-client/src/schemas/location-context.schema.js.map",
+          "hash": "11191675871240995336"
+        },
+        {
+          "file": "libs/kafka-client/src/schemas/location-context.schema.ts",
+          "hash": "16043910682856625316"
+        },
+        {
+          "file": "libs/kafka-client/src/schemas/recommendation-feedback.schema.d.ts",
+          "hash": "6356642669026560795"
+        },
+        {
+          "file": "libs/kafka-client/src/schemas/recommendation-feedback.schema.js",
+          "hash": "11322047714317814093"
+        },
+        {
+          "file": "libs/kafka-client/src/schemas/recommendation-feedback.schema.js.map",
+          "hash": "15442618998958133999"
+        },
+        {
+          "file": "libs/kafka-client/src/schemas/recommendation-feedback.schema.ts",
+          "hash": "11293148793008255122"
+        },
+        {
+          "file": "libs/kafka-client/src/schemas/search-events.schema.d.ts",
+          "hash": "10311687449756129869"
+        },
+        {
+          "file": "libs/kafka-client/src/schemas/search-events.schema.js",
+          "hash": "17697090749102138125"
+        },
+        {
+          "file": "libs/kafka-client/src/schemas/search-events.schema.js.map",
+          "hash": "2322588696322558972"
+        },
+        {
+          "file": "libs/kafka-client/src/schemas/search-events.schema.ts",
+          "hash": "15065825025568902425"
+        },
+        {
+          "file": "libs/kafka-client/src/schemas/user-activity.schema.d.ts",
+          "hash": "14847703384704619067"
+        },
+        {
+          "file": "libs/kafka-client/src/schemas/user-activity.schema.js",
+          "hash": "17074458987039857318"
+        },
+        {
+          "file": "libs/kafka-client/src/schemas/user-activity.schema.js.map",
+          "hash": "7588122153123810251"
+        },
+        {
+          "file": "libs/kafka-client/src/schemas/user-activity.schema.ts",
+          "hash": "9821026881773079181"
+        },
+        {
+          "file": "libs/kafka-client/tsconfig.json",
+          "hash": "14910574388472849694"
+        },
+        {
+          "file": "libs/kafka-client/tsconfig.lib.json",
+          "hash": "4693710514456808669"
+        }
+      ],
+      "admin-frontend": [
+        {
+          "file": "apps/admin-frontend/Dockerfile",
+          "hash": "9711510263749484020"
+        },
+        {
+          "file": "apps/admin-frontend/components.json",
+          "hash": "11991600666611588451"
+        },
+        {
+          "file": "apps/admin-frontend/next-env.d.ts",
+          "hash": "10054213917412045845"
+        },
+        {
+          "file": "apps/admin-frontend/next.config.js",
+          "hash": "17705925596211682455"
+        },
+        {
+          "file": "apps/admin-frontend/package.json",
+          "hash": "16825688186453770133",
+          "deps": [
+            "npm:@types/node",
+            "npm:@types/react",
+            "npm:@types/react-dom",
+            "npm:autoprefixer",
+            "npm:postcss",
+            "npm:typescript",
+            "npm:@tanstack/react-query",
+            "npm:axios",
+            "npm:class-variance-authority",
+            "npm:clsx",
+            "npm:lucide-react",
+            "npm:next",
+            "npm:next-themes",
+            "npm:react",
+            "npm:react-day-picker",
+            "npm:react-dom",
+            "npm:sonner",
+            "npm:tailwind-merge",
+            "npm:tailwindcss",
+            "npm:tailwindcss-animate",
+            "npm:zustand"
+          ]
+        },
+        {
+          "file": "apps/admin-frontend/postcss.config.mjs",
+          "hash": "9334535520284521497"
+        },
+        {
+          "file": "apps/admin-frontend/project.json",
+          "hash": "15840118348114424635"
+        },
+        {
+          "file": "apps/admin-frontend/src/app/dashboard/bookings/page.tsx",
+          "hash": "5491848669085284560",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/admin-frontend/src/app/dashboard/events/page.tsx",
+          "hash": "14402160311382253236",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/admin-frontend/src/app/dashboard/insights/page.tsx",
+          "hash": "66751420426636517",
+          "deps": [
+            "npm:react",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/admin-frontend/src/app/dashboard/knowledge/chat/page.tsx",
+          "hash": "8607132536161565203",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/admin-frontend/src/app/dashboard/knowledge/page.tsx",
+          "hash": "9834270343631669855",
+          "deps": [
+            "npm:react",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/admin-frontend/src/app/dashboard/layout.tsx",
+          "hash": "4644192380192795316",
+          "deps": [
+            "npm:react",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/admin-frontend/src/app/dashboard/page.tsx",
+          "hash": "11003396525997166475",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/admin-frontend/src/app/dashboard/settings/page.tsx",
+          "hash": "2159810603018684678",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/admin-frontend/src/app/dashboard/venues/[venueId]/timeslots/page.tsx",
+          "hash": "17628360772340119516",
+          "deps": [
+            "npm:react",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/admin-frontend/src/app/dashboard/venues/page.tsx",
+          "hash": "6580925461316260102",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/admin-frontend/src/app/globals.css",
+          "hash": "1900841667424987979"
+        },
+        {
+          "file": "apps/admin-frontend/src/app/layout.tsx",
+          "hash": "8380667474912741978",
+          "deps": [
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/admin-frontend/src/app/login/page.tsx",
+          "hash": "15537771911692777494",
+          "deps": [
+            "npm:react",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/admin-frontend/src/app/onboarding/complete/page.tsx",
+          "hash": "17023821247168175825",
+          "deps": [
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/admin-frontend/src/app/onboarding/layout.tsx",
+          "hash": "16296688885869270030",
+          "deps": [
+            "npm:react",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/admin-frontend/src/app/onboarding/profile/page.tsx",
+          "hash": "2691120504131921031",
+          "deps": [
+            "npm:react",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/admin-frontend/src/app/onboarding/timeslots/page.tsx",
+          "hash": "18327451431869415019",
+          "deps": [
+            "npm:react",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/admin-frontend/src/app/onboarding/venues/page.tsx",
+          "hash": "4369533724402796659",
+          "deps": [
+            "npm:react",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/admin-frontend/src/app/page.tsx",
+          "hash": "7200785799293766954",
+          "deps": [
+            "npm:react",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/admin-frontend/src/app/register/page.tsx",
+          "hash": "16971770808222403367",
+          "deps": [
+            "npm:react",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/admin-frontend/src/lib/agent-api.ts",
+          "hash": "16692375457943442455"
+        },
+        {
+          "file": "apps/admin-frontend/src/lib/api.ts",
+          "hash": "11473973974677868046",
+          "deps": [
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "apps/admin-frontend/src/lib/knowledge-api.ts",
+          "hash": "15488224942052708288"
+        },
+        {
+          "file": "apps/admin-frontend/src/lib/query-client.tsx",
+          "hash": "9957127114413752600",
+          "deps": [
+            "npm:@tanstack/react-query",
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/admin-frontend/src/lib/utils.ts",
+          "hash": "4398841608861978635",
+          "deps": [
+            "npm:clsx",
+            "npm:tailwind-merge"
+          ]
+        },
+        {
+          "file": "apps/admin-frontend/src/stores/admin-auth-store.ts",
+          "hash": "9709783727125027459",
+          "deps": [
+            "npm:zustand"
+          ]
+        },
+        {
+          "file": "apps/admin-frontend/src/stores/onboarding-store.ts",
+          "hash": "4929206094208374595",
+          "deps": [
+            "npm:zustand"
+          ]
+        },
+        {
+          "file": "apps/admin-frontend/tailwind.config.ts",
+          "hash": "16858375715855457276",
+          "deps": [
+            "npm:tailwindcss",
+            "npm:tailwindcss-animate"
+          ]
+        },
+        {
+          "file": "apps/admin-frontend/tsconfig.json",
+          "hash": "17564387835875178089"
+        },
+        {
+          "file": "apps/admin-frontend/tsconfig.tsbuildinfo",
+          "hash": "12193118249978545742"
+        }
+      ],
+      "user-service": [
+        {
+          "file": "apps/nestjs-services/user-service/Dockerfile",
+          "hash": "8629967006717070956"
+        },
+        {
+          "file": "apps/nestjs-services/user-service/jest.config.ts",
+          "hash": "10186431132111039836",
+          "deps": [
+            "npm:jest"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/nest-cli.json",
+          "hash": "5977972196143888440"
+        },
+        {
+          "file": "apps/nestjs-services/user-service/package.json",
+          "hash": "17562528260240384126",
+          "deps": [
+            "npm:@nestjs/cli",
+            "npm:@nestjs/schematics",
+            "npm:@nestjs/testing",
+            "npm:@types/jest",
+            "npm:@types/node",
+            "npm:drizzle-kit",
+            "npm:jest",
+            "npm:ts-jest",
+            "npm:tsx",
+            "npm:typescript@5.7.2",
+            "npm:@neondatabase/serverless",
+            "npm:@nestjs/common",
+            "npm:@nestjs/config",
+            "npm:@nestjs/core",
+            "npm:@nestjs/microservices",
+            "npm:@nestjs/platform-express",
+            "npm:class-transformer",
+            "npm:class-validator",
+            "npm:dotenv",
+            "npm:drizzle-orm",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/project.json",
+          "hash": "16137123228859888834"
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/app.module.ts",
+          "hash": "644368151112929766",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/config",
+            "nats-client"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/application/dto/create-user-profile.dto.ts",
+          "hash": "5811455404924561710",
+          "deps": [
+            "shared-types"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/application/use-cases/create-user-profile.use-case.ts",
+          "hash": "3672186781818962408",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/config/database/database.config.ts",
+          "hash": "11675060396835396932",
+          "deps": [
+            "npm:@nestjs/config"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/config/modules/persistence.module.ts",
+          "hash": "4259060446655770482",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/config"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/database/client.ts",
+          "hash": "10621440763564005942",
+          "deps": [
+            "database-client",
+            "npm:dotenv"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/database/drizzle.config.ts",
+          "hash": "9309748837568214773",
+          "deps": [
+            "npm:drizzle-kit",
+            "npm:dotenv"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/database/migrations/0000_silky_shinobi_shaw.sql",
+          "hash": "17037654265021722343"
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/database/migrations/0001_sample_data.sql",
+          "hash": "4098547649547182133"
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/database/migrations/meta/0000_snapshot.json",
+          "hash": "11370135689446089010"
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/database/migrations/meta/_journal.json",
+          "hash": "6039821872281832287"
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/database/schema.ts",
+          "hash": "8929088357971650002",
+          "deps": [
+            "npm:drizzle-orm"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/database/seed.ts",
+          "hash": "1569421463303442500"
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/domain/entities/user-profile.entity.ts",
+          "hash": "3685604000180013651",
+          "deps": [
+            "shared-types"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/domain/index.ts",
+          "hash": "13601074584727032276"
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/domain/repositories/tokens.ts",
+          "hash": "5693649355748383575"
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/domain/repositories/user-profile-repository.factory.ts",
+          "hash": "8752510121623374681"
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/domain/repositories/user-profile.repository.ts",
+          "hash": "1270030089535696123",
+          "deps": [
+            "shared-types"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/group/dto/create-group.dto.ts",
+          "hash": "859310011231282974",
+          "deps": [
+            "npm:class-validator"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/group/dto/index.ts",
+          "hash": "16395074975706314298"
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/group/dto/update-group.dto.ts",
+          "hash": "6086787343294962958",
+          "deps": [
+            "npm:class-validator"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/group/group.controller.spec.ts",
+          "hash": "10843899016547662093",
+          "deps": [
+            "npm:@nestjs/testing"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/group/group.controller.ts",
+          "hash": "14905414714879300409",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/group/group.module.ts",
+          "hash": "4010326418372579641",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/group/group.service.ts",
+          "hash": "8551727241611464927",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:drizzle-orm"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/health.controller.spec.ts",
+          "hash": "2188061286480411284",
+          "deps": [
+            "npm:@nestjs/testing"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/health.controller.ts",
+          "hash": "12458437865751486971",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/infrastructure/persistence/adapters/mongo.adapter.ts",
+          "hash": "4379636487364640030",
+          "deps": [
+            "npm:@nestjs/common",
+            "shared-types",
+            "database-client"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/infrastructure/persistence/adapters/postgres.adapter.ts",
+          "hash": "1245263607277495581",
+          "deps": [
+            "npm:@nestjs/common",
+            "shared-types",
+            "database-client"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/infrastructure/persistence/adapters/redis.adapter.ts",
+          "hash": "461503876126491388",
+          "deps": [
+            "npm:@nestjs/common",
+            "shared-types",
+            "database-client"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/infrastructure/persistence/database.manager.ts",
+          "hash": "12862089949107925443",
+          "deps": [
+            "npm:@nestjs/common",
+            "shared-types"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/infrastructure/persistence/factories/postgres-user-profile-repository.factory.ts",
+          "hash": "7752893459997802368",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/infrastructure/persistence/mappers/user-profile.mapper.ts",
+          "hash": "11749251214491333298",
+          "deps": [
+            "shared-types"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/infrastructure/persistence/repositories/postgres-user-profile.repository.ts",
+          "hash": "12999709418819734778",
+          "deps": [
+            "npm:@nestjs/common",
+            "shared-types",
+            "npm:drizzle-orm"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/main.ts",
+          "hash": "17982590890219244375",
+          "deps": [
+            "npm:@nestjs/core",
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/user/dto/index.ts",
+          "hash": "16562524097794983379"
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/user/dto/update-profile.dto.ts",
+          "hash": "1590609103843913656",
+          "deps": [
+            "npm:class-validator"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/user/user.controller.spec.ts",
+          "hash": "9428509986883384754",
+          "deps": [
+            "npm:@nestjs/testing"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/user/user.controller.ts",
+          "hash": "6073021754092280982",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/user/user.module.ts",
+          "hash": "4609787990613019532",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/src/user/user.service.ts",
+          "hash": "15269653172074062908",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:drizzle-orm",
+            "nats-client"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/user-service/tsconfig.build.json",
+          "hash": "9717903506663159030"
+        },
+        {
+          "file": "apps/nestjs-services/user-service/tsconfig.json",
+          "hash": "2029852287283198647"
+        },
+        {
+          "file": "apps/nestjs-services/user-service/webpack.config.js",
+          "hash": "5761133112294047706",
+          "deps": [
+            "npm:webpack-node-externals",
+            "npm:webpack@5.97.1"
+          ]
+        }
+      ],
+      "event-service": [
+        {
+          "file": "apps/nestjs-services/event-service/Dockerfile",
+          "hash": "15958268941802041584"
+        },
+        {
+          "file": "apps/nestjs-services/event-service/jest.config.ts",
+          "hash": "2292337811957944103",
+          "deps": [
+            "npm:jest"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/event-service/nest-cli.json",
+          "hash": "5977972196143888440"
+        },
+        {
+          "file": "apps/nestjs-services/event-service/package.json",
+          "hash": "15269109717816337146",
+          "deps": [
+            "npm:@nestjs/cli",
+            "npm:@nestjs/schematics",
+            "npm:@nestjs/testing",
+            "npm:@types/jest",
+            "npm:@types/node",
+            "npm:drizzle-kit",
+            "npm:jest",
+            "npm:ts-jest",
+            "npm:tsx",
+            "npm:typescript@5.7.2",
+            "npm:@neondatabase/serverless",
+            "npm:@nestjs/common",
+            "npm:@nestjs/config",
+            "npm:@nestjs/core",
+            "npm:@nestjs/platform-express",
+            "kafka-client",
+            "npm:class-transformer",
+            "npm:class-validator",
+            "npm:dotenv",
+            "npm:drizzle-orm",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/event-service/project.json",
+          "hash": "5929045653111166874"
+        },
+        {
+          "file": "apps/nestjs-services/event-service/src/app.module.ts",
+          "hash": "11483573768785383184",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/config",
+            "kafka-client",
+            "nats-client"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/event-service/src/database/client.ts",
+          "hash": "4597308061630797096",
+          "deps": [
+            "database-client",
+            "npm:dotenv"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/event-service/src/database/drizzle.config.ts",
+          "hash": "3677508816506302849",
+          "deps": [
+            "npm:drizzle-kit",
+            "npm:dotenv"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/event-service/src/database/migrations/0000_bouncy_the_stranger.sql",
+          "hash": "15863155378189634764"
+        },
+        {
+          "file": "apps/nestjs-services/event-service/src/database/migrations/0001_sample_data.sql",
+          "hash": "3144073520758319410"
+        },
+        {
+          "file": "apps/nestjs-services/event-service/src/database/migrations/meta/0000_snapshot.json",
+          "hash": "2297580362063506231"
+        },
+        {
+          "file": "apps/nestjs-services/event-service/src/database/migrations/meta/_journal.json",
+          "hash": "7267039127085989789"
+        },
+        {
+          "file": "apps/nestjs-services/event-service/src/database/schema.ts",
+          "hash": "15386267118110763846",
+          "deps": [
+            "npm:drizzle-orm"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/event-service/src/database/seed.ts",
+          "hash": "15721874059230078484"
+        },
+        {
+          "file": "apps/nestjs-services/event-service/src/event/dto/create-event.dto.ts",
+          "hash": "1124956440236762665",
+          "deps": [
+            "npm:class-validator"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/event-service/src/event/dto/index.ts",
+          "hash": "1534880637751061771"
+        },
+        {
+          "file": "apps/nestjs-services/event-service/src/event/dto/search-event.dto.ts",
+          "hash": "8510416034789495304",
+          "deps": [
+            "npm:class-validator",
+            "npm:class-transformer"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/event-service/src/event/dto/update-event.dto.ts",
+          "hash": "7150754755175106730",
+          "deps": [
+            "npm:class-validator"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/event-service/src/event/event-search.controller.spec.ts",
+          "hash": "17931367244866279759",
+          "deps": [
+            "npm:@nestjs/testing"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/event-service/src/event/event-search.controller.ts",
+          "hash": "12116338228743775157",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/event-service/src/event/event.controller.spec.ts",
+          "hash": "12059795587990655050",
+          "deps": [
+            "npm:@nestjs/testing"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/event-service/src/event/event.controller.ts",
+          "hash": "40872203302550006",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/event-service/src/event/event.module.ts",
+          "hash": "4888266232493295310",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/event-service/src/event/event.service.ts",
+          "hash": "13901965114039413051",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:drizzle-orm",
+            "kafka-client",
+            "nats-client"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/event-service/src/health.controller.spec.ts",
+          "hash": "3372855034892485003",
+          "deps": [
+            "npm:@nestjs/testing"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/event-service/src/health.controller.ts",
+          "hash": "8062495403989386636",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/event-service/src/main.ts",
+          "hash": "269503011647854583",
+          "deps": [
+            "npm:@nestjs/core",
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/nestjs-services/event-service/tsconfig.build.json",
+          "hash": "18226327615299451984"
+        },
+        {
+          "file": "apps/nestjs-services/event-service/tsconfig.json",
+          "hash": "17880755948990127816"
+        },
+        {
+          "file": "apps/nestjs-services/event-service/webpack.config.js",
+          "hash": "5761133112294047706",
+          "deps": [
+            "npm:webpack-node-externals",
+            "npm:webpack@5.97.1"
+          ]
+        }
+      ],
+      "shared-types": [
+        {
+          "file": "libs/shared-types/README.md",
+          "hash": "14158794989228259769"
+        },
+        {
+          "file": "libs/shared-types/package.json",
+          "hash": "17610309269495376951"
+        },
+        {
+          "file": "libs/shared-types/project.json",
+          "hash": "3338497891613564"
+        },
+        {
+          "file": "libs/shared-types/src/auth.interface.ts",
+          "hash": "12198861979671250773"
+        },
+        {
+          "file": "libs/shared-types/src/booking.interface.ts",
+          "hash": "5662277671908658443"
+        },
+        {
+          "file": "libs/shared-types/src/domain/entities/entity.ts",
+          "hash": "710759051512273416"
+        },
+        {
+          "file": "libs/shared-types/src/domain/entities/user.entity.ts",
+          "hash": "9344335295370911448"
+        },
+        {
+          "file": "libs/shared-types/src/domain/index.ts",
+          "hash": "5917491790301061965"
+        },
+        {
+          "file": "libs/shared-types/src/domain/repositories/base.repository.ts",
+          "hash": "9735710946686483660"
+        },
+        {
+          "file": "libs/shared-types/src/domain/repositories/user.repository.ts",
+          "hash": "13871244392413834186"
+        },
+        {
+          "file": "libs/shared-types/src/domain/value-objects/location.ts",
+          "hash": "13758985644299586429"
+        },
+        {
+          "file": "libs/shared-types/src/domain/value-objects/notification-settings.ts",
+          "hash": "14330363508937135295"
+        },
+        {
+          "file": "libs/shared-types/src/domain/value-objects/user-preferences.ts",
+          "hash": "11987902966479992787"
+        },
+        {
+          "file": "libs/shared-types/src/domain/value-objects/user-role.ts",
+          "hash": "8339183863073944887"
+        },
+        {
+          "file": "libs/shared-types/src/event.interface.ts",
+          "hash": "13586494647808905802"
+        },
+        {
+          "file": "libs/shared-types/src/group.interface.ts",
+          "hash": "852734303957493423"
+        },
+        {
+          "file": "libs/shared-types/src/index.ts",
+          "hash": "65151273374958145"
+        },
+        {
+          "file": "libs/shared-types/src/permissions.interface.ts",
+          "hash": "6257944601156962016"
+        },
+        {
+          "file": "libs/shared-types/src/persistence/index.ts",
+          "hash": "2397628339411841562"
+        },
+        {
+          "file": "libs/shared-types/src/persistence/interfaces/database-adapter.interface.ts",
+          "hash": "16405371118546255684"
+        },
+        {
+          "file": "libs/shared-types/src/persistence/interfaces/database-config.interface.ts",
+          "hash": "9134039248853165430"
+        },
+        {
+          "file": "libs/shared-types/src/persistence/interfaces/repository-factory.interface.ts",
+          "hash": "12951747732697070879"
+        },
+        {
+          "file": "libs/shared-types/src/saga.interface.ts",
+          "hash": "17100905643751717740"
+        },
+        {
+          "file": "libs/shared-types/src/timeslot.interface.ts",
+          "hash": "12700378244967939669"
+        },
+        {
+          "file": "libs/shared-types/src/user.interface.ts",
+          "hash": "18324361849887446403"
+        },
+        {
+          "file": "libs/shared-types/src/vendor.interface.ts",
+          "hash": "953585383429191380"
+        },
+        {
+          "file": "libs/shared-types/src/venue.interface.ts",
+          "hash": "13778099842253689433"
+        },
+        {
+          "file": "libs/shared-types/tsconfig.json",
+          "hash": "14910574388472849694"
+        },
+        {
+          "file": "libs/shared-types/tsconfig.lib.json",
+          "hash": "4693710514456808669"
         }
       ]
     }

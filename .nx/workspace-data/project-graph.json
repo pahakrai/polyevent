@@ -18129,6 +18129,11 @@
       },
       {
         "source": "search-service",
+        "target": "npm:jest",
+        "type": "static"
+      },
+      {
+        "source": "search-service",
         "target": "npm:@nestjs/cli",
         "type": "static"
       },
@@ -18150,11 +18155,6 @@
       {
         "source": "search-service",
         "target": "npm:@types/node",
-        "type": "static"
-      },
-      {
-        "source": "search-service",
-        "target": "npm:jest",
         "type": "static"
       },
       {
@@ -18286,6 +18286,11 @@
       },
       {
         "source": "vendor-service",
+        "target": "npm:jest",
+        "type": "static"
+      },
+      {
+        "source": "vendor-service",
         "target": "npm:@nestjs/cli",
         "type": "static"
       },
@@ -18312,11 +18317,6 @@
       {
         "source": "vendor-service",
         "target": "npm:drizzle-kit",
-        "type": "static"
-      },
-      {
-        "source": "vendor-service",
-        "target": "npm:jest",
         "type": "static"
       },
       {
@@ -18745,6 +18745,11 @@
       },
       {
         "source": "event-service",
+        "target": "npm:jest",
+        "type": "static"
+      },
+      {
+        "source": "event-service",
         "target": "npm:@nestjs/cli",
         "type": "static"
       },
@@ -18771,11 +18776,6 @@
       {
         "source": "event-service",
         "target": "npm:drizzle-kit",
-        "type": "static"
-      },
-      {
-        "source": "event-service",
-        "target": "npm:jest",
         "type": "static"
       },
       {
@@ -18897,6 +18897,11 @@
       },
       {
         "source": "auth-service",
+        "target": "npm:jest",
+        "type": "static"
+      },
+      {
+        "source": "auth-service",
         "target": "npm:@nestjs/testing",
         "type": "static"
       },
@@ -18923,11 +18928,6 @@
       {
         "source": "auth-service",
         "target": "npm:drizzle-kit",
-        "type": "static"
-      },
-      {
-        "source": "auth-service",
-        "target": "npm:jest",
         "type": "static"
       },
       {
@@ -19119,6 +19119,11 @@
       },
       {
         "source": "user-service",
+        "target": "npm:jest",
+        "type": "static"
+      },
+      {
+        "source": "user-service",
         "target": "npm:@nestjs/cli",
         "type": "static"
       },
@@ -19145,11 +19150,6 @@
       {
         "source": "user-service",
         "target": "npm:drizzle-kit",
-        "type": "static"
-      },
-      {
-        "source": "user-service",
-        "target": "npm:jest",
         "type": "static"
       },
       {
@@ -19271,6 +19271,11 @@
       },
       {
         "source": "api-gateway",
+        "target": "npm:jest",
+        "type": "static"
+      },
+      {
+        "source": "api-gateway",
         "target": "npm:@nestjs/cli",
         "type": "static"
       },
@@ -19292,11 +19297,6 @@
       {
         "source": "api-gateway",
         "target": "npm:@types/node",
-        "type": "static"
-      },
-      {
-        "source": "api-gateway",
-        "target": "npm:jest",
         "type": "static"
       },
       {

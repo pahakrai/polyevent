@@ -1,0 +1,13 @@
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [0m[7m[37m api-gateway [39m[27m[0m [2mapps/nestjs-services/api-gateway/src/[22m[1mhealth.controller.spec.ts[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [0m[7m[37m api-gateway [39m[27m[0m [2mapps/nestjs-services/api-gateway/src/proxy/[22m[1mauth-proxy.controller.spec.ts[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [0m[7m[37m api-gateway [39m[27m[0m [2mapps/nestjs-services/api-gateway/src/proxy/[22m[1mvendor-proxy.controller.spec.ts[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [0m[7m[37m api-gateway [39m[27m[0m [2mapps/nestjs-services/api-gateway/src/proxy/[22m[1mevent-proxy.controller.spec.ts[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [0m[7m[37m api-gateway [39m[27m[0m [2mapps/nestjs-services/api-gateway/src/proxy/[22m[1muser-proxy.controller.spec.ts[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [0m[7m[37m api-gateway [39m[27m[0m [2mapps/nestjs-services/api-gateway/src/proxy/[22m[1magent-proxy.controller.spec.ts[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [0m[7m[37m api-gateway [39m[27m[0m [2mapps/nestjs-services/api-gateway/src/tracking/[22m[1mtracking.controller.spec.ts[22m
+
+[1mTest Suites: [22m[1m[32m7 passed[39m[22m, 7 total
+[1mTests:       [22m[1m[32m54 passed[39m[22m, 54 total
+[1mSnapshots:   [22m0 total
+[1mTime:[22m        [1m[33m3.859 s[39m[22m
+[2mRan all test suites[22m[2m.[22m
