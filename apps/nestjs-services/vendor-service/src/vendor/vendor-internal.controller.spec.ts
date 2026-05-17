@@ -31,8 +31,10 @@ describe('VendorInternalController', () => {
 
   describe('POST /internal/vendors', () => {
     const dto = {
+      userId: 'user-1',
+      idempotencyKey: 'idem-1',
       businessName: 'Internal Biz',
-      category: 'MUSIC',
+      category: 'MUSIC' as const,
       contactEmail: 'biz@test.com',
       contactPhone: '555-9999',
       address: { street: '1 Main' },

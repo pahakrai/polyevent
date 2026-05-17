@@ -28,14 +28,23 @@ describe('TimeslotController', () => {
   const baseSlot = {
     id: 'slot-1',
     venueId: 'venue-1',
-    startTime: '2026-06-01T09:00:00Z',
-    endTime: '2026-06-01T11:00:00Z',
-    status: 'AVAILABLE',
+    startTime: new Date('2026-06-01T09:00:00Z'),
+    endTime: new Date('2026-06-01T11:00:00Z'),
+    status: 'AVAILABLE' as const,
+    recurrenceRule: null,
+    priceOverride: null,
+    maxBookings: 1,
+    createdAt: new Date(),
+    updatedAt: new Date(),
   };
 
   describe('POST /venues/:venueId/timeslots', () => {
     it('creates a timeslot, merging venueId into dto', async () => {
-      const dto = { startTime: '2026-06-01T09:00:00Z', endTime: '2026-06-01T11:00:00Z', price: 100 };
+      const dto = {
+        venueId: 'venue-1',
+        startTime: '2026-06-01T09:00:00Z',
+        endTime: '2026-06-01T11:00:00Z',
+      };
       mockTimeslotService.create.mockResolvedValue(baseSlot);
 
       const result = await controller.create('venue-1', dto);
@@ -46,17 +55,18 @@ describe('TimeslotController', () => {
 
     it('creates timeslot with all optional fields', async () => {
       const dto = {
+        venueId: 'venue-1',
         startTime: '2026-06-01T14:00:00Z',
         endTime: '2026-06-01T16:00:00Z',
-        price: 150,
         maxBookings: 50,
-        notes: 'Afternoon slot',
+        priceOverride: { amount: 150, currency: 'USD' },
       };
-      mockTimeslotService.create.mockResolvedValue({ id: 'slot-2', venueId: 'venue-1', ...dto });
+      const created = { ...baseSlot, maxBookings: 50, priceOverride: { amount: 150, currency: 'USD' } };
+      mockTimeslotService.create.mockResolvedValue(created);
 
       const result = await controller.create('venue-1', dto);
 
-      expect(result.price).toBe(150);
+      expect(result.maxBookings).toBe(50);
       expect(mockTimeslotService.create).toHaveBeenCalledWith({ ...dto, venueId: 'venue-1' });
     });
   });
@@ -64,31 +74,32 @@ describe('TimeslotController', () => {
   describe('POST /venues/:venueId/timeslots/bulk', () => {
     it('creates timeslots in bulk', async () => {
       const dto = {
-        slots: [
-          { startTime: '2026-06-01T09:00:00Z', endTime: '2026-06-01T11:00:00Z' },
-          { startTime: '2026-06-01T11:00:00Z', endTime: '2026-06-01T13:00:00Z' },
-        ],
+        venueId: 'venue-1',
+        startDate: '2026-06-01',
+        endDate: '2026-06-07',
+        daysOfWeek: [1, 3, 5],
+        startTime: '09:00',
+        endTime: '11:00',
       };
-      const created = [
-        { id: 'slot-1', venueId: 'venue-1', ...dto.slots[0] },
-        { id: 'slot-2', venueId: 'venue-1', ...dto.slots[1] },
-      ];
-      mockTimeslotService.createBulk.mockResolvedValue(created);
+      mockTimeslotService.createBulk.mockResolvedValue({ count: 3 });
 
       const result = await controller.createBulk('venue-1', dto);
 
-      expect(result).toHaveLength(2);
+      expect(result.count).toBe(3);
       expect(mockTimeslotService.createBulk).toHaveBeenCalledWith({ ...dto, venueId: 'venue-1' });
     });
 
-    it('creates bulk with prices', async () => {
+    it('creates bulk with price override', async () => {
       const dto = {
-        slots: [
-          { startTime: '2026-06-01T09:00:00Z', endTime: '2026-06-01T11:00:00Z', price: 100 },
-          { startTime: '2026-06-01T11:00:00Z', endTime: '2026-06-01T13:00:00Z', price: 120 },
-        ],
+        venueId: 'venue-1',
+        startDate: '2026-06-01',
+        endDate: '2026-06-07',
+        daysOfWeek: [1, 3, 5],
+        startTime: '09:00',
+        endTime: '11:00',
+        priceOverride: { amount: 100, currency: 'USD' },
       };
-      mockTimeslotService.createBulk.mockResolvedValue([]);
+      mockTimeslotService.createBulk.mockResolvedValue({ count: 3 });
 
       await controller.createBulk('venue-1', dto);
 
@@ -146,13 +157,13 @@ describe('TimeslotController', () => {
 
   describe('PATCH /timeslots/:id', () => {
     it('updates a timeslot', async () => {
-      const dto = { price: 200, maxBookings: 75 };
+      const dto = { priceOverride: { amount: 200, currency: 'USD' }, maxBookings: 75 };
       const updated = { ...baseSlot, ...dto };
       mockTimeslotService.update.mockResolvedValue(updated);
 
       const result = await controller.update('slot-1', dto);
 
-      expect(result.price).toBe(200);
+      expect(result.maxBookings).toBe(75);
       expect(mockTimeslotService.update).toHaveBeenCalledWith('slot-1', dto);
     });
   });
@@ -176,7 +187,7 @@ describe('TimeslotController', () => {
 
   describe('POST /timeslots/:id/block', () => {
     it('blocks a timeslot', async () => {
-      const blocked = { ...baseSlot, status: 'BLOCKED' };
+      const blocked = { ...baseSlot, status: 'BLOCKED' as const };
       mockTimeslotService.block.mockResolvedValue(blocked);
 
       const result = await controller.block('slot-1');

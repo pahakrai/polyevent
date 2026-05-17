@@ -27,13 +27,29 @@ describe('VenueController', () => {
     id: 'venue-1',
     vendorId: 'v-1',
     name: 'Main Hall',
-    type: 'INDOOR',
+    description: null,
+    type: 'INDOOR' as const,
     capacity: 200,
+    address: { city: 'NYC' },
+    location: { lat: 40.7, lon: -74.0 },
+    amenities: [],
+    images: [],
+    pricingModel: 'PER_HOUR' as const,
+    hourlyRate: null,
+    isAvailable: true,
+    createdAt: new Date(),
   };
 
   describe('POST /vendors/:vendorId/venues', () => {
     it('creates a venue, merging vendorId into dto', async () => {
-      const dto = { name: 'Main Hall', type: 'INDOOR', capacity: 200, address: { city: 'NYC' } };
+      const dto = {
+        vendorId: 'v-1',
+        name: 'Main Hall',
+        type: 'INDOOR' as const,
+        capacity: 200,
+        address: { city: 'NYC' },
+        location: { lat: 40.7, lon: -74.0 },
+      };
       mockVenueService.create.mockResolvedValue(baseVenue);
 
       const result = await controller.create('v-1', dto);
@@ -44,18 +60,19 @@ describe('VenueController', () => {
 
     it('creates venue with all fields', async () => {
       const dto = {
-        name: 'Grand Ballroom',
-        type: 'BALLROOM',
+        vendorId: 'v-1',
+        name: 'Grand Hall',
+        type: 'INDOOR' as const,
         capacity: 500,
         description: 'A grand hall',
         address: { street: '1 Park Ave', city: 'NYC', country: 'US' },
-        coordinates: { lat: 40.7, lon: -74.0 },
+        location: { lat: 40.7, lon: -74.0 },
       };
-      mockVenueService.create.mockResolvedValue({ id: 'venue-2', vendorId: 'v-1', ...dto });
+      mockVenueService.create.mockResolvedValue({ id: 'venue-2', ...dto });
 
       const result = await controller.create('v-1', dto);
 
-      expect(result.name).toBe('Grand Ballroom');
+      expect(result.name).toBe('Grand Hall');
       expect(mockVenueService.create).toHaveBeenCalledWith({ ...dto, vendorId: 'v-1' });
     });
   });

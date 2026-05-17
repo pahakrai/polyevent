@@ -27,16 +27,31 @@ describe('VendorController', () => {
 
   const baseVendor = {
     id: 'v-1',
+    userId: 'user-1',
     businessName: 'My Business',
-    category: 'MUSIC',
-    status: 'PENDING',
+    description: null,
+    category: 'MUSIC' as const,
+    subCategory: null,
+    contactEmail: 'vendor@test.com',
+    contactPhone: '555-1234',
+    website: null,
+    address: { street: '123 Main' },
+    location: { lat: 40.7, lon: -74.0 },
+    coverImage: null,
+    verificationStatus: 'PENDING',
+    rating: 0,
+    totalReviews: 0,
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
   };
 
   describe('POST /vendors', () => {
     it('creates a vendor', async () => {
       const dto = {
+        userId: 'user-1',
         businessName: 'My Business',
-        category: 'MUSIC',
+        category: 'MUSIC' as const,
         contactEmail: 'vendor@test.com',
         contactPhone: '555-1234',
         address: { street: '123 Main' },
@@ -52,8 +67,9 @@ describe('VendorController', () => {
 
     it('creates vendor with all optional fields', async () => {
       const dto = {
+        userId: 'user-1',
         businessName: 'Full Business',
-        category: 'ART',
+        category: 'ART' as const,
         subCategory: 'Painting',
         description: 'An art studio',
         website: 'https://art.com',
@@ -63,7 +79,8 @@ describe('VendorController', () => {
         address: { street: '456 Oak' },
         location: { lat: 41.0, lon: -73.0 },
       };
-      mockVendorService.create.mockResolvedValue({ id: 'v-2', ...dto });
+      const created = { ...baseVendor, ...dto, category: 'ART' as const };
+      mockVendorService.create.mockResolvedValue(created);
 
       const result = await controller.create(dto);
 
@@ -152,12 +169,12 @@ describe('VendorController', () => {
 
   describe('POST /vendors/:id/verify', () => {
     it('verifies a vendor', async () => {
-      const verified = { ...baseVendor, status: 'VERIFIED' };
+      const verified = { ...baseVendor, verificationStatus: 'VERIFIED' };
       mockVendorService.verify.mockResolvedValue(verified);
 
       const result = await controller.verify('v-1');
 
-      expect(result.status).toBe('VERIFIED');
+      expect(result.verificationStatus).toBe('VERIFIED');
       expect(mockVendorService.verify).toHaveBeenCalledWith('v-1');
     });
   });

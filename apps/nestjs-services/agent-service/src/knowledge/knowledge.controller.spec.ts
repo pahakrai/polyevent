@@ -15,7 +15,7 @@ describe('KnowledgeController', () => {
     chatStream: jest.fn(),
   };
 
-  const mockUser = { sub: 'user-1', email: 'test@test.com', role: 'USER' };
+  const mockUser = { sub: 'user-1', email: 'test@test.com', role: 'USER', permissions: [] };
 
   beforeEach(async () => {
     jest.clearAllMocks();

@@ -56,11 +56,16 @@ describe('AuthController', () => {
           location: { lat: 40.7, lon: -74.0 },
         },
       };
-      mockAuthService.register.mockResolvedValue({ id: 'user-2', ...dto });
+      mockAuthService.register.mockResolvedValue({
+        accessToken: 'at',
+        refreshToken: 'rt',
+        expiresIn: '15m',
+        user: { id: 'user-2', email: dto.email, firstName: dto.firstName, lastName: dto.lastName, role: 'VENDOR', permissions: [] },
+      });
 
       const result = await controller.register(dto);
 
-      expect(result.role).toBe('VENDOR');
+      expect(result.user.role).toBe('VENDOR');
       expect(mockAuthService.register).toHaveBeenCalledWith(dto);
     });
 

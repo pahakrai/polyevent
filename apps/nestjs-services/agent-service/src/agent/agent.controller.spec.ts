@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { HttpException } from '@nestjs/common';
 import { Subject, firstValueFrom } from 'rxjs';
 import { AgentController } from './agent.controller';
 import { InvestigationService } from './investigation.service';
