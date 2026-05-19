@@ -39,26 +39,27 @@ resource "kubernetes_secret_v1" "db_credentials" {
   data = {
     postgres-user     = "eventbooking"
     postgres-password = var.postgres_password
-    postgres-host     = "postgres.polydom-production.svc.cluster.local"
+    postgres-host     = "postgres.polydom-prod.svc.cluster.local"
     postgres-port     = "5432"
 
     # Per-service database URLs
-    gateway-database-url      = "postgresql://eventbooking:${var.postgres_password}@postgres.polydom-production.svc.cluster.local:5432/gateway_db"
-    auth-database-url         = "postgresql://eventbooking:${var.postgres_password}@postgres.polydom-production.svc.cluster.local:5432/auth_db"
-    user-database-url         = "postgresql://eventbooking:${var.postgres_password}@postgres.polydom-production.svc.cluster.local:5432/user_db"
-    vendor-database-url       = "postgresql://eventbooking:${var.postgres_password}@postgres.polydom-production.svc.cluster.local:5432/vendor_db"
-    event-database-url        = "postgresql://eventbooking:${var.postgres_password}@postgres.polydom-production.svc.cluster.local:5432/event_db"
-    booking-database-url      = "postgresql://eventbooking:${var.postgres_password}@postgres.polydom-production.svc.cluster.local:5432/booking_db"
-    agent-database-url        = "postgresql://eventbooking:${var.postgres_password}@postgres.polydom-production.svc.cluster.local:5432/agent_db"
-    search-database-url       = "postgresql://eventbooking:${var.postgres_password}@postgres.polydom-production.svc.cluster.local:5432/vector_db"
-    vector-database-url       = "postgresql://eventbooking:${var.postgres_password}@postgres.polydom-production.svc.cluster.local:5432/vector_db"
-    notification-database-url = "postgresql://eventbooking:${var.postgres_password}@postgres.polydom-production.svc.cluster.local:5432/notification_db"
-    analytics-database-url    = "postgresql://eventbooking:${var.postgres_password}@postgres.polydom-production.svc.cluster.local:5432/analytics_db"
-    admin-database-url        = "postgresql://eventbooking:${var.postgres_password}@postgres.polydom-production.svc.cluster.local:5432/admin_db"
+    gateway-database-url      = "postgresql://eventbooking:${var.postgres_password}@postgres.polydom-prod.svc.cluster.local:5432/gateway_db"
+    auth-database-url         = "postgresql://eventbooking:${var.postgres_password}@postgres.polydom-prod.svc.cluster.local:5432/auth_db"
+    user-database-url         = "postgresql://eventbooking:${var.postgres_password}@postgres.polydom-prod.svc.cluster.local:5432/user_db"
+    vendor-database-url       = "postgresql://eventbooking:${var.postgres_password}@postgres.polydom-prod.svc.cluster.local:5432/vendor_db"
+    event-database-url        = "postgresql://eventbooking:${var.postgres_password}@postgres.polydom-prod.svc.cluster.local:5432/event_db"
+    booking-database-url      = "postgresql://eventbooking:${var.postgres_password}@postgres.polydom-prod.svc.cluster.local:5432/booking_db"
+    agent-database-url        = "postgresql://eventbooking:${var.postgres_password}@postgres.polydom-prod.svc.cluster.local:5432/agent_db"
+    search-database-url       = "postgresql://eventbooking:${var.postgres_password}@postgres.polydom-prod.svc.cluster.local:5432/vector_db"
+    vector-database-url       = "postgresql://eventbooking:${var.postgres_password}@postgres.polydom-prod.svc.cluster.local:5432/vector_db"
+    notification-database-url = "postgresql://eventbooking:${var.postgres_password}@postgres.polydom-prod.svc.cluster.local:5432/notification_db"
+    analytics-database-url    = "postgresql://eventbooking:${var.postgres_password}@postgres.polydom-prod.svc.cluster.local:5432/analytics_db"
+    admin-database-url        = "postgresql://eventbooking:${var.postgres_password}@postgres.polydom-prod.svc.cluster.local:5432/admin_db"
 
     # Shared infra
     redis-url           = "redis://redis:6379"
-    elasticsearch-hosts = "http://elasticsearch:9200"
+    elasticsearch-url     = "http://elasticsearch:9200"
+    source-database-url  = "postgresql://eventbooking:${var.postgres_password}@postgres.polydom-prod.svc.cluster.local:5432/eventbooking"
   }
 }
 

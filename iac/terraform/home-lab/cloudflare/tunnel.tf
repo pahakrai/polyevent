@@ -35,12 +35,12 @@ resource "cloudflare_tunnel_config" "main" {
   config {
     ingress_rule {
       hostname = var.domain
-      service  = "http://api-gateway.polydom-production.svc.cluster.local:3000"
+      service  = "http://api-gateway.polydom-prod.svc.cluster.local:3000"
     }
 
     ingress_rule {
       hostname = "*.${var.domain}"
-      service  = "http://api-gateway.polydom-production.svc.cluster.local:3000"
+      service  = "http://api-gateway.polydom-prod.svc.cluster.local:3000"
     }
 
     # Catch-all — drop everything else

@@ -4,7 +4,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: event-service
-  namespace: polydom-production
+  namespace: polydom-prod
   labels:
     app: event-service
 spec:
@@ -53,6 +53,10 @@ spec:
               key: jwt-secret
         - name: PORT
           value: "3000"
+        - name: KAFKA_BROKERS
+          value: kafka:9092
+        - name: NATS_SERVERS
+          value: nats:4222
         resources:
           requests:
             memory: "256Mi"
@@ -77,7 +81,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: event-service
-  namespace: polydom-production
+  namespace: polydom-prod
 spec:
   selector:
     app: event-service

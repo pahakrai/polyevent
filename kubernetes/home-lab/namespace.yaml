@@ -1,10 +1,10 @@
-# polydom-production namespace
+# polydom-prod namespace
 # Also created by Terraform — kept here so ArgoCD can manage app-layer resources
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: polydom-production
+  name: polydom-prod
   labels:
     environment: production
     managed-by: argocd

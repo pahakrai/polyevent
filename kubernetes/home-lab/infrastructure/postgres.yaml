@@ -5,7 +5,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: postgres-pvc
-  namespace: polydom-production
+  namespace: polydom-prod
 spec:
   accessModes:
     - ReadWriteOnce
@@ -17,7 +17,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: postgres-init
-  namespace: polydom-production
+  namespace: polydom-prod
 data:
   01-create-databases.sql: |
     CREATE DATABASE gateway_db;
@@ -41,7 +41,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: postgres
-  namespace: polydom-production
+  namespace: polydom-prod
   labels:
     app: postgres
 spec:
@@ -117,7 +117,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: postgres
-  namespace: polydom-production
+  namespace: polydom-prod
 spec:
   selector:
     app: postgres

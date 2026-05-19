@@ -6,7 +6,7 @@
 
 resource "kubernetes_namespace" "production" {
   metadata {
-    name = "polydom-production"
+    name = "polydom-prod"
     labels = {
       environment = "production"
       managed-by  = "terraform"

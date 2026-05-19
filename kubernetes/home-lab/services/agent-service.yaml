@@ -4,7 +4,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: agent-service
-  namespace: polydom-production
+  namespace: polydom-prod
   labels:
     app: agent-service
 spec:
@@ -71,6 +71,12 @@ spec:
               name: llm-secrets
               key: deepseek-api-key
               optional: true
+        - name: ANTHROPIC_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: llm-secrets
+              key: deepseek-api-key
+              optional: true
         resources:
           requests:
             memory: "256Mi"
@@ -95,7 +101,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: agent-service
-  namespace: polydom-production
+  namespace: polydom-prod
 spec:
   selector:
     app: agent-service

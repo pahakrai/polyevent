@@ -4,7 +4,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nats
-  namespace: polydom-production
+  namespace: polydom-prod
   labels:
     app: nats
 spec:
@@ -46,7 +46,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nats
-  namespace: polydom-production
+  namespace: polydom-prod
 spec:
   selector:
     app: nats

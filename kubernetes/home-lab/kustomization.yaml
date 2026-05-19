@@ -6,7 +6,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-namespace: polydom-production
+namespace: polydom-prod
 
 resources:
   - namespace.yaml
@@ -14,6 +14,7 @@ resources:
   - infrastructure/postgres.yaml
   - infrastructure/redis.yaml
   - infrastructure/nats.yaml
+  - infrastructure/redpanda.yaml
   - services/api-gateway.yaml
   - services/auth-service.yaml
   - services/user-service.yaml
