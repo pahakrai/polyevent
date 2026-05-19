@@ -1,0 +1,49 @@
+# Home-lab production — deployed by ArgoCD
+#
+# ArgoCD watches this directory and syncs to the Minikube cluster.
+# Registry: ghcr.io (free for public repos)
+# Images are built + pushed by GitHub Actions on push to main.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: polydom-production
+
+resources:
+  - namespace.yaml
+  - cloudflared/deployment.yaml
+  - infrastructure/postgres.yaml
+  - infrastructure/redis.yaml
+  - infrastructure/nats.yaml
+  - services/api-gateway.yaml
+  - services/auth-service.yaml
+  - services/user-service.yaml
+  - services/vendor-service.yaml
+  - services/event-service.yaml
+  - services/search-service.yaml
+  - services/agent-service.yaml
+  - services/frontend.yaml
+  - services/admin-frontend.yaml
+  - python-workers/inference.yaml
+  - python-workers/celery-worker.yaml
+
+images:
+  - name: ghcr.io/pahakrai/polydom/api-gateway
+    newTag: latest
+  - name: ghcr.io/pahakrai/polydom/auth-service
+    newTag: latest
+  - name: ghcr.io/pahakrai/polydom/user-service
+    newTag: latest
+  - name: ghcr.io/pahakrai/polydom/vendor-service
+    newTag: latest
+  - name: ghcr.io/pahakrai/polydom/event-service
+    newTag: latest
+  - name: ghcr.io/pahakrai/polydom/search-service
+    newTag: latest
+  - name: ghcr.io/pahakrai/polydom/agent-service
+    newTag: latest
+  - name: ghcr.io/pahakrai/polydom/frontend
+    newTag: latest
+  - name: ghcr.io/pahakrai/polydom/admin-frontend
+    newTag: latest
+  - name: ghcr.io/pahakrai/polydom/python-workers
+    newTag: latest

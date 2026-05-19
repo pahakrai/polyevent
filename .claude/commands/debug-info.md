@@ -33,6 +33,7 @@ Without `0.0.0.0`, Node defaults to `127.0.0.1` — only reachable inside the co
 | vendor-service| 9232 |
 | event-service | 9233 |
 | agent-service | 9234 |
+| search-service| 9235 |
 
 ### Commands
 

@@ -1,283 +1,182 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+## Common Commands
 
-## Common Development Commands
+### Development
+| Command | Description |
+|---------|-------------|
+| `yarn dev:infra` | Start infrastructure only (DBs, Kafka, Redis, ES, NATS) — run services natively |
+| `yarn dev:infra:down` | Stop infrastructure |
+| `yarn dev` | Docker Compose full stack (infra + all services, hot reload) |
+| `yarn dev:down` | Stop full stack |
+| `yarn skaffold:dev` | Skaffold watch: build + deploy to local K8s, port-forward |
+| `yarn skaffold:dev:debug` | Skaffold with sequential builds (prevents resource contention) |
+| `yarn skaffold:run` | One-shot build + deploy |
+| `yarn skaffold:build` | Build images only (no deploy) |
+| `yarn start` / `yarn build` / `yarn test` / `yarn lint` | Run across all projects (NX) |
 
-### Root-level commands (from `package.json`)
-- `yarn start` - Start all services (via NX `run-many --target=serve --all`)
-- `yarn build` - Build all projects
-- `yarn test` - Run tests for all projects
-- `yarn lint` - Lint all projects
-- `yarn format` - Format code with Prettier
-- `yarn docker:up` - Start all Docker Compose services (databases + apps with hot reload)
-- `yarn docker:down` - Stop all Docker Compose services
-- `yarn dev:infra` - Start Docker Compose **infrastructure only** (databases, message queues, search) — for running services natively
-- `yarn dev:infra:down` - Stop infrastructure-only Docker Compose
-- `yarn skaffold:dev` - Skaffold watch mode: build + deploy all services to local Kubernetes with port-forward
-- `yarn skaffold:dev:debug` - Skaffold watch mode with sequential builds (`--build-concurrency=1`) — prevents resource contention during builds
-- `yarn skaffold:run` - Skaffold one-shot: build + deploy all services to local Kubernetes once
-- `yarn skaffold:build` - Skaffold build only (no deploy)
-- `yarn k8s:apply` - Apply Kubernetes manifests
-- `yarn k8s:delete` - Delete Kubernetes resources
-
-### Database operations (per service)
-Each NestJS service has its own database. Use `yarn db:<action>:<service>` where `<service>` is `auth`, `user`, `vendor`, `event`, `booking`, `notification`, `analytics`, `admin`, `agent`. Actions:
-- `db:generate` - Generate Drizzle migrations
-- `db:migrate` - Run migrations
-- `db:seed` - Seed database
-- `db:studio` - Open Drizzle Studio UI
-- `db:push` - Push schema changes (development)
-
-### Database reset (truncate all tables)
-During development, you can wipe all table records while keeping schemas intact:
-- `yarn db:truncate:docker` - Truncate all tables in Docker PostgreSQL
-- `yarn db:truncate:k8s` - Truncate all tables in K8s PostgreSQL
-- `yarn db:reset:docker` - Truncate + re-migrate (Docker)
-- `yarn db:reset:k8s` - Truncate + re-migrate (K8s)
-- `bash scripts/db-reset.sh docker --migrate` - Manual control with `--migrate` flag
-
-### NX commands
-- `nx run-many --target=serve --projects=<comma-separated>` - Start specific services
-- `nx build <project>` - Build a single project
-- `nx test <project>` - Run tests for a single project
-- `nx lint <project>` - Lint a single project
-
-### Service-specific commands
-- **Frontend**: `cd apps/frontend && yarn dev` (Next.js dev server)
-- **NestJS services**: `cd apps/nestjs-services/<service> && yarn start:dev` (watch mode)
-- **Python workers**: See `apps/python-workers/`
-
-## Architecture Overview
-
-This is an NX monorepo for an event booking platform connecting casual musicians, activity organizers, and users. The architecture follows microservices principles with event-driven communication.
-
-### High-level structure
-- **Frontend**: Next.js 14+ with App Router, Shadcn/ui, TanStack Query, Zustand
-- **Backend**: NestJS microservices (API Gateway, Auth, User, Vendor, Event, Booking, Search, Notification, Analytics, Admin)
-- **Data infrastructure**: PostgreSQL (per service), MongoDB, Redis, Elasticsearch, Kafka
-- **Machine Learning**: Python workers for ML training, inference, and Kafka consumers
-- **DevOps**: Docker, Kubernetes, Helm, GitHub Actions, monitoring (Prometheus/Grafana/ELK)
-
-### Key architectural patterns
-- **Microservices**: Each service owns its database and exposes well-defined APIs
-- **Event-driven**: Async communication via Kafka for eventual consistency
-- **API Gateway**: Single entry point with routing, rate limiting, circuit breaking
-- **Database per service**: Each microservice has its own PostgreSQL database
-- **CQRS**: Read/write separation in search service
-- **Saga pattern**: Distributed transactions (e.g., booking flow)
-
-### Data flow highlights
-1. **User search**: Frontend → API Gateway → Search Service → Elasticsearch → Event Service (availability enrichment)
-2. **Booking**: Frontend → Booking Service → Event Service (validation) → Stripe → Notification Service → Kafka (analytics)
-3. **Vendor onboarding**: Vendor Service → Admin Service (approval) → Notification Service
-
-## Library Architecture
-
-Shared libraries in `libs/` vary in framework coupling:
-
-| Library | Coupling | Status | Notes |
-|---------|----------|--------|-------|
-| `shared-types` | Framework-agnostic | ✅ Complete | Pure TypeScript interfaces |
-| `kafka-client` | NestJS-coupled | 🚧 Stub | Base classes with `@Injectable()` |
-| `database-client` | NestJS-coupled | 🚧 Stub | Client wrappers with `@Injectable()` |
-| `elasticsearch-client` | Mixed | 🚧 Partial | Client is NestJS, query builders are framework-agnostic |
-| `utils` | Mixed | ✅ Partial | Validators/transformers complete, logger stub |
-
-**Important**: Most libraries are NestJS-coupled, which is acceptable as all services use NestJS. See `LIBRARY_AUDIT.md` for detailed analysis.
-
-## Database Setup
-
-Each microservice has its own PostgreSQL database managed with Drizzle ORM:
-
-| Service | Database | Schema location |
-|---------|----------|----------------|
-| API Gateway | `gateway_db` | `apps/nestjs-services/api-gateway/src/database/` |
-| Auth Service | `auth_db` | `apps/nestjs-services/auth-service/src/database/` |
-| User Service | `user_db` | `apps/nestjs-services/user-service/src/database/` |
-| Vendor Service | `vendor_db` | `apps/nestjs-services/vendor-service/src/database/` |
-| Event Service | `event_db` | `apps/nestjs-services/event-service/src/database/` |
-| Booking Service | `booking_db` | `apps/nestjs-services/booking-service/src/database/` |
-| Notification Service | `notification_db` | `apps/nestjs-services/notification-service/src/database/` |
-| Analytics Service | `analytics_db` | `apps/nestjs-services/analytics-service/src/database/` |
-| Admin Service | `admin_db` | `apps/nestjs-services/admin-service/src/database/` |
-
-### How databases are created
-
-Databases are created automatically via `docker-entrypoint-initdb.d` mechanism:
-
-- **Docker Compose**: `tools/postgres-init/*.sql` files run on first PVC boot. `01-create-databases.sql` creates all 11 databases; `02-create-extensions.sql` sets up pgvector. These only run when the PostgreSQL volume is empty (first boot).
-- **Kubernetes (Skaffold)**: `kubernetes/local/postgres-init.yaml` ConfigMap with the same SQL mounted to the PostgreSQL pod's `/docker-entrypoint-initdb.d/`. Applies on first PersistentVolumeClaim creation.
-- **Migrations** (run separately after DB creation) use Drizzle ORM to create/alter tables and seed data.
-
-**Important**: Init containers CANNOT replace `docker-entrypoint-initdb.d` — they run before the PostgreSQL process starts, so SQL execution would fail.
-
-### Setup steps
-1. Copy `.env.example` to `.env` and adjust database URLs
-2. `yarn docker:up` - Start PostgreSQL and other dependencies
-3. Run migrations per service: `yarn db:migrate:auth`, etc.
-4. Seed databases: `yarn db:seed:auth`, etc.
-
-See `DATABASE_SETUP.md` for detailed instructions.
-
-## Development Workflow
-
-Two local development options are available:
-
-### Option 1: Docker Compose (databases only) — lightweight
-
-Run infrastructure in Docker, run services natively on the host. Best for rapid iteration on individual services.
-
+### Per-service
 ```bash
-yarn dev:infra          # Start PostgreSQL, MongoDB, Redis, Kafka, Elasticsearch, etc.
-                        # All with named volumes for persistence across restarts
-
-# Run services natively in separate terminals:
-cd apps/nestjs-services/auth-service && yarn start:dev
-cd apps/frontend && yarn dev
-
-# Or start multiple at once:
-yarn nx run-many --target=serve --projects=frontend,api-gateway,auth-service
+nx build <project>          # Build single project
+nx test <project>           # Test single project (--coverage for coverage)
+nx lint <project>           # Lint single project
+cd apps/nestjs-services/<service> && yarn start:dev   # NestJS watch mode
+cd apps/frontend && yarn dev                           # Next.js dev (port 3002)
+cd apps/admin-frontend && yarn dev                     # Admin Next.js dev (port 3004)
 ```
 
-**pgAdmin** is included in both Docker Compose setups. Login at http://localhost:5050 with:
-- Email: `admin@polydom.com`
-- Password: `admin`
-- The PostgreSQL server is pre-configured — just click on it in the left sidebar to browse all databases.
+### Database (per service)
+`yarn db:<action>:<service>` where `<service>` = `auth`, `user`, `vendor`, `event`, `booking`, `agent`.
+
+| Action | Description |
+|--------|-------------|
+| `generate` | Generate Drizzle migrations from schema |
+| `migrate` | Run pending migrations |
+| `seed` | Seed database with sample data |
+| `studio` | Open Drizzle Studio UI |
+| `push` | Push schema directly (dev only) |
+
+Neon (production): `yarn db:push:neon:<service>` or `yarn db:push:neon:all` (auth, user, vendor, event).
+
+### Database Reset
+| Command | Description |
+|---------|-------------|
+| `yarn db:truncate:docker` | Truncate all tables (Docker PG) |
+| `yarn db:truncate:k8s` | Truncate all tables (K8s PG) |
+| `yarn db:reset:docker` | Truncate + re-migrate (Docker) |
+| `yarn db:reset:k8s` | Truncate + re-migrate (K8s) |
+
+### Sample Data
+| Command | Description |
+|---------|-------------|
+| `yarn sample-data:migrate` | Seed all databases with sample data (local) |
+| `yarn sample-data:docker:migrate` | Seed via Docker |
+| `yarn sample-data:kafka` | Generate sample Kafka events |
+| `yarn sample-data:kafka:stream` | Stream live sample events (20 events, 10s delay) |
+
+### Kubernetes
+| Command | Description |
+|---------|-------------|
+| `yarn k8s:apply` / `yarn k8s:delete` | Production overlay |
+| `yarn k8s:apply:staging` / `yarn k8s:delete:staging` | Staging overlay |
+
+### Docker utilities
+| Command | Description |
+|---------|-------------|
+| `yarn affected:docker:build` | Build images for NX-affected services |
+| `yarn affected:docker:push` | Build + push images for affected services |
+| `yarn validate:dockerfiles` | Verify all Dockerfiles reference required shared libs |
+
+---
+
+## Services
+
+| Service | HTTP | Debug | Database | Status |
+|---------|------|-------|----------|--------|
+| **api-gateway** | 3000 | 9229 | — (proxy only) | Active |
+| **auth-service** | 3001 | 9230 | `auth_db` | Active |
+| **user-service** | 3002 | 9231 | `user_db` | Active |
+| **vendor-service** | 3003 | 9232 | `vendor_db` | Active |
+| **event-service** | 3004 | 9233 | `event_db` | Active |
+| **booking-service** | — | — | `booking_db` | DB layer only (no app bootstrap) |
+| **search-service** | 3060 | 9235 | External (ES + pgvector) | Active |
+| **agent-service** | 3010 | 9234 | `agent_db` (pgvector) | Active — LLM agent, RAG, BullMQ |
+| **notification-service** | — | — | — | Stub (webpack.config.js only) |
+| **analytics-service** | — | — | — | Stub (webpack.config.js only) |
+| **admin-service** | — | — | — | Stub (webpack.config.js only) |
+
+### Frontends
+| App | Framework | Docker Port | Local Dev |
+|-----|-----------|-------------|-----------|
+| **frontend** | Next.js 14, TanStack Query, Zustand, Shadcn/ui | 3005 | `yarn dev` (port 3002) |
+| **admin-frontend** | Next.js 14, same stack + react-day-picker, sonner | 3004 | `yarn dev` (port 3004) |
+
+### Python Workers
+| Service | Entry Point | Port | Schedule |
+|---------|-------------|------|----------|
+| **inference** | `uvicorn inference.api:app` | 8000 | Deployment (3 replicas, HPA) |
+| **kafka-consumers** | `python -m kafka-consumers.user_activity` | — | Deployment (2 replicas) |
+| **ml-training** | `python -m ml-training.data_pipeline` | — | CronJob (daily 4 AM) |
+
+All three share one Docker image (`polydom/python-workers:latest`) with different entrypoints. Managed in `kubernetes/python-workers/` (separate from main kustomization, not in Skaffold).
+
+---
+
+## Shared Libraries (`libs/`)
+
+| Library | Package | Coupling | Has Build Target |
+|---------|---------|----------|-----------------|
+| `shared-types` | `@polydom/shared-types` | Framework-agnostic | Yes |
+| `auth` | `@polydom/auth` | NestJS | Yes |
+| `kafka-client` | `@polydom/kafka-client` | NestJS | Yes |
+| `nats-client` | `@polydom/nats-client` | NestJS | Yes |
+| `database-client` | `@polydom/database-client` | NestJS | Yes |
+| `elasticsearch-client` | `@polydom/elasticsearch-client` | Mixed | Yes |
+| `utils` | `@polydom/utils` | Mixed | Yes |
+
+**Key rule**: Libraries marked "NestJS-coupled" use `@Injectable()` and assume `@nestjs/common` is available — fine for this monorepo, limits reuse outside NestJS. `workspace.json` registers all 16 NX projects (10 services + 6 libs); the `auth` lib is in `tsconfig` paths but not in `workspace.json`.
+
+---
+
+## Architecture
+
+**Platform**: NX monorepo for an event booking platform connecting musicians, organizers, and users.
+
+**Patterns**:
+- **Microservices**: Each service owns its database (PostgreSQL + Drizzle ORM)
+- **API Gateway**: Single entry point, proxy pattern to backend services
+- **Event-driven**: Kafka (6 topics, 6 partitions) for async communication + NATS for lightweight messaging
+- **CQRS**: Search service uses Elasticsearch for reads
+- **Saga**: Distributed transaction orchestration (auth-service `SagaExecutor`)
+- **Hexagonal**: user-service uses domain/infrastructure/application layers with multi-DB adapters
+
+**Infrastructure**: PostgreSQL 15 + pgvector, MongoDB 7, Redis 7, Kafka (Confluent 7.4), NATS 2.10, Elasticsearch 8.11, Prometheus, Grafana, Kibana
+
+**CI/CD**: GitHub Actions — `pr-check.yaml` (lint, test, dry-run build, validate), `deploy.yaml` (detect changes → test → build+push → kustomize deploy)
+
+**IaC**: Terraform modules for AWS and DigitalOcean in `iac/terraform/`
+
+---
+
+## Config Sync Rule (Docker Compose ↔ Kubernetes)
+
+**CRITICAL**: When changing one, update the other:
+
+| What | Docker Compose | Kubernetes |
+|------|---------------|------------|
+| Databases | `tools/postgres-init/*.sql` | `kubernetes/local/postgres-init.yaml` |
+| Secrets | `.env` / `.env.example` | `kubernetes/local/secrets.yaml` |
+| Service config | `docker-compose.yml` | `kubernetes/local/services.yaml` |
+| Infrastructure | `docker-compose.infra.yml` | `kubernetes/local/infrastructure.yaml` |
+
+---
+
+## Key URLs (local dev)
 
 | Service | URL |
 |---------|-----|
 | Frontend | http://localhost:3002 |
+| Admin Frontend | http://localhost:3004 |
 | API Gateway | http://localhost:3000 |
-| PostgreSQL | localhost:5432 |
-| pgAdmin | http://localhost:5050 |
-| Redis | localhost:6379 |
-| Kafka | localhost:9092 |
-| Elasticsearch | http://localhost:9200 |
-| Kibana | http://localhost:5601 |
+| pgAdmin | http://localhost:5050 (admin@polydom.com / admin) |
 | Grafana | http://localhost:3001 |
+| Kibana | http://localhost:5601 |
+| Inference API | http://localhost:8000 |
 
-### Option 2: Skaffold + Kubernetes (full stack) — production-like
+---
 
-All microservices, frontend, and Python workers run in a local Kubernetes cluster with persistent volumes. Requires: Docker Desktop K8s, minikube, or kind.
+## Creating a New NestJS Service
 
-```bash
-yarn skaffold:dev       # Watch mode: rebuilds + redeploys on file changes with port-forward
-yarn skaffold:run       # One-shot: build + deploy, then exit
-```
+1. `nx generate @nx/nest:library <name> --directory=apps/nestjs-services`
+2. Add to `docker-compose.yml` and `kubernetes/local/services.yaml`
+3. Add API Gateway proxy route in `apps/nestjs-services/api-gateway/src/proxy/`
+4. Add database to `tools/postgres-init/01-create-databases.sql` and `kubernetes/local/postgres-init.yaml`
+5. Add to `skaffold.yaml` (artifact + portForward)
+6. Add to `workspace.json` and CI matrices (`.github/workflows/`)
+7. Run the `debug-setup` agent for debug wiring (project.json, Dockerfile, K8s ports, VS Code launch config)
+8. Run `/build-check` to validate
 
-This deploys everything to the `polydom-dev` namespace:
-- **PostgreSQL**: Single PostgreSQL instance with 11 databases (one per microservice) following database-per-service pattern. Created via `docker-entrypoint-initdb.d` init scripts.
-- **Infrastructure**: Redis, MongoDB, Kafka, Zookeeper, Elasticsearch, Kibana, Prometheus, Grafana
-- **Services**: API Gateway, Auth, User, Vendor, Event, Booking, Search, Agent
-- **Frontend**: Next.js (via `polydom/frontend`)
-- **Python workers**: ML training, inference, Kafka consumers (via `polydom/python-workers`)
-
-All stateful services use PersistentVolumeClaims. Data survives pod restarts and cluster reboots.
-
-### Creating a new microservice
-1. Generate NestJS service: `nx generate @nx/nest:library <service-name> --directory=apps/nestjs-services`
-2. Add to `docker-compose.yml` and Kubernetes manifests
-3. Configure API Gateway routing
-4. Create database schema and migrations
-
-### Config sync rule: Docker Compose ↔ Kubernetes
-
-**CRITICAL**: Docker Compose (`docker-compose.yml`, `docker-compose.infra.yml`) and Kubernetes configs (`kubernetes/local/`) MUST stay in sync. When changing one, update the other:
-
-| What | Docker Compose | Kubernetes |
-|------|---------------|------------|
-| Databases | `tools/postgres-init/` | `kubernetes/local/postgres-init.yaml` |
-| Secrets/env vars | `.env` / `.env.example` | `kubernetes/local/secrets.yaml` |
-| Service env vars | `docker-compose.yml` | `kubernetes/local/services.yaml` |
-| Service replicas | `docker-compose.yml` | `kubernetes/local/services.yaml` |
-
-### Code standards
-- TypeScript strict mode
-- ESLint and Prettier configured
-- Jest for unit tests, Supertest for API tests
-- Conventional commits
-
-## Service Details
-
-### Frontend (Next.js)
-- Pages: Home, Search, Event Details, Booking, User Dashboard, Vendor Dashboard, Admin Panel
-- State: Zustand (client), TanStack Query (server)
-- Styling: Tailwind CSS with Shadcn/ui components
-- Map integration: Google Maps/Mapbox
-- Payment: Stripe
-
-### Backend services
-See `README.md` for detailed descriptions of each service (Auth, User, Vendor, Event, Booking, Search, Notification, Analytics, Admin).
-
-### Python workers
-- `ml-training/`: Batch training of recommendation models
-- `inference/`: Real-time recommendations, search ranking
-- `kafka-consumers/`: Process user activity streams
-
-## Important Notes
-
-### Environment variables
-- Required variables are in `.env.example`
-- Each service expects its own `*_DATABASE_URL`
-- Kafka, Redis, Elasticsearch connections configured via environment variables
-- JWT secrets, Stripe keys, SMTP credentials needed for full functionality
-
-### Dependency management
-- **Root dependencies**: Drizzle ORM, Neon database driver, dotenv (see root `package.json`)
-- **Service dependencies**: Each NestJS service has its own `package.json` with NestJS dependencies
-- **Library dependencies**: Shared libraries assume peer dependencies (e.g., `@nestjs/common`) provided by consuming services
-- **Python dependencies**: `requirements.txt` in `apps/python-workers/`
-- **Development**: Use `yarn install` at root; service-specific dependencies are hoisted via workspaces
-
-### Claude Code settings
-- Custom permissions are configured in `.claude/settings.local.json` allowing Bash commands for directory operations, PowerShell, find, and xargs grep.
-- These permissions are specific to this workspace and may affect tool availability.
-
-### Project status
-| Component | Status | Notes |
-|-----------|--------|-------|
-| **Frontend** | Basic structure | Next.js app with placeholder page |
-| **API Gateway** | Basic structure | NestJS app with Dockerfile |
-| **Auth Service** | Basic structure | Database schema defined, Dockerfile |
-| **User Service** | Basic structure | Database schema defined, Dockerfile |
-| **Vendor Service** | Basic structure | Database schema defined, Dockerfile |
-| **Event Service** | Basic structure | Database schema defined, Dockerfile |
-| **Booking Service** | Basic structure | Database schema defined, Dockerfile |
-| **Search Service** | Basic structure | NestJS app with Dockerfile |
-| **Notification Service** | Not generated | Placeholder DB only (no service code) |
-| **Analytics Service** | Not generated | Placeholder DB only (no service code) |
-| **Admin Service** | Not generated | Placeholder DB only (no service code) |
-| **Agent Service** | Basic structure | NestJS app with pgvector, Dockerfile |
-| **Python workers** | Basic structure | ML training, inference, Kafka consumers stubs |
-| **Shared libraries** | Mostly stub implementations | See `LIBRARY_AUDIT.md` for details |
-| **Database schemas** | Defined per service | 11 databases, 7 with active schemas |
-| **Kubernetes manifests** | Complete | Production, staging, and local dev overlays with all services + infrastructure |
-| **Docker Compose** | Complete | All dependencies + all 7 buildable services |
-| **Dev tooling** | Complete | db-reset.sh for truncating/clearing table data |
-
-**Note**: The `workspace.json` currently lists only `frontend`, `api-gateway`, `auth-service`, `user-service`, `vendor-service`, `event-service`, and shared libraries. Other services mentioned in README need to be generated using NX generators.
-
-No Cursor rules (`.cursorrules` or `.cursor/rules/`) or GitHub Copilot instructions (`.github/copilot-instructions.md`) are present in the repository.
-
-### Framework assumptions
-- All backend services use NestJS
-- Frontend uses Next.js 14+ with App Router
-- Database: PostgreSQL with Drizzle ORM
-- Event streaming: Kafka
-- Search: Elasticsearch
-
-### When modifying shared libraries
-Consider framework coupling: If a library is marked "NestJS-coupled", it uses `@Injectable()` and assumes `@nestjs/common` is available. This is acceptable for current monorepo but limits reuse outside NestJS.
-
-### Testing
-- Run all tests: `yarn test`
-- Run specific service tests: `yarn nx test <project>`
-- Test coverage: `yarn nx test <project> --coverage`
-
-### Deployment
-- Docker images defined per service
-- Kubernetes manifests in `kubernetes/`
-- CI/CD via GitHub Actions (to be implemented)
-
-Refer to `README.md` for comprehensive architecture documentation and `DATABASE_SETUP.md` for database-specific instructions.
+## Code Standards
+- TypeScript strict mode, ESLint, Prettier, conventional commits
+- Jest + Supertest for testing
+- Each service Dockerfile is 2-stage (development + builder), `node:20-alpine`, uses `scripts/entrypoint-dev.sh`

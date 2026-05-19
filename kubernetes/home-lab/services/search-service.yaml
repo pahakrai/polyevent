@@ -1,0 +1,116 @@
+# Search Service — ML-powered search with pgvector + Elasticsearch
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: search-service
+  namespace: polydom-production
+  labels:
+    app: search-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: search-service
+  template:
+    metadata:
+      labels:
+        app: search-service
+    spec:
+      imagePullSecrets:
+      - name: ghcr-image-pull
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      initContainers:
+      - name: wait-for-postgres
+        image: postgres:16-alpine
+        command:
+        - sh
+        - -c
+        - |
+          until pg_isready -h postgres -U eventbooking -d vector_db; do
+            echo "Waiting for PostgreSQL (vector_db)..."
+            sleep 2
+          done
+          echo "PostgreSQL is ready."
+        env:
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: postgres-password
+        resources:
+          requests:
+            memory: "16Mi"
+            cpu: "10m"
+      containers:
+      - name: search-service
+        image: ghcr.io/pahakrai/polydom/search-service:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+          name: http
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
+        env:
+        - name: NODE_ENV
+          value: production
+        - name: VECTOR_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: vector-database-url
+        - name: ELASTICSEARCH_HOSTS
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: elasticsearch-hosts
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: redis-url
+        - name: PYTHON_INFERENCE_URL
+          value: http://inference:8000
+        - name: PORT
+          value: "3000"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        startupProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          failureThreshold: 30
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 3000
+          periodSeconds: 10
+          failureThreshold: 5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: search-service
+  namespace: polydom-production
+spec:
+  selector:
+    app: search-service
+  ports:
+  - port: 3000
+    targetPort: 3000
+    name: http

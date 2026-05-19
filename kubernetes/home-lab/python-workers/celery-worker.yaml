@@ -1,0 +1,91 @@
+# Celery Worker — on-demand ML training tasks
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: training-data-pvc
+  namespace: polydom-production
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery-worker
+  namespace: polydom-production
+  labels:
+    app: celery-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: celery-worker
+  template:
+    metadata:
+      labels:
+        app: celery-worker
+    spec:
+      imagePullSecrets:
+      - name: ghcr-image-pull
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: celery-worker
+        image: ghcr.io/pahakrai/polydom/python-workers:latest
+        imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
+        env:
+        - name: VECTOR_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: vector-database-url
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: redis-url
+        - name: FEATURE_STORE_URL
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: redis-url
+        - name: PIPELINE_MODE
+          value: incremental
+        - name: PIPELINE_WINDOW_DAYS
+          value: "7"
+        - name: TRAINING_DATA_PATH
+          value: /data/training
+        - name: BULK_LOAD_PGVECTOR
+          value: "1"
+        - name: EXPORT_EVENT_CATALOG
+          value: "1"
+        command:
+        - celery
+        - -A
+        - config.celery_app
+        - worker
+        - --loglevel=info
+        - --concurrency=1
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        volumeMounts:
+        - name: training-data
+          mountPath: /data/training
+      volumes:
+      - name: training-data
+        persistentVolumeClaim:
+          claimName: training-data-pvc

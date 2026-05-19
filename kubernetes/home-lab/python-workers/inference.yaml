@@ -1,0 +1,92 @@
+# Python Inference API — FastAPI server for real-time inference + search
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inference
+  namespace: polydom-production
+  labels:
+    app: inference
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inference
+  template:
+    metadata:
+      labels:
+        app: inference
+    spec:
+      imagePullSecrets:
+      - name: ghcr-image-pull
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: inference
+        image: ghcr.io/pahakrai/polydom/python-workers:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
+        env:
+        - name: VECTOR_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: vector-database-url
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: redis-url
+        - name: ELASTICSEARCH_HOSTS
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: elasticsearch-hosts
+        command:
+        - uvicorn
+        - inference.api:app
+        - --host
+        - "0.0.0.0"
+        - --port
+        - "8000"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        startupProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          failureThreshold: 30
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: inference
+  namespace: polydom-production
+spec:
+  selector:
+    app: inference
+  ports:
+  - port: 8000
+    targetPort: 8000

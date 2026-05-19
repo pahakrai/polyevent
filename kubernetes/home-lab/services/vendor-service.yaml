@@ -1,0 +1,87 @@
+# Vendor Service
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vendor-service
+  namespace: polydom-production
+  labels:
+    app: vendor-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vendor-service
+  template:
+    metadata:
+      labels:
+        app: vendor-service
+    spec:
+      imagePullSecrets:
+      - name: ghcr-image-pull
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: vendor-service
+        image: ghcr.io/pahakrai/polydom/vendor-service:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+          name: http
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
+        env:
+        - name: NODE_ENV
+          value: production
+        - name: VENDOR_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: vendor-database-url
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: redis-url
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: jwt-secret
+              key: jwt-secret
+        - name: PORT
+          value: "3000"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 3000
+          initialDelaySeconds: 20
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vendor-service
+  namespace: polydom-production
+spec:
+  selector:
+    app: vendor-service
+  ports:
+  - port: 3000
+    targetPort: 3000
+    name: http

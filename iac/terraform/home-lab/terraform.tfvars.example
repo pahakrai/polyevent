@@ -1,0 +1,25 @@
+# ── Cloudflare ───────────────────────────────────────────────────────
+# Create a scoped API token at: https://dash.cloudflare.com/profile/api-tokens
+# Permissions: Zone.DNS:Edit, Account.Cloudflare Tunnel:Edit
+cloudflare_api_token = "your-cloudflare-api-token"
+cloudflare_zone_id   = "your-zone-id-for-pahakrai.xyz"
+cloudflare_account_id = "your-cloudflare-account-id"
+
+# ── Kubernetes ────────────────────────────────────────────────────────
+# Defaults to ~/.kube/config with context "minikube" — adjust if needed.
+# kube_config_path = "~/.kube/config"
+# kube_context     = "minikube"
+
+# ── GitHub ────────────────────────────────────────────────────────────
+# Create a classic PAT at: https://github.com/settings/tokens
+# Scopes: repo (all), workflow
+github_token = "your-github-pat"
+github_owner = "pahakrai"
+
+# GitHub PAT with read:packages scope — used by Minikube to pull images
+github_packages_token = "your-read-packages-pat"
+
+# ── Secrets ───────────────────────────────────────────────────────────
+postgres_password = "your-strong-production-password"
+jwt_secret        = "your-jwt-secret-at-least-32-characters-long"
+llm_api_key       = "your-deepseek-or-anthropic-api-key"
