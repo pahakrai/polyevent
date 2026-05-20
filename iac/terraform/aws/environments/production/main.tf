@@ -90,20 +90,6 @@ module "opensearch" {
   master_password = var.opensearch_password
 }
 
-module "msk" {
-  source = "../../modules/msk"
-
-  environment           = "production"
-  vpc_id                = module.networking.vpc_id
-  private_subnet_ids    = module.networking.private_subnet_ids
-  eks_security_group_id = module.security.eks_security_group_id
-  kms_key_arn           = module.security.kms_key_arn
-
-  broker_instance_type = "kafka.t3.small"
-  broker_count         = 3
-  broker_volume_size   = 250
-}
-
 # ---- Compute ----
 
 module "eks" {

@@ -121,7 +121,7 @@ Each service has its own Drizzle configuration:
 
 Since each service has its own database, data synchronization is achieved through:
 
-1. **Event-Driven Architecture**: Services publish events to Kafka when data changes
+1. **Event-Driven Architecture**: Services publish events to Redpanda when data changes
 2. **Event Consumers**: Services consume events to update their local data copies
 3. **API Calls**: Direct service-to-service calls for real-time data needs
 

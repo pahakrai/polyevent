@@ -120,7 +120,7 @@ From the 2026-05-11 audit:
 
 ```bash
 # Build all libraries (should all pass)
-npx nx run-many --target=build --projects=shared-types,elasticsearch-client,utils,auth,nats-client,kafka-client,database-client
+npx nx run-many --target=build --projects=shared-types,elasticsearch-client,utils,auth,nats-client,database-client
 
 # Build a service (should pull libs from cache)
 npx nx build api-gateway

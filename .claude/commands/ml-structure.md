@@ -15,7 +15,7 @@ apps/python-workers/
   Dockerfile                          # python:3.11-slim, shared image for all 3 services
   requirements.txt                    # All Python dependencies
 
-  schemas/                            # Pydantic v2 models for Kafka message validation
+  schemas/                            # Pydantic v2 models for event message validation
     __init__.py
     user_activity.py                  # Topic: user-activities (page_view, event_view, click, etc.)
     event_lifecycle.py                # Topic: event-lifecycle (created, published, cancelled, etc.)
@@ -25,7 +25,7 @@ apps/python-workers/
     location_context.py               # Topic: location-context (search, nearby, map_pan, geofence)
 
   kafka-consumers/
-    user_activity.py                  # Real-time Kafka consumer, updates Redis feature store
+    user_activity.py                  # Real-time event consumer, updates Redis feature store
 
   inference/
     api.py                            # FastAPI app (7 endpoints on port 8000)
@@ -55,10 +55,10 @@ apps/python-workers/
 ## Data Flow
 
 ```
-Frontend → API Gateway → Kafka (6 topics, 6 partitions each)
+Frontend → API Gateway → Redpanda (6 topics, 6 partitions each)
                               │
                               ▼
-                    Kafka Consumer (user_activity.py)
+                    Event Consumer (user_activity.py)
                               │
                     ┌─────────┼─────────┐
                     │         │         │
@@ -117,7 +117,7 @@ Frontend → API Gateway → Kafka (6 topics, 6 partitions each)
 │  GET  /similar-events/{id}                               │
 │  GET  /nearby-events                                     │
 │  GET  /trending-events                                   │
-│  POST /feedback          → produces Kafka feedback event │
+│  POST /feedback          → produces Redpanda feedback event │
 │  POST /search/personalize  ← re-ranks ES results + blend │
 │  POST /inference-vector  ← session vector from clicks    │
 │                                                          │
@@ -134,7 +134,7 @@ Frontend → API Gateway → Kafka (6 topics, 6 partitions each)
 
 | Service | Entry Point | Platform | Replicas | Resources |
 |---------|-------------|----------|----------|-----------|
-| Kafka Consumer | `python -m kafka-consumers.user_activity` | Deployment | 2 | 256Mi/250m req, 512Mi/500m limit |
+| Event Consumer | `python -m kafka-consumers.user_activity` | Deployment | 2 | 256Mi/250m req, 512Mi/500m limit |
 | Inference API | `uvicorn inference.api:app --host 0.0.0.0 --port 8000` | Deployment + HPA | 3 (2–8) | 512Mi/500m req, 2Gi/2CPU limit |
 | ML Training | `python -m ml-training.data_pipeline` | CronJob (daily 4AM) | 1 | 1Gi/1CPU req, 4Gi/4CPU limit |
 
@@ -142,7 +142,7 @@ All three use the same Docker image (`polydom/python-workers:latest`) with diffe
 
 ---
 
-## Kafka Topics
+## Event Topics
 
 | Topic | Partitions | Purpose |
 |-------|-----------|---------|
@@ -278,8 +278,8 @@ GitHub Actions (`deploy.yaml`, `pr-check.yaml`) have special python-workers dete
 
 ## What is NOT yet implemented (stubs/placeholders)
 
-- `search_events` handler in Kafka consumer is a no-op placeholder
-- `feedback` endpoint produces to Kafka but does not trigger online model updates
+- `search_events` handler in the event consumer is a no-op placeholder
+- `feedback` endpoint produces to Redpanda but does not trigger online model updates
 - Neural embeddings (`USE_NEURAL_EMBEDDINGS`) disabled in production CronJob (set to 0)
 - Skaffold integration for python-workers does not exist
 - No Helm charts exist
@@ -322,7 +322,7 @@ GitHub Actions (`deploy.yaml`, `pr-check.yaml`) have special python-workers dete
 | numpy | YES | Core array operations throughout |
 | pandas | YES | Data extraction and transformation |
 | scipy | YES | Sparse matrix for SVD |
-| confluent-kafka | YES | Kafka consumer + producer |
+| confluent-kafka | YES | Event consumer + producer (Redpanda) |
 | fastapi + uvicorn | YES | Inference API server |
 | redis | YES | Feature store, caching, recent clicks |
 | pydantic | YES | Schema validation |

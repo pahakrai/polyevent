@@ -14,7 +14,7 @@ npm run sample-data:docker:migrate
 # 3. Initialize ML pipeline data (embeddings, feature store)
 python scripts/sample-data/init_ml_pipeline_data.py
 
-# 4. Start generating Kafka events (streaming)
+# 4. Start generating Redpanda events (streaming)
 npm run sample-data:kafka:stream
 ```
 
@@ -76,7 +76,7 @@ npm run db:seed:event
 npm run db:seed:booking
 ```
 
-### Kafka Event Generation
+### Event Generation
 
 ```bash
 # One-shot: generate 50 events per topic
@@ -89,7 +89,7 @@ npm run sample-data:kafka:stream
 python scripts/sample-data/generate_kafka_events.py \
   --stream --count 100 --delay 5 --topics user-activities,search-events
 
-# Generate to file without Kafka
+# Generate to file without Redpanda
 python scripts/sample-data/generate_kafka_events.py \
   --count 100 --stdout-only --output sample-events.jsonl
 ```
@@ -127,7 +127,7 @@ sample-data-constants.ts (single source of truth for all IDs)
     
 master-seed.ts (orchestrates all seeds in dependency order)
 
-generate_kafka_events.py → Kafka (6 topics) → Python workers → Redis + pgvector
+generate_kafka_events.py → Redpanda (6 topics) → Python workers → Redis + pgvector
 init_ml_pipeline_data.py → Redis FeatureStore + pgvector embeddings
 ```
 
@@ -153,7 +153,7 @@ All IDs are deterministic and shared across services:
 After seeding all data, you can test the full ML pipeline:
 
 ```bash
-# 1. Ensure Kafka is running (comes with dev:infra)
+# 1. Ensure Redpanda is running (comes with dev:infra)
 # 2. Start streaming events
 npm run sample-data:kafka:stream
 

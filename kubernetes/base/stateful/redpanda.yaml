@@ -1,0 +1,108 @@
+# Redpanda — Kafka API-compatible message broker (no Zookeeper)
+# Production: 3 replicas with persistent storage
+# Service name: kafka-service (backward-compatible with KAFKA_BROKERS=kafka-service:9092)
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-service
+  namespace: production
+  labels:
+    app: redpanda
+spec:
+  clusterIP: None
+  selector:
+    app: redpanda
+  ports:
+  - name: kafka-api
+    protocol: TCP
+    port: 9092
+    targetPort: 9092
+  - name: admin
+    protocol: TCP
+    port: 9644
+    targetPort: 9644
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redpanda
+  namespace: production
+  labels:
+    app: redpanda
+spec:
+  replicas: 3
+  serviceName: kafka-service
+  selector:
+    matchLabels:
+      app: redpanda
+  template:
+    metadata:
+      labels:
+        app: redpanda
+    spec:
+      terminationGracePeriodSeconds: 90
+      containers:
+      - name: redpanda
+        image: docker.redpanda.com/redpandadata/redpanda:v24.2.18
+        args:
+        - redpanda
+        - start
+        - --kafka-addr=0.0.0.0:9092
+        - --advertise-kafka-addr=$(POD_NAME).kafka-service:9092
+        - --admin-addr=0.0.0.0:9644
+        - --seeds=redpanda-0.kafka-service:33145,redpanda-1.kafka-service:33145,redpanda-2.kafka-service:33145
+        - --default-log-level=info
+        ports:
+        - containerPort: 9092
+          name: kafka-api
+        - containerPort: 9644
+          name: admin
+        - containerPort: 33145
+          name: internal
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/redpanda/data
+        startupProbe:
+          exec:
+            command:
+            - rpk
+            - cluster
+            - health
+          failureThreshold: 60
+          periodSeconds: 5
+        livenessProbe:
+          exec:
+            command:
+            - rpk
+            - cluster
+            - health
+          periodSeconds: 20
+        readinessProbe:
+          exec:
+            command:
+            - rpk
+            - cluster
+            - health
+          periodSeconds: 10
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 20Gi

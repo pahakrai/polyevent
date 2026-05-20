@@ -13,18 +13,18 @@
 │                       API GATEWAY (NestJS)                           │
 │  TrackingController  ←  explicit client-side events                 │
 │  AnalyticsInterceptor ← auto-tracked GET routes                     │
-│  TrackingService     →  Kafka Producer (6 topics)                   │
+│  TrackingService     →  Redpanda Producer (6 topics)                 │
 └────────────────────────────┬────────────────────────────────────────┘
-                             │ Kafka
+                             │ Redpanda (Kafka API-compatible)
                              ▼
 ┌─────────────────────────────────────────────────────────────────────┐
 │                    PYTHON WORKERS (apps/python-workers/)             │
 │                                                                      │
 │  ┌─────────────────┐   ┌──────────────────┐   ┌──────────────────┐  │
-│  │ Kafka Consumer  │   │  ML Training      │   │  Inference API   │  │
+│  │ Event Consumer  │   │  ML Training      │   │  Inference API   │  │
 │  │ (all 6 topics)  │   │  Data Pipeline    │   │  (FastAPI:8000)  │  │
 │  │                 │   │                    │   │                  │  │
-│  │ user_activity   │──▶│ EXTRACT (Kafka)   │   │ /recommendations │  │
+│  │ user_activity   │──▶│ EXTRACT (events)  │   │ /recommendations │  │
 │  │ .py             │   │  ↓                │   │ /similar-events  │  │
 │  │                 │   │ TRANSFORM (7 FE)  │   │ /nearby-events   │  │
 │  │ batch + manual  │   │  ↓                │   │ /trending-events │  │
@@ -64,7 +64,7 @@
 
 ETLT (Extract-Transform-Load-Train) orchestrator:
 
-1. **EXTRACT**: Read from Kafka topic archives (6 topics) → structured DataFrames
+1. **EXTRACT**: Read from event topic archives (6 topics) → structured DataFrames
 2. **TRANSFORM**: Run all 7 feature engineers, concatenate into 139-dim vectors, build labels
 3. **LOAD**: Write to Redis Feature Store + .npy training files
 4. **TRAIN**: Train LightGBM LambdaMART ranker with NDCG optimization
@@ -141,7 +141,7 @@ Fallback to heuristic scoring (booking ratio + time relevance) when no embedding
 | `MODEL_PATH` | Path to trained model directory | `/data/training/models` |
 | `EMBEDDINGS_PATH` | Path to embeddings pickle file | _(auto-discovered)_ |
 | `EVENT_CATALOG_PATH` | JSON file with event metadata | _(none)_ |
-| `KAFKA_BROKERS` | Kafka bootstrap servers | `localhost:9092` |
+| `KAFKA_BROKERS` | Redpanda bootstrap servers | `localhost:9092` |
 | `FEATURE_STORE_URL` | Redis URL for feature store | `redis://localhost:6379` |
 | `TRAINING_DATA_PATH` | Directory for training data | `/data/training` |
 | `PIPELINE_MODE` | `full` or `incremental` | `incremental` |

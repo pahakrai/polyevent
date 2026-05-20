@@ -61,33 +61,27 @@ services:
       timeout: 5s
       retries: 5
 
-  # Message Queue
-  zookeeper:
-    image: confluentinc/cp-zookeeper:7.4.0
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-    ports:
-      - "2181:2181"
-
+  # Redpanda — Kafka API-compatible message broker (no Zookeeper)
   kafka:
-    image: confluentinc/cp-kafka:7.4.0
-    depends_on:
-      - zookeeper
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    image: docker.redpanda.com/redpandadata/redpanda:v24.2.18
+    command:
+      - redpanda
+      - start
+      - --smp=1
+      - --memory=512M
+      - --reserve-memory=0M
+      - --overprovisioned
+      - --kafka-addr=0.0.0.0:9092
+      - --advertise-kafka-addr=kafka:9092
+      - --admin-addr=0.0.0.0:9644
     ports:
       - "9092:9092"
+      - "9644:9644"
     healthcheck:
-      test: ["CMD", "kafka-topics", "--list", "--bootstrap-server", "localhost:9092"]
-      interval: 30s
+      test: ["CMD", "rpk", "cluster", "health"]
+      interval: 15s
       timeout: 10s
-      retries: 3
+      retries: 5
 
   # NATS message broker
   nats:

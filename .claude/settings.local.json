@@ -327,7 +327,8 @@
       "Bash(yarn skaffold:dev:debug)",
       "Bash(yarn skaffold:run *)",
       "mcp__ide__getDiagnostics",
-      "Bash(yarn add *)"
+      "Bash(yarn add *)",
+      "Bash([ -f \"C:/Users/user/repo/polydom/apps/nestjs-services/$d/Dockerfile\" ])"
     ]
   },
   "enableAllProjectMcpServers": true,

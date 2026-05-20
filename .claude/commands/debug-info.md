@@ -76,7 +76,7 @@ ATTACH   VS Code "Python: Remote Attach" → localhost:<port> → debugpy protoc
 |------------------|------|--------------------------------------------|
 | inference        | 9235 | `uvicorn inference.api:app`                |
 | ml-training      | 9236 | `python -m ml-training.data_pipeline`      |
-| kafka-consumers  | 9237 | `python -m kafka-consumers.user_activity`  |
+| event-consumers  | 9237 | `python -m kafka-consumers.user_activity`  |
 
 ### Commands
 
@@ -86,7 +86,7 @@ docker compose run --rm -p 9235:9235 inference \
   python -m debugpy --listen 0.0.0.0:9235 --wait-for-client \
   -m uvicorn inference.api:app --host 0.0.0.0 --port 8000
 
-# VS Code: F5 → pick "Python: Attach to Inference" / "Attach to ML Training" / "Attach to Kafka Consumer"
+# VS Code: F5 → pick "Python: Attach to Inference" / "Attach to ML Training" / "Attach to Event Consumer"
 ```
 
 ### VS Code launch.json entries
@@ -111,7 +111,7 @@ docker compose run --rm -p 9235:9235 inference \
   ]
 },
 {
-  "name": "Python: Attach to Kafka Consumer",
+  "name": "Python: Attach to Event Consumer",
   "type": "python",
   "request": "attach",
   "connect": { "host": "localhost", "port": 9237 },

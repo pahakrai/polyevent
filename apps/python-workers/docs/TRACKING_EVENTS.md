@@ -1,11 +1,11 @@
 # Tracking Events Catalog
 
-All user behavior events tracked from the frontend, flowing through API Gateway → Kafka → Python ML pipeline.
+All user behavior events tracked from the frontend, flowing through API Gateway → Redpanda → Python ML pipeline.
 
 ## Architecture
 
 ```
-Frontend (useAnalytics hook) → API Gateway (TrackingController) → Kafka → Python Consumers → Feature Engineering
+Frontend (useAnalytics hook) → API Gateway (TrackingController) → Redpanda → Python Consumers → Feature Engineering
 ```
 
 ## Event Topics

@@ -5,7 +5,7 @@
 ### Development
 | Command | Description |
 |---------|-------------|
-| `yarn dev:infra` | Start infrastructure only (DBs, Kafka, Redis, ES, NATS) — run services natively |
+| `yarn dev:infra` | Start infrastructure only (DBs, Redpanda, Redis, ES, NATS) — run services natively |
 | `yarn dev:infra:down` | Stop infrastructure |
 | `yarn dev` | Docker Compose full stack (infra + all services, hot reload) |
 | `yarn dev:down` | Stop full stack |
@@ -125,12 +125,12 @@ All three share one Docker image (`polydom/python-workers:latest`) with differen
 **Patterns**:
 - **Microservices**: Each service owns its database (PostgreSQL + Drizzle ORM)
 - **API Gateway**: Single entry point, proxy pattern to backend services
-- **Event-driven**: Kafka (6 topics, 6 partitions) for async communication + NATS for lightweight messaging
+- **Event-driven**: Redpanda (6 topics, Kafka API-compatible) for async communication + NATS for lightweight messaging
 - **CQRS**: Search service uses Elasticsearch for reads
 - **Saga**: Distributed transaction orchestration (auth-service `SagaExecutor`)
 - **Hexagonal**: user-service uses domain/infrastructure/application layers with multi-DB adapters
 
-**Infrastructure**: PostgreSQL 15 + pgvector, MongoDB 7, Redis 7, Kafka (Confluent 7.4), NATS 2.10, Elasticsearch 8.11, Prometheus, Grafana, Kibana
+**Infrastructure**: PostgreSQL 15 + pgvector, MongoDB 7, Redis 7, Redpanda v24.2, NATS 2.10, Elasticsearch 8.11, Prometheus, Grafana, Kibana
 
 **CI/CD**: GitHub Actions — `pr-check.yaml` (lint, test, dry-run build, validate), `deploy.yaml` (detect changes → test → build+push → kustomize deploy)
 

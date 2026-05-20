@@ -6,7 +6,7 @@
 #   - DO Managed Redis instead of ElastiCache
 #   - DO Spaces instead of S3
 #   - DO Container Registry instead of ECR
-#   - No managed Kafka / OpenSearch → run Strimzi + ECK on DOKS
+#   - No managed OpenSearch → run ECK on DOKS. Redpanda deployed via Kubernetes.
 #   - cert-manager on DOKS instead of ACM
 #
 # Provider: digitalocean/digitalocean

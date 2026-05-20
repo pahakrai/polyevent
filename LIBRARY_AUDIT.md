@@ -13,7 +13,7 @@ The shared libraries are predominantly **NestJS-coupled**, which is acceptable f
 | Library | Coupling | NestJS Imports | Notes |
 |---------|----------|----------------|--------|
 | `shared-types` | 🟢 None | 0 | Pure TypeScript interfaces |
-| `kafka-client` | 🟡 NestJS-coupled | 2 files | `BaseProducer`, `BaseConsumer` use `@Injectable()` |
+| `kafka-client` | 🟡 NestJS-coupled | 2 files | `BaseProducer`, `BaseConsumer` (Kafka API-compatible, Redpanda-backed) |
 | `database-client` | 🟡 NestJS-coupled | 3 files | `PostgresClient`, `MongoDBClient`, `RedisClient` use `@Injectable()` |
 | `elasticsearch-client` | 🟡 Mixed | 1 file | Client is NestJS, query builders are framework-agnostic |
 | `utils` | 🟡 Mixed | 1 file | `CustomLogger` is NestJS, validators/transformers are framework-agnostic |
@@ -31,7 +31,7 @@ The shared libraries are predominantly **NestJS-coupled**, which is acceptable f
 | Library | Status | Notes |
 |---------|--------|-------|
 | `shared-types` | ✅ Complete | All domain interfaces defined |
-| `kafka-client` | 🚧 Stub | Placeholder implementations with TODOs |
+| `kafka-client` | ✅ Complete | Kafka API-compatible producer/consumer (Redpanda) |
 | `database-client` | 🚧 Stub | Placeholder implementations with TODOs |
 | `elasticsearch-client` | 🚧 Partial | Query builders complete, client stub |
 | `utils` | ✅ Partial | Validators/transformers complete, logger stub |

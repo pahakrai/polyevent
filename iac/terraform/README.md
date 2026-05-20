@@ -14,7 +14,6 @@ iac/terraform/
 │   │   ├── rds/                 PostgreSQL per microservice (5 instances)
 │   │   ├── elasticache/         Redis replication group
 │   │   ├── opensearch/          Managed search
-│   │   ├── msk/                 Managed Kafka (SASL/SCRAM)
 │   │   └── security/            KMS, SGs, ECR, S3, ACM, Route53
 │   └── environments/
 │       ├── production/          Multi-AZ, 3+ nodes, full HA

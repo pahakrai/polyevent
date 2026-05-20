@@ -16,14 +16,14 @@ npm install
 
 # Start infrastructure services
 echo "Starting infrastructure services with Docker Compose..."
-docker-compose up -d postgres mongodb redis zookeeper kafka elasticsearch kibana
+docker-compose up -d postgres mongodb redis kafka elasticsearch kibana
 
 # Wait for services to be ready
 echo "Waiting for services to be ready..."
 sleep 10
 
-# Create Kafka topics
-echo "Creating Kafka topics..."
+# Create Redpanda topics
+echo "Creating Redpanda topics..."
 
 declare -A TOPICS=(
   # Recommendation signal topics
@@ -42,11 +42,10 @@ declare -A TOPICS=(
 for topic in "${!TOPICS[@]}"; do
   partitions=${TOPICS[$topic]}
   echo "  Creating topic: $topic (partitions=$partitions, rf=1)"
-  docker-compose exec kafka kafka-topics --create \
-    --topic "$topic" \
+  docker-compose exec kafka rpk topic create "$topic" \
     --partitions "$partitions" \
-    --replication-factor 1 \
-    --bootstrap-server localhost:9092 || true
+    --replicas 1 \
+    --brokers localhost:9092 || true
 done
 
 # Create Elasticsearch indices

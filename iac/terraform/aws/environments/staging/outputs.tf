@@ -21,11 +21,6 @@ output "opensearch_url" {
   sensitive = true
 }
 
-output "msk_bootstrap_brokers" {
-  value     = module.msk.bootstrap_brokers
-  sensitive = true
-}
-
 output "ecr_repositories" {
   value = module.security.ecr_repository_urls
 }

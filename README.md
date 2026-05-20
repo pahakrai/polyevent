@@ -22,7 +22,7 @@ A comprehensive event booking platform connecting casual musicians and activity 
 - **Booking Service** - Ticket bookings, payment processing, cancellation
 - **Search Service** - Elasticsearch integration for events/vendors search
 - **Notification Service** - Email/SMS/push notifications
-- **Analytics Service** - User activity tracking, Kafka integration
+- **Analytics Service** - User activity tracking, event streaming integration
 - **Admin Service** - Administrative operations, reporting
 
 ### Data Infrastructure
@@ -30,12 +30,12 @@ A comprehensive event booking platform connecting casual musicians and activity 
 - **MongoDB** - For flexible document storage (user preferences, event details)
 - **Redis** - Caching, session storage, rate limiting
 - **Elasticsearch** - Full-text search, geospatial queries, personalized ranking
-- **Kafka** - Event streaming for user activities, analytics pipeline
+- **Redpanda** - Event streaming for user activities, analytics pipeline (Kafka API-compatible)
 
 ### Machine Learning (Python)
 - **ML Training Pipeline** - Batch training of recommendation models
 - **Inference Service** - Real-time recommendations, search ranking
-- **Kafka Consumers** - Process user activity streams for model features
+- **Event Consumers** - Process user activity streams for model features
 - **Feature Store** - Centralized feature management
 
 ### DevOps
@@ -50,12 +50,12 @@ A comprehensive event booking platform connecting casual musicians and activity 
 
 ### 1. Microservices Design
 - Each service owns its data and exposes well-defined APIs
-- Async communication via Kafka for eventual consistency
+- Async communication via Redpanda for eventual consistency
 - API Gateway for request routing and composition
 - Service discovery via Kubernetes services
 
 ### 2. Event-Driven Architecture
-- User activities published to Kafka topics
+- User activities published to Redpanda topics
 - Multiple consumers for different purposes (analytics, ML, notifications)
 - Event sourcing for critical business workflows
 
@@ -261,7 +261,7 @@ event-booking-app/
 3. Booking Service validates availability with Event Service
 4. Payment processed via Stripe integration
 5. Booking confirmed, notifications sent via Notification Service
-6. Booking event published to Kafka for analytics
+6. Booking event published to Redpanda for analytics
 
 ### Vendor Onboarding Flow
 1. Vendor submits registration form
@@ -270,7 +270,7 @@ event-booking-app/
 4. Notification sent to vendor upon approval
 5. Vendor can now create events
 
-## Kafka Topics
+## Event Topics
 - `user-activities` - User clicks, searches, page views
 - `booking-events` - Booking creations, updates, cancellations
 - `vendor-events` - Vendor registrations, event creations
@@ -516,7 +516,7 @@ Both paths use the same infrastructure services. Default ports:
 | pgAdmin | 5050 | `admin@polydom.com` / `admin` |
 | MongoDB | 27017 | `root` / `mongopass123` |
 | Redis | 6379 | password: `redispass123` |
-| Kafka | 9092 | — |
+| Redpanda | 9092 | Kafka API-compatible |
 | Elasticsearch | 9200 | — |
 
 ---
@@ -642,7 +642,7 @@ kubernetes/
     hpa/                 # Horizontal Pod Autoscalers
     network-policies/    # Zero-trust network rules
     pod-disruption-budgets/
-    stateful/            # Postgres, Redis, Kafka, Elasticsearch
+    stateful/            # Postgres, Redis, Redpanda, Elasticsearch
     ingress/             # TLS ingress with cert-manager
   overlays/
     production/          # Production-specific patches (replicas, images, resources)
@@ -684,18 +684,17 @@ kustomize edit set image \
 
 ### Deploy stateful infrastructure (operators)
 
-For production Kafka and Elasticsearch, use operators instead of raw manifests:
+For production Elasticsearch, use the ECK operator:
 
 ```bash
-# Install Strimzi (Kafka) and ECK (Elasticsearch) operators
+# Install ECK (Elasticsearch) operator
 ./tools/scripts/install-operators.sh
-
-# Create Kafka cluster (set STORAGE_CLASS per cloud)
-STORAGE_CLASS=do-block-storage ./tools/scripts/create-kafka-cluster.sh
 
 # Create Elasticsearch cluster
 STORAGE_CLASS=do-block-storage ./tools/scripts/create-es-cluster.sh
 ```
+
+Redpanda is deployed via Kubernetes StatefulSet (see `kubernetes/base/stateful/redpanda.yaml`).
 
 Storage classes per cloud:
 | Cloud | Storage Class |
@@ -994,7 +993,7 @@ nx generate @nx/nest:application booking-service --directory=apps/nestjs-service
 ### Development Teams
 1. **Frontend Team**: Next.js, UI/UX, mobile responsive
 2. **Backend Team**: Microservices, databases, APIs
-3. **Data Team**: Elasticsearch, Kafka, ML pipelines
+3. **Data Team**: Elasticsearch, Redpanda, ML pipelines
 4. **DevOps Team**: Kubernetes, CI/CD, monitoring
 5. **QA Team**: Testing, automation, performance
 

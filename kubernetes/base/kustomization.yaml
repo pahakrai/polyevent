@@ -11,7 +11,7 @@ resources:
   - service-accounts/app-sa.yaml
   - stateful/postgres.yaml
   - stateful/redis.yaml
-  - stateful/kafka.yaml
+  - stateful/redpanda.yaml
   - stateful/nats.yaml
   - stateful/elasticsearch.yaml
   - deployments/api-gateway.yaml
