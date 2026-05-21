@@ -328,7 +328,13 @@
       "Bash(yarn skaffold:run *)",
       "mcp__ide__getDiagnostics",
       "Bash(yarn add *)",
-      "Bash([ -f \"C:/Users/user/repo/polydom/apps/nestjs-services/$d/Dockerfile\" ])"
+      "Bash([ -f \"C:/Users/user/repo/polydom/apps/nestjs-services/$d/Dockerfile\" ])",
+      "Bash(docker rm *)",
+      "Bash(MSYS_NO_PATHCONV=1 docker exec redpanda-test rpk cluster health)",
+      "Bash(MSYS_NO_PATHCONV=1 docker exec redpanda-test *)",
+      "Bash(grep -E \"^polydom/.+:[a-f0-9]{64}$\")",
+      "Bash(grep \":latest$\")",
+      "Bash(kind create *)"
     ]
   },
   "enableAllProjectMcpServers": true,

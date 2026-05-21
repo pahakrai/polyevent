@@ -43,7 +43,8 @@
         "debug": {
           "inspect": true,
           "host": "0.0.0.0",
-          "port": 9230
+          "port": 9230,
+          "watch": false
         }
       }
     },

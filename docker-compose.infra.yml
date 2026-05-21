@@ -73,7 +73,6 @@ services:
       - --overprovisioned
       - --kafka-addr=0.0.0.0:9092
       - --advertise-kafka-addr=kafka:9092
-      - --admin-addr=0.0.0.0:9644
     ports:
       - "9092:9092"
       - "9644:9644"

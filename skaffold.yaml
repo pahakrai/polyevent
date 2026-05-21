@@ -10,8 +10,9 @@
 #   Frontend (Next.js): file sync → hot reload on save, no rebuild.
 #   Backend (NestJS):  rebuilds on file change via Docker layer cache
 #     + yarn cache mount + NX cache mount for fast incremental builds.
-#   Tags: sha256 content-addressable (no registry push needed).
-#   Prune: enabled (--no-prune=false) to keep local disk usage low.
+#   Tags: fixed "dev" tag — each rebuild replaces the previous image,
+#     keeping only one copy per service. Old images become dangling and
+#     are removed by docker image prune on exit.
 #
 # Usage:
 #   yarn skaffold:dev           Dev mode: port-forward + watch
@@ -29,7 +30,8 @@ metadata:
 
 build:
   tagPolicy:
-    sha256: {}
+    customTemplate:
+      template: "dev"
   artifacts:
     - image: polydom/api-gateway
       context: .

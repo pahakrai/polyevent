@@ -45,7 +45,6 @@ spec:
         - --overprovisioned
         - --kafka-addr=0.0.0.0:9092
         - --advertise-kafka-addr=kafka:9092
-        - --admin-addr=0.0.0.0:9644
         ports:
         - containerPort: 9092
           name: kafka-api

@@ -50,7 +50,6 @@ spec:
         - start
         - --kafka-addr=0.0.0.0:9092
         - --advertise-kafka-addr=$(POD_NAME).kafka-service:9092
-        - --admin-addr=0.0.0.0:9644
         - --seeds=redpanda-0.kafka-service:33145,redpanda-1.kafka-service:33145,redpanda-2.kafka-service:33145
         - --default-log-level=info
         ports:
