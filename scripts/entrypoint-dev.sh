@@ -2,17 +2,12 @@
 set -e
 
 SERVICE="$1"
-if [ -z "$SERVICE" ]; then
-  echo "Usage: entrypoint-dev.sh <service-name>"
-  exit 1
-fi
 
 echo "=== $SERVICE: Starting (development mode) ==="
 
-# Wait for PostgreSQL to be ready
 echo "[$SERVICE] Waiting for PostgreSQL..."
 for i in $(seq 1 20); do
-  DB_VAR=$(echo "$SERVICE" | sed 's/-service//' | tr '[:lower:]-' '[:upper:]_')_DATABASE_URL
+  DB_VAR="$(echo "$SERVICE" | sed 's/-service//' | tr '[:lower:]-' '[:upper:]_')_DATABASE_URL"
   eval "DB_URL=\${$DB_VAR:-\${DATABASE_URL:-}}"
   if [ -z "$DB_URL" ]; then
     echo "[$SERVICE] No DATABASE_URL found, skipping DB wait."
@@ -26,7 +21,6 @@ for i in $(seq 1 20); do
   sleep 2
 done
 
-# Create pgvector extension for agent-service
 if [ "$SERVICE" = "agent-service" ]; then
   echo "[agent-service] Creating pgvector extension (retry up to 5 times)..."
   for i in $(seq 1 5); do
@@ -56,6 +50,6 @@ if [ "$SERVICE" = "agent-service" ]; then
   done || { echo "[agent-service] ERROR: pgvector extension creation failed after retries"; exit 1; }
 fi
 
-echo "[$SERVICE] Starting NestJS server..."
+echo "[$SERVICE] Starting via nx serve --configuration=debug..."
 cd /app
-exec yarn nx run "$SERVICE:serve" --configuration=debug
+exec yarn nx serve "$SERVICE" --configuration=debug

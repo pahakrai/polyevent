@@ -40,6 +40,7 @@
           "buildTarget": "api-gateway:build:development"
         },
         "debug": {
+          "buildTarget": "api-gateway:build:development",
           "inspect": true,
           "host": "0.0.0.0",
           "port": 9229,

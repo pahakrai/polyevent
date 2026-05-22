@@ -42,18 +42,12 @@
           "buildTarget": "agent-service:build:development"
         },
         "debug": {
+          "buildTarget": "agent-service:build:development",
           "inspect": true,
           "host": "0.0.0.0",
           "port": 9234,
           "watch": false
         }
-      }
-    },
-    "dev": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "nest start --watch --webpack",
-        "cwd": "apps/nestjs-services/agent-service"
       }
     },
     "lint": {

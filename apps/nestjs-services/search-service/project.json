@@ -38,6 +38,7 @@
           "buildTarget": "search-service:build:development"
         },
         "debug": {
+          "buildTarget": "search-service:build:development",
           "inspect": true,
           "host": "0.0.0.0",
           "port": 9235,

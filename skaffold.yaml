@@ -1,27 +1,17 @@
 # ============================================================
 # Skaffold configuration — polydom monorepo (development only)
 #
-# NX-aware build pipeline:
-#   Dockerfiles use `nx build <project>` which resolves the full
-#   dependency graph, uses NX computation caching, and only rebuilds
-#   what changed. Skaffold handles image tagging + K8s deploy.
-#
-# Development (hybrid workflow — minimal memory/network):
-#   Frontend (Next.js): file sync → hot reload on save, no rebuild.
-#   Backend (NestJS):  rebuilds on file change via Docker layer cache
-#     + yarn cache mount + NX cache mount for fast incremental builds.
-#   Tags: fixed "dev" tag — each rebuild replaces the previous image,
-#     keeping only one copy per service. Old images become dangling and
-#     are removed by docker image prune on exit.
+# Dev loop:
+#   - Backend: Docker layer cache → fast image rebuilds on source
+#     change (1-2s Docker + pod restart + nx build).
+#   - Frontend: file sync → Next.js HMR on save (no rebuild).
+#   - Tags: fixed "dev" tag, images replaced on rebuild.
 #
 # Usage:
 #   yarn skaffold:dev           Dev mode: port-forward + watch
+#   yarn skaffold:dev:debug     Dev mode: limited concurrency (lower memory)
 #   yarn skaffold:run           One-shot local deploy
 #   yarn skaffold:build         Build images only
-#
-# For production / staging, use Kustomize directly:
-#   kubectl apply -k kubernetes/overlays/production
-#   kubectl apply -k kubernetes/overlays/staging
 # ============================================================
 apiVersion: skaffold/v4beta5
 kind: Config
@@ -38,36 +28,43 @@ build:
       docker:
         dockerfile: apps/nestjs-services/api-gateway/Dockerfile
         target: development
+
     - image: polydom/auth-service
       context: .
       docker:
         dockerfile: apps/nestjs-services/auth-service/Dockerfile
         target: development
+
     - image: polydom/user-service
       context: .
       docker:
         dockerfile: apps/nestjs-services/user-service/Dockerfile
         target: development
+
     - image: polydom/vendor-service
       context: .
       docker:
         dockerfile: apps/nestjs-services/vendor-service/Dockerfile
         target: development
+
     - image: polydom/event-service
       context: .
       docker:
         dockerfile: apps/nestjs-services/event-service/Dockerfile
         target: development
+
     - image: polydom/agent-service
       context: .
       docker:
         dockerfile: apps/nestjs-services/agent-service/Dockerfile
         target: development
+
     - image: polydom/search-service
       context: .
       docker:
         dockerfile: apps/nestjs-services/search-service/Dockerfile
         target: development
+
     - image: polydom/frontend
       context: .
       docker:
@@ -76,9 +73,10 @@ build:
       sync:
         manual:
           - src: 'apps/frontend/**/*.{js,jsx,ts,tsx,css,scss}'
-            dest: /app/apps/frontend/
+            dest: /app/
           - src: 'libs/**/src/**/*.{ts,tsx}'
-            dest: /app/libs/
+            dest: /app/
+
     - image: polydom/admin-frontend
       context: .
       docker:
@@ -87,9 +85,9 @@ build:
       sync:
         manual:
           - src: 'apps/admin-frontend/**/*.{js,jsx,ts,tsx,css,scss}'
-            dest: /app/apps/admin-frontend/
+            dest: /app/
           - src: 'libs/**/src/**/*.{ts,tsx}'
-            dest: /app/libs/
+            dest: /app/
   local:
     useBuildkit: true
     push: false
@@ -191,8 +189,12 @@ portForward:
     namespace: polydom-dev
     port: 3000
     localPort: 3060
+  - resourceType: service
+    resourceName: search-service
+    namespace: polydom-dev
+    port: 9235
+    localPort: 9235
 
-# ── Profiles: opt-in extras activated with --profile ──────────────────────
 profiles:
   - name: ml
     build:

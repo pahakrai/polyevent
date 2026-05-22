@@ -21,7 +21,7 @@ build:
         target: development
   local:
     push: false
-    concurrency: 1
+    concurrency: 4
 manifests:
   rawYaml:
     - kubernetes/local/namespace.yaml

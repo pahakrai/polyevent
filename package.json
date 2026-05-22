@@ -34,7 +34,7 @@
     "tf:plan:homelab": "cd iac/terraform/home-lab && terraform plan",
     "tf:apply:homelab": "cd iac/terraform/home-lab && terraform apply",
     "skaffold:dev": "cross-env DOCKER_BUILDKIT=1 skaffold dev --no-prune=false --port-forward && docker image prune -f",
-    "skaffold:dev:debug": "cross-env DOCKER_BUILDKIT=1 skaffold dev --no-prune=false --port-forward --build-concurrency=1 && docker image prune -f",
+    "skaffold:dev:debug": "cross-env DOCKER_BUILDKIT=1 skaffold dev --no-prune=false --port-forward --build-concurrency=4 && docker image prune -f",
     "skaffold:build": "cross-env DOCKER_BUILDKIT=1 skaffold build",
     "skaffold:run": "cross-env DOCKER_BUILDKIT=1 skaffold run --no-prune=false --port-forward",
     "skaffold:build:production": "cross-env DOCKER_BUILDKIT=1 skaffold build --profile=production",

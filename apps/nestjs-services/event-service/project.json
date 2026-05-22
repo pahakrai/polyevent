@@ -41,6 +41,7 @@
           "buildTarget": "event-service:build:development"
         },
         "debug": {
+          "buildTarget": "event-service:build:development",
           "inspect": true,
           "host": "0.0.0.0",
           "port": 9233,

@@ -1,4 +1,3 @@
----
 # Local dev nginx reverse proxy — replaces the need for an external ingress controller.
 # Routes: all API prefixes → api-gateway, /api/* → api-gateway (prefix stripped),
 #         /admin/* → admin-frontend, /* → frontend
@@ -11,17 +10,12 @@ data:
   nginx.conf: |
     events {}
     http {
-      # Resolve upstreams at request time instead of startup so nginx doesn't
-      # crash when upstream services haven't been created yet.
       resolver kube-dns.kube-system.svc.cluster.local valid=30s ipv6=off;
 
       server {
         listen 80;
         server_name localhost;
 
-        # API Gateway — all backend service routes
-        # Regex matches any top-level API prefix: /auth, /events, /users, /groups,
-        # /vendors, /venues, /timeslots, /agent, /tracking, /health
         location ~ ^/(auth|events|users|groups|vendors|venues|timeslots|agent|tracking|health)(/|$) {
           set $apigw api-gateway:3000;
           proxy_pass http://$apigw;
@@ -32,8 +26,6 @@ data:
           proxy_set_header X-Forwarded-Proto $scheme;
         }
 
-        # K8s Ingress-compatible /api prefix — strips /api before forwarding
-        # (e.g. /api/auth/login → /auth/login at the gateway)
         location /api/ {
           set $apigw api-gateway:3000;
           proxy_pass http://$apigw/;
@@ -44,7 +36,6 @@ data:
           proxy_set_header X-Forwarded-Proto $scheme;
         }
 
-        # Admin Frontend
         location /admin {
           set $adminfe admin-frontend:3000;
           proxy_pass http://$adminfe/admin;
@@ -55,7 +46,6 @@ data:
           proxy_set_header X-Forwarded-Proto $scheme;
         }
 
-        # Frontend — everything else
         location / {
           set $fe frontend:3000;
           proxy_pass http://$fe;
