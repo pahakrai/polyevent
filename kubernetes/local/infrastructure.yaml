@@ -52,6 +52,10 @@ spec:
       containers:
       - name: redpanda
         image: docker.redpanda.com/redpandadata/redpanda:v24.2.18
+        command:
+        - sh
+        - -c
+        - rm -f /var/lib/redpanda/data/pid.lock && exec /entrypoint.sh redpanda start --smp=1 --memory=512M --reserve-memory=0M --overprovisioned --kafka-addr=0.0.0.0:9092 --advertise-kafka-addr=kafka:9092
         args:
         - redpanda
         - start
