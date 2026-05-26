@@ -549,6 +549,9 @@ class DataPipeline:
         # Write to Redis Feature Store (real-time serving)
         self.feature_store.batch_put(features)
 
+        # Store per-user and per-event profiles for inference-time lookup
+        self._store_profiles()
+
         # Write to disk for training
         os.makedirs(self.output_path, exist_ok=True)
         timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
@@ -557,6 +560,63 @@ class DataPipeline:
             path = os.path.join(self.output_path, f"{name}_{timestamp}.npy")
             np.save(path, array)
             logger.info("  Saved %s -> %s (shape=%s)", name, path, array.shape)
+
+    def _store_profiles(self) -> None:
+        """Store per-user and per-event profiles in Redis for inference-time lookup."""
+        logger.info("Storing user/event profiles to Redis...")
+
+        # ── Per-user profiles ─────────────────────────────────────────
+        for uid in self.location_engineer.user_location_profile:
+            profile = {}
+            loc = self.location_engineer.user_location_profile.get(uid, {})
+            if loc:
+                profile.update({
+                    "home_lat": loc.get("home_lat", 0.0),
+                    "home_lon": loc.get("home_lon", 0.0),
+                    "home_city": loc.get("home_city", ""),
+                    "typical_radius_km": loc.get("typical_radius_km", 10.0),
+                    "n_unique_cities": loc.get("n_unique_cities", 0),
+                    "n_unique_neighborhoods": loc.get("n_unique_neighborhoods", 0),
+                    "location_entropy": loc.get("location_entropy", 0.0),
+                })
+            cf = self.collaborative_engineer.user_factors.get(uid)
+            if cf is not None:
+                profile["user_embedding"] = cf.tolist()
+            else:
+                profile["user_embedding"] = np.zeros(16, dtype=np.float32).tolist()
+            ue = self.engagement_engineer.user_engagement.get(uid, {})
+            if ue:
+                profile["engagement"] = dict(ue)
+            co = self.participant_engineer.user_event_sets.get(uid, set())
+            cg = self.participant_engineer.coattendee_graph.get(uid, {})
+            profile["coattendee_data"] = {
+                "coattendee_count": len(cg),
+                "n_events": len(co),
+            }
+            interests = self.interest_similarity_engineer.user_interest_vecs.get(uid)
+            if interests is not None:
+                profile["interest_vector"] = interests[:5].tolist() if len(interests) > 5 else interests.tolist()
+            self.feature_store.save_user_profile(uid, profile)
+        logger.info("  stored %d user profiles", len(self.location_engineer.user_location_profile))
+
+        # ── Per-event profiles ────────────────────────────────────────
+        for eid in self.location_engineer.event_location_profile:
+            profile = {}
+            eloc = self.location_engineer.event_location_profile.get(eid, {})
+            if eloc:
+                profile.update({
+                    "latitude": eloc.get("lat", 0.0),
+                    "longitude": eloc.get("lon", 0.0),
+                    "city_popularity": eloc.get("city_popularity", 0.5),
+                    "venue_bookings": eloc.get("venue_bookings", 0),
+                    "venue_repeat_rate": eloc.get("venue_repeat_rate", 0.0),
+                    "venue_unique_users": eloc.get("venue_unique_users", 0),
+                })
+            ef = self.collaborative_engineer.event_factors.get(eid)
+            if ef is not None:
+                profile["event_embedding"] = ef.tolist()
+            self.feature_store.save_event_profile(eid, profile)
+        logger.info("  stored %d event profiles", len(self.location_engineer.event_location_profile))
 
     # ── Phase 4: Train ────────────────────────────────────────────────
 

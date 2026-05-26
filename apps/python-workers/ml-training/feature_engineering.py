@@ -29,6 +29,19 @@ import redis.exceptions
 logger = logging.getLogger("feature-engineering")
 
 
+def _json_default(obj: Any) -> Any:
+    """Convert numpy/pandas types to native Python for JSON serialization."""
+    if isinstance(obj, (np.integer,)):
+        return int(obj)
+    if isinstance(obj, (np.floating,)):
+        return float(obj)
+    if isinstance(obj, np.ndarray):
+        return obj.tolist()
+    if isinstance(obj, (pd.Timestamp,)):
+        return obj.isoformat()
+    raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
+
+
 # ═══════════════════════════════════════════════════════════════════════════
 # Feature Store
 # ═══════════════════════════════════════════════════════════════════════════
@@ -157,6 +170,48 @@ class FeatureStore:
                 pipe.execute()
             except Exception as e:
                 logger.warning("Redis push_recent_click failed for %s: %s", key, e)
+
+    def save_user_profile(self, user_id: str, data: Dict[str, Any]) -> None:
+        key = f"profile:user:{user_id}"
+        self._store.setdefault("user_profiles", {})[user_id] = data.copy()
+        if self._redis:
+            try:
+                payload = {k: json.dumps(v, default=_json_default).encode() for k, v in data.items()}
+                self._redis.hset(key, mapping=payload)
+            except Exception as e:
+                logger.warning("Redis save_user_profile failed for %s: %s", key, e)
+
+    def load_user_profile(self, user_id: str) -> Dict[str, Any]:
+        key = f"profile:user:{user_id}"
+        if self._redis:
+            try:
+                raw = self._redis.hgetall(key)
+                if raw:
+                    return {k.decode(): json.loads(v) for k, v in raw.items()}
+            except Exception as e:
+                logger.warning("Redis load_user_profile failed for %s: %s", key, e)
+        return self._store.get("user_profiles", {}).get(user_id, {})
+
+    def save_event_profile(self, event_id: str, data: Dict[str, Any]) -> None:
+        key = f"profile:event:{event_id}"
+        self._store.setdefault("event_profiles", {})[event_id] = data.copy()
+        if self._redis:
+            try:
+                payload = {k: json.dumps(v, default=_json_default).encode() for k, v in data.items()}
+                self._redis.hset(key, mapping=payload)
+            except Exception as e:
+                logger.warning("Redis save_event_profile failed for %s: %s", key, e)
+
+    def load_event_profile(self, event_id: str) -> Dict[str, Any]:
+        key = f"profile:event:{event_id}"
+        if self._redis:
+            try:
+                raw = self._redis.hgetall(key)
+                if raw:
+                    return {k.decode(): json.loads(v) for k, v in raw.items()}
+            except Exception as e:
+                logger.warning("Redis load_event_profile failed for %s: %s", key, e)
+        return self._store.get("event_profiles", {}).get(event_id, {})
 
     def invalidate_user_cache(self, user_id: str) -> None:
         """Remove cached inference vector for a user (e.g., on new booking)."""
