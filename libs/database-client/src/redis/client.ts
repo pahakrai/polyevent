@@ -89,6 +89,17 @@ export class RedisClient {
     return this.client.del(key);
   }
 
+  /**
+   * Acquire a distributed lock via SET key value NX EX ttlSeconds.
+   * Returns true if the lock was acquired (key did not exist),
+   * false if the key already exists (lock held by another process).
+   */
+  async setNX(key: string, value: string, ttlSeconds: number): Promise<boolean> {
+    if (!this.client) throw new Error('Redis not connected');
+    const result = await this.client.set(key, value, 'EX', ttlSeconds, 'NX');
+    return result === 'OK';
+  }
+
   async exists(key: string): Promise<number> {
     if (!this.client) throw new Error('Redis not connected');
     return this.client.exists(key);

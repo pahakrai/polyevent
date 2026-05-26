@@ -255,12 +255,15 @@ services:
         condition: service_healthy
       kafka:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     environment:
       NODE_ENV: development
       EVENT_DATABASE_URL: postgresql://eventbooking:eventbooking123@postgres:5432/event_db
       REDIS_URL: redis://:redispass123@redis:6379
       KAFKA_BROKERS: kafka:9092
       NATS_SERVERS: nats:4222
+      VENDOR_BOOKING_LOCK_TTL_SECONDS: "600"
       PORT: 3004
     ports:
       - "3004:3004"

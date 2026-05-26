@@ -17,8 +17,14 @@ import { CreateEventDto, UpdateEventDto } from './dto';
 export class EventController {
   constructor(private readonly eventService: EventService) {}
 
+  // ── CRUD ────────────────────────────────────────────────────────────
+
   @Post()
   create(@Body() dto: CreateEventDto) {
+    // Use createWithVendor if timeslot is provided; falls back to plain create
+    if ((dto as any).timeSlotId) {
+      return this.eventService.createWithVendor(dto as any);
+    }
     return this.eventService.create(dto);
   }
 
@@ -67,5 +73,76 @@ export class EventController {
     @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
   ) {
     return this.eventService.findByVendor(vendorId, page, limit);
+  }
+
+  // ── Vendor booking ──────────────────────────────────────────────────
+
+  @Post(':id/confirm-vendor')
+  confirmVendorBooking(@Param('id') id: string) {
+    return this.eventService.confirmVendorBooking(id);
+  }
+
+  @Post(':id/release-vendor')
+  releaseVendorBooking(@Param('id') id: string) {
+    return this.eventService.releaseVendorBooking(id);
+  }
+
+  @Post(':id/rebook-vendor')
+  rebookVendor(@Param('id') id: string) {
+    return this.eventService.rebookVendor(id);
+  }
+
+  // ── Invitations ─────────────────────────────────────────────────────
+
+  @Post(':id/invite')
+  inviteUser(
+    @Param('id') eventId: string,
+    @Body('userId') userId: string,
+    @Body('inviterId') inviterId: string,
+  ) {
+    return this.eventService.inviteUser(eventId, userId, inviterId);
+  }
+
+  @Post('invitations/:invitationId/accept')
+  acceptInvite(@Param('invitationId') invitationId: string) {
+    return this.eventService.acceptInvite(invitationId);
+  }
+
+  @Post('invitations/:invitationId/reject')
+  rejectInvite(@Param('invitationId') invitationId: string) {
+    return this.eventService.rejectInvite(invitationId);
+  }
+
+  @Post(':id/join-request')
+  requestJoin(
+    @Param('id') eventId: string,
+    @Body('userId') userId: string,
+  ) {
+    return this.eventService.requestJoin(eventId, userId);
+  }
+
+  @Post('invitations/:invitationId/respond')
+  respondToRequest(
+    @Param('invitationId') invitationId: string,
+    @Body('accept') accept: boolean,
+  ) {
+    return this.eventService.respondToRequest(invitationId, accept);
+  }
+
+  @Get(':id/invitations')
+  listInvitations(@Param('id') eventId: string) {
+    return this.eventService.listInvitations(eventId);
+  }
+
+  // ── Quota / invites toggle ──────────────────────────────────────────
+
+  @Post(':id/disable-invites')
+  disableInvites(@Param('id') id: string) {
+    return this.eventService.disableInvites(id);
+  }
+
+  @Post(':id/enable-invites')
+  enableInvites(@Param('id') id: string) {
+    return this.eventService.enableInvites(id);
   }
 }

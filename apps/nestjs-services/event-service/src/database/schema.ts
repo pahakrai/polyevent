@@ -26,6 +26,7 @@ export const eventStatusEnum = pgEnum('event_status', [
   'CANCELLED',
   'COMPLETED',
   'POSTPONED',
+  'SOLD_OUT',
 ]);
 
 export const pricingModelEnum = pgEnum('event_pricing_model', [
@@ -33,6 +34,24 @@ export const pricingModelEnum = pgEnum('event_pricing_model', [
   'PER_HOUR',
   'CONTRACT',
   'MIXED',
+]);
+
+export const vendorStatusEnum = pgEnum('vendor_status', [
+  'NONE',
+  'PENDING_CONFIRMATION',
+  'CONFIRMED',
+  'CANCELLED',
+]);
+
+export const invitationTypeEnum = pgEnum('invitation_type', [
+  'CREATOR_INVITE',
+  'USER_REQUEST',
+]);
+
+export const invitationStatusEnum = pgEnum('invitation_status', [
+  'PENDING',
+  'ACCEPTED',
+  'REJECTED',
 ]);
 
 // Event table
@@ -59,15 +78,39 @@ export const events = pgTable('events', {
   recurringRule: text('recurring_rule'),
   timeSlotId: text('time_slot_id'),
   groupId: text('group_id'),
+  // Vendor booking lifecycle
+  vendorStatus: vendorStatusEnum('vendor_status').notNull().default('NONE'),
+  vendorLockedAt: timestamp('vendor_locked_at'),
+  // Invite / quota control
+  allowInvites: boolean('allow_invites').notNull().default(true),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdateFn(() => new Date()),
 });
 
+// Event invitations — both creator-invited and user-requested
+export const eventInvitations = pgTable('event_invitations', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  eventId: text('event_id').notNull().references(() => events.id, { onDelete: 'cascade' }),
+  userId: text('user_id').notNull(),
+  inviterId: text('inviter_id'), // The user who sent the invite (null for USER_REQUEST)
+  type: invitationTypeEnum('type').notNull(),
+  status: invitationStatusEnum('status').notNull().default('PENDING'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdateFn(() => new Date()),
+});
+
+// Indexes
+export const eventInvitationsEventIdIdx = uniqueIndex('event_invitations_event_user_idx')
+  .on(eventInvitations.eventId, eventInvitations.userId);
+
 // Export schema
 export const schema = {
   events,
+  eventInvitations,
 };
 
 // Export types
 export type Event = typeof events.$inferSelect;
 export type NewEvent = typeof events.$inferInsert;
+export type EventInvitation = typeof eventInvitations.$inferSelect;
+export type NewEventInvitation = typeof eventInvitations.$inferInsert;

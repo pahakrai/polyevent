@@ -38,6 +38,9 @@ interface FormData {
   tags: string[];
   ageRestriction: string;
   groupId: string;
+  vendorId: string;
+  timeSlotId: string;
+  vendorPriceType: 'free' | 'paid';
 }
 
 function NewEventForm() {
@@ -67,6 +70,9 @@ function NewEventForm() {
     tags: [],
     ageRestriction: '',
     groupId: searchParams.get('groupId') || '',
+    vendorId: '',
+    timeSlotId: '',
+    vendorPriceType: 'free',
   });
 
   useEffect(() => { setMounted(true); }, []);
@@ -148,6 +154,8 @@ function NewEventForm() {
         tags: form.tags.length > 0 ? form.tags : undefined,
         ageRestriction: form.ageRestriction ? parseInt(form.ageRestriction) : undefined,
         groupId: form.groupId || undefined,
+        vendorId: form.vendorId || undefined,
+        timeSlotId: form.timeSlotId || undefined,
       });
 
       router.push(`/events/${res.id || res.data?.id}`);
@@ -403,6 +411,55 @@ function NewEventForm() {
               </div>
             </div>
           )}
+        </Card>
+
+        {/* Vendor */}
+        <Card className="space-y-4 p-6">
+          <h2 className="text-lg font-semibold">Vendor (optional)</h2>
+          <p className="text-sm text-muted-foreground">
+            Select a vendor for your event. The vendor will be locked for 10
+            minutes while you confirm the booking.
+          </p>
+
+          <div className="flex gap-3">
+            {(['free', 'paid'] as const).map((type) => (
+              <button
+                key={type}
+                type="button"
+                onClick={() => update('vendorPriceType', type)}
+              >
+                <Badge
+                  variant={form.vendorPriceType === type ? 'default' : 'secondary'}
+                  className="cursor-pointer px-3 py-1.5 text-sm"
+                >
+                  {type === 'free' ? 'Free Vendor' : 'Paid Vendor'}
+                </Badge>
+              </button>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+              <label className={labelClass}>Vendor ID</label>
+              <input
+                type="text"
+                className={inputClass}
+                placeholder="Vendor ID (e.g. from vendor profile)"
+                value={form.vendorId}
+                onChange={(e) => update('vendorId', e.target.value)}
+              />
+            </div>
+            <div>
+              <label className={labelClass}>Time Slot ID</label>
+              <input
+                type="text"
+                className={inputClass}
+                placeholder="Timeslot ID"
+                value={form.timeSlotId}
+                onChange={(e) => update('timeSlotId', e.target.value)}
+              />
+            </div>
+          </div>
         </Card>
 
         {/* Additional settings */}

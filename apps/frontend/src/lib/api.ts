@@ -59,12 +59,11 @@ async function tryRefreshToken(): Promise<string | null> {
     localStorage.setItem('authToken', newAccessToken);
     localStorage.setItem('refreshToken', newRefreshToken);
 
-    // Update Zustand store (imported dynamically to avoid circular refs)
     try {
       const { useAuthStore } = await import('@/stores/auth-store');
       useAuthStore.getState().setTokens(newAccessToken, newRefreshToken);
     } catch {
-      // Store import may fail during SSR — tokens are already in localStorage
+      // Store import may fail during SSR
     }
 
     return newAccessToken;
@@ -73,21 +72,17 @@ async function tryRefreshToken(): Promise<string | null> {
   }
 }
 
-// ── Response interceptor ───────────────────────────────────────────────
-
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    // Don't intercept refresh requests themselves (avoid loops)
     if (originalRequest?.url === '/auth/refresh') {
       return Promise.reject(error);
     }
 
     if (error?.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
-        // Another request is already refreshing — queue this one
         return new Promise((resolve, reject) => {
           failedQueue.push({
             resolve: (token: string) => {
@@ -111,7 +106,6 @@ api.interceptors.response.use(
         return api(originalRequest);
       }
 
-      // Refresh failed — hard logout
       processQueue(new Error('Refresh failed'), null);
       isRefreshing = false;
 
@@ -129,7 +123,7 @@ api.interceptors.response.use(
   },
 );
 
-// ── API methods ────────────────────────────────────────────────────────
+// ── Events ─────────────────────────────────────────────────────────────
 
 export async function searchEvents(params: {
   query?: string;
@@ -195,14 +189,76 @@ export async function createEvent(payload: {
   images?: string[];
   ageRestriction?: number;
   groupId?: string;
+  vendorId?: string;
   venueId?: string;
-  timeslotId?: string;
+  timeSlotId?: string;
 }) {
   const { data } = await api.post('/events', payload);
   return data;
 }
 
-// ── Tracking (client-side → API Gateway → Kafka) ───────────────────────
+// ── Vendor booking ─────────────────────────────────────────────────────
+
+export async function confirmVendor(eventId: string) {
+  const { data } = await api.post(`/events/${eventId}/confirm-vendor`);
+  return data;
+}
+
+export async function releaseVendor(eventId: string) {
+  const { data } = await api.post(`/events/${eventId}/release-vendor`);
+  return data;
+}
+
+export async function rebookVendor(eventId: string) {
+  const { data } = await api.post(`/events/${eventId}/rebook-vendor`);
+  return data;
+}
+
+// ── Invitations ────────────────────────────────────────────────────────
+
+export async function inviteUser(eventId: string, userId: string, inviterId: string) {
+  const { data } = await api.post(`/events/${eventId}/invite`, { userId, inviterId });
+  return data;
+}
+
+export async function acceptInvite(invitationId: string) {
+  const { data } = await api.post(`/events/invitations/${invitationId}/accept`);
+  return data;
+}
+
+export async function rejectInvite(invitationId: string) {
+  const { data } = await api.post(`/events/invitations/${invitationId}/reject`);
+  return data;
+}
+
+export async function requestJoin(eventId: string, userId: string) {
+  const { data } = await api.post(`/events/${eventId}/join-request`, { userId });
+  return data;
+}
+
+export async function respondToRequest(invitationId: string, accept: boolean) {
+  const { data } = await api.post(`/events/invitations/${invitationId}/respond`, { accept });
+  return data;
+}
+
+export async function listInvitations(eventId: string) {
+  const { data } = await api.get(`/events/${eventId}/invitations`);
+  return data;
+}
+
+// ── Quota ──────────────────────────────────────────────────────────────
+
+export async function disableInvites(eventId: string) {
+  const { data } = await api.post(`/events/${eventId}/disable-invites`);
+  return data;
+}
+
+export async function enableInvites(eventId: string) {
+  const { data } = await api.post(`/events/${eventId}/enable-invites`);
+  return data;
+}
+
+// ── Tracking ───────────────────────────────────────────────────────────
 
 export async function trackActivity(params: {
   userId: string;
@@ -213,7 +269,7 @@ export async function trackActivity(params: {
   try {
     await api.post('/tracking/activity', params);
   } catch {
-    // Fire-and-forget — don't block UX on analytics
+    // Fire-and-forget
   }
 }
 
