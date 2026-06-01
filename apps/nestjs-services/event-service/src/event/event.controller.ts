@@ -7,11 +7,12 @@ import {
   Body,
   Param,
   Query,
+  Headers,
   ParseIntPipe,
   DefaultValuePipe,
 } from '@nestjs/common';
 import { EventService } from './event.service';
-import { CreateEventDto, UpdateEventDto } from './dto';
+import { CreateEventDto, UpdateEventDto, CreateJamSessionDto } from './dto';
 
 @Controller('events')
 export class EventController {
@@ -21,7 +22,6 @@ export class EventController {
 
   @Post()
   create(@Body() dto: CreateEventDto) {
-    // Use createWithVendor if timeslot is provided; falls back to plain create
     if ((dto as any).timeSlotId) {
       return this.eventService.createWithVendor(dto as any);
     }
@@ -92,6 +92,60 @@ export class EventController {
     return this.eventService.rebookVendor(id);
   }
 
+  // ── Jam Sessions ────────────────────────────────────────────────────
+
+  @Post('jam-sessions')
+  createJamSession(
+    @Headers('x-user-id') hostId: string,
+    @Body() dto: CreateJamSessionDto,
+  ) {
+    return this.eventService.createJamSession(hostId, dto);
+  }
+
+  @Get('jam-sessions')
+  findJamSessions(
+    @Query('instrumentsWanted') instrumentsWanted?: string,
+    @Query('genres') genres?: string,
+    @Query('lat') lat?: string,
+    @Query('lon') lon?: string,
+    @Query('radiusKm', new DefaultValuePipe(50), ParseIntPipe) radiusKm?: number,
+    @Query('groupId') groupId?: string,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page?: number,
+    @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit?: number,
+  ) {
+    return this.eventService.findJamSessions({
+      instrumentsWanted: instrumentsWanted ? instrumentsWanted.split(',') : undefined,
+      genres: genres ? genres.split(',') : undefined,
+      lat: lat != null ? parseFloat(lat) : undefined,
+      lon: lon != null ? parseFloat(lon) : undefined,
+      radiusKm,
+      groupId,
+      page,
+      limit,
+    });
+  }
+
+  @Post(':id/rsvp')
+  rsvp(
+    @Param('id') eventId: string,
+    @Headers('x-user-id') userId: string,
+  ) {
+    return this.eventService.rsvp(eventId, userId);
+  }
+
+  @Delete(':id/rsvp')
+  cancelRsvp(
+    @Param('id') eventId: string,
+    @Headers('x-user-id') userId: string,
+  ) {
+    return this.eventService.cancelRsvp(eventId, userId);
+  }
+
+  @Get(':id/attendees')
+  listAttendees(@Param('id') eventId: string) {
+    return this.eventService.listAttendees(eventId);
+  }
+
   // ── Invitations ─────────────────────────────────────────────────────
 
   @Post(':id/invite')
@@ -144,5 +198,12 @@ export class EventController {
   @Post(':id/enable-invites')
   enableInvites(@Param('id') id: string) {
     return this.eventService.enableInvites(id);
+  }
+
+  // ── Internal: called by booking-service on payment confirmation ──────
+
+  @Post(':id/increment-bookings')
+  incrementBookings(@Param('id') id: string) {
+    return this.eventService.incrementBookings(id);
   }
 }

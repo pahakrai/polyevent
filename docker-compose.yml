@@ -274,6 +274,34 @@ services:
     command: yarn nest start --watch
     working_dir: /app/apps/nestjs-services/event-service
 
+  booking-service:
+    build:
+      context: .
+      dockerfile: ./apps/nestjs-services/booking-service/Dockerfile
+      target: development
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: development
+      BOOKING_DATABASE_URL: postgresql://eventbooking:eventbooking123@postgres:5432/booking_db
+      REDIS_URL: redis://:redispass123@redis:6379
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-sk_test_placeholder}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-whsec_placeholder}
+      PLATFORM_FEE_ENABLED: "false"
+      PLATFORM_FEE_PERCENTAGE: "0"
+      PLATFORM_FEE_FLAT_CENTS: "0"
+      PLATFORM_FEE_MINIMUM_CENTS: "0"
+      PAYOUTS_ENABLED: "false"
+      PORT: 3007
+    ports:
+      - "3007:3007"
+    volumes:
+      - .:/app
+      - /app/apps/nestjs-services/booking-service/node_modules
+
   agent-service:
     build:
       context: .

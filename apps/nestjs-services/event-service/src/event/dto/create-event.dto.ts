@@ -13,8 +13,8 @@ import {
 
 export class CreateEventDto {
   @IsString()
-  @IsNotEmpty()
-  vendorId: string;
+  @IsOptional()
+  vendorId?: string;
 
   @IsString()
   @IsOptional()
@@ -59,7 +59,8 @@ export class CreateEventDto {
   };
 
   @IsObject()
-  price: {
+  @IsOptional()
+  price?: {
     minPrice?: number;
     maxPrice?: number;
     price?: number;
@@ -92,4 +93,21 @@ export class CreateEventDto {
   @IsString()
   @IsOptional()
   recurringRule?: string;
+
+  @IsString()
+  @IsOptional()
+  eventType?: string;
+
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  instrumentsWanted?: string[];
+
+  @IsString()
+  @IsOptional()
+  hostId?: string;
+
+  @IsString()
+  @IsOptional()
+  groupId?: string;
 }

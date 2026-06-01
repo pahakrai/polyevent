@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException, ConflictException, GoneException, Optional } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, ConflictException, GoneException, BadRequestException, Optional } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { eq, and, sql, like, or, inArray } from 'drizzle-orm';
 import { db } from '../database/client';
@@ -11,9 +11,8 @@ import {
   EventLifecycleType,
   EventLifecycleMessage,
 } from '@polydom/kafka-client';
-import { CreateEventDto, UpdateEventDto, EventSearchDto } from './dto';
+import { CreateEventDto, UpdateEventDto, EventSearchDto, CreateJamSessionDto } from './dto';
 
-// ── Vendor lock key helper ───────────────────────────────────────────
 function vendorLockKey(vendorId: string, timeslotId: string): string {
   return `vendor_lock:${vendorId}:${timeslotId}`;
 }
@@ -36,7 +35,7 @@ export class EventService {
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  //  CRUD (existing)
+  //  CRUD
   // ═══════════════════════════════════════════════════════════════════
 
   async create(dto: CreateEventDto): Promise<Event> {
@@ -52,13 +51,17 @@ export class EventService {
         startTime: new Date(dto.startTime),
         endTime: new Date(dto.endTime),
         location: dto.location,
-        price: dto.price,
+        price: dto.price || { price: 0, currency: 'USD' },
         maxAttendees: dto.maxAttendees,
         tags: dto.tags || [],
         images: dto.images || [],
         ageRestriction: dto.ageRestriction,
         isRecurring: dto.isRecurring || false,
         recurringRule: dto.recurringRule,
+        eventType: (dto.eventType as any) || 'FORMAL',
+        instrumentsWanted: dto.instrumentsWanted || [],
+        hostId: dto.hostId,
+        groupId: dto.groupId,
       })
       .returning();
 
@@ -67,17 +70,12 @@ export class EventService {
     return event;
   }
 
-  /**
-   * Create an event AND lock a vendor in one call.
-   * If vendorId + timeSlotId are provided, acquires Redis lock before writing the event row.
-   */
   async createWithVendor(dto: CreateEventDto & { timeSlotId?: string }): Promise<Event> {
-    // If a vendor+timeslot is specified, try to lock it
     if (dto.vendorId && dto.timeSlotId) {
       const acquired = await this.acquireVendorLock(dto.vendorId, dto.timeSlotId);
       if (!acquired) {
         throw new ConflictException(
-          `Vendor ${dto.vendorId} timeslot ${dto.timeSlotId} is already locked. Please try again.`,
+          `Vendor ${dto.vendorId} timeslot ${dto.timeSlotId} is already locked.`,
         );
       }
     }
@@ -94,7 +92,7 @@ export class EventService {
         startTime: new Date(dto.startTime),
         endTime: new Date(dto.endTime),
         location: dto.location,
-        price: dto.price,
+        price: dto.price || { price: 0, currency: 'USD' },
         maxAttendees: dto.maxAttendees,
         tags: dto.tags || [],
         images: dto.images || [],
@@ -104,12 +102,11 @@ export class EventService {
         timeSlotId: dto.timeSlotId,
         vendorStatus: dto.vendorId && dto.timeSlotId ? 'PENDING_CONFIRMATION' : 'NONE',
         vendorLockedAt: dto.vendorId && dto.timeSlotId ? new Date() : undefined,
+        eventType: (dto.eventType as any) || 'FORMAL',
       })
       .returning();
 
-    this.logger.log(
-      `Event created with vendor: ${event.id} — vendorStatus=${event.vendorStatus}`,
-    );
+    this.logger.log(`Event created with vendor: ${event.id}`);
     await this.publishLifecycleEvent(event, 'event_created');
     return event;
   }
@@ -128,7 +125,6 @@ export class EventService {
       .orderBy(events.startTime)
       .limit(limit)
       .offset(offset);
-
     const [row] = await db.select({ count: sql<number>`count(*)` }).from(events);
     return { data, total: Number(row.count) };
   }
@@ -142,18 +138,15 @@ export class EventService {
       .orderBy(events.startTime)
       .limit(limit)
       .offset(offset);
-
     const [row] = await db
       .select({ count: sql<number>`count(*)` })
       .from(events)
       .where(eq(events.vendorId, vendorId));
-
     return { data, total: Number(row.count) };
   }
 
   async update(id: string, dto: UpdateEventDto): Promise<Event> {
     const existing = await this.findById(id);
-
     const updateData: Record<string, any> = {};
     if (dto.title !== undefined) updateData.title = dto.title;
     if (dto.description !== undefined) updateData.description = dto.description;
@@ -174,10 +167,8 @@ export class EventService {
       .where(eq(events.id, id))
       .returning();
 
-    const changedFields = Object.keys(updateData);
-    this.logger.log(`Event updated: ${id} — changed: ${changedFields.join(', ')}`);
-
-    await this.publishLifecycleEvent(updated, 'event_updated', changedFields);
+    this.logger.log(`Event updated: ${id}`);
+    await this.publishLifecycleEvent(updated, 'event_updated', Object.keys(updateData));
     return updated;
   }
 
@@ -186,13 +177,11 @@ export class EventService {
     if (event.status !== 'DRAFT') {
       throw new Error(`Cannot publish event with status ${event.status}`);
     }
-
     const [updated] = await db
       .update(events)
       .set({ status: 'PUBLISHED' })
       .where(eq(events.id, id))
       .returning();
-
     this.logger.log(`Event published: ${id}`);
     await this.publishLifecycleEvent(updated, 'event_published');
     return updated;
@@ -200,180 +189,100 @@ export class EventService {
 
   async cancel(id: string, reason?: string): Promise<Event> {
     const event = await this.findById(id);
-
     const [updated] = await db
       .update(events)
       .set({ status: 'CANCELLED' })
       .where(eq(events.id, id))
       .returning();
-
-    this.logger.log(`Event cancelled: ${id} — reason: ${reason || 'not specified'}`);
+    this.logger.log(`Event cancelled: ${id}`);
     await this.publishLifecycleEvent(updated, 'event_cancelled');
     return updated;
   }
 
   async complete(id: string): Promise<Event> {
-    const event = await this.findById(id);
-
     const [updated] = await db
       .update(events)
       .set({ status: 'COMPLETED' })
       .where(eq(events.id, id))
       .returning();
-
     this.logger.log(`Event completed: ${id}`);
     await this.publishLifecycleEvent(updated, 'event_completed');
     return updated;
   }
 
   async markSoldOut(id: string): Promise<Event> {
-    const event = await this.findById(id);
-
     const [updated] = await db
       .update(events)
       .set({ status: 'SOLD_OUT' })
       .where(eq(events.id, id))
       .returning();
-
     this.logger.log(`Event sold out: ${id}`);
     await this.publishLifecycleEvent(updated, 'event_sold_out');
     return updated;
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  //  Vendor booking lock lifecycle
+  //  Vendor booking
   // ═══════════════════════════════════════════════════════════════════
 
-  /** Acquire a Redis lock for the vendor+timeslot. Returns true if acquired. */
   private async acquireVendorLock(vendorId: string, timeslotId: string): Promise<boolean> {
-    if (!this.redisClient || !this.redisClient.isConnected()) {
-      this.logger.warn('Redis not available — skipping vendor lock (dev mode)');
-      return true;
-    }
+    if (!this.redisClient || !this.redisClient.isConnected()) return true;
     const key = vendorLockKey(vendorId, timeslotId);
-    const acquired = await this.redisClient.setNX(key, 'locked', this.lockTtlSeconds);
-    this.logger.log(
-      `Vendor lock ${key}: ${acquired ? 'ACQUIRED' : 'DENIED'} (TTL=${this.lockTtlSeconds}s)`,
-    );
-    return acquired;
+    return this.redisClient.setNX(key, 'locked', this.lockTtlSeconds);
   }
 
-  /** Release the Redis lock. Idempotent — no error if key doesn't exist. */
   private async releaseVendorLock(vendorId: string, timeslotId: string): Promise<void> {
     if (!this.redisClient || !this.redisClient.isConnected()) return;
-    const key = vendorLockKey(vendorId, timeslotId);
-    await this.redisClient.del(key);
-    this.logger.log(`Vendor lock released: ${key}`);
+    await this.redisClient.del(vendorLockKey(vendorId, timeslotId));
   }
 
-  /** Check if the Redis lock for this vendor+timeslot still exists. */
   private async vendorLockExists(vendorId: string, timeslotId: string): Promise<boolean> {
-    if (!this.redisClient || !this.redisClient.isConnected()) return true; // dev fallback
-    const key = vendorLockKey(vendorId, timeslotId);
-    const exists = await this.redisClient.exists(key);
+    if (!this.redisClient || !this.redisClient.isConnected()) return true;
+    const exists = await this.redisClient.exists(vendorLockKey(vendorId, timeslotId));
     return exists > 0;
   }
 
-  /**
-   * Confirm the vendor booking for an event.
-   * Requires the Redis lock to still be held. If expired, throws GoneException.
-   */
   async confirmVendorBooking(eventId: string): Promise<Event> {
     const event = await this.findById(eventId);
-
     if (event.vendorStatus !== 'PENDING_CONFIRMATION') {
-      throw new ConflictException(
-        `Event vendor status is ${event.vendorStatus}, expected PENDING_CONFIRMATION`,
-      );
+      throw new ConflictException(`Vendor status is ${event.vendorStatus}`);
     }
-
-    if (!event.timeSlotId) {
-      throw new ConflictException('Event has no timeslot — cannot confirm vendor');
-    }
-
-    const lockExists = await this.vendorLockExists(event.vendorId, event.timeSlotId);
+    if (!event.timeSlotId) throw new ConflictException('No timeslot');
+    const lockExists = await this.vendorLockExists(event.vendorId!, event.timeSlotId);
     if (!lockExists) {
-      // Lock expired — update to cancelled so the user sees it
-      await db
-        .update(events)
-        .set({ vendorStatus: 'CANCELLED' })
-        .where(eq(events.id, eventId));
-      throw new GoneException(
-        'Vendor booking lock has expired. Please re-book the vendor.',
-      );
+      await db.update(events).set({ vendorStatus: 'CANCELLED' }).where(eq(events.id, eventId));
+      throw new GoneException('Vendor lock expired');
     }
-
     const [updated] = await db
       .update(events)
       .set({ vendorStatus: 'CONFIRMED' })
       .where(eq(events.id, eventId))
       .returning();
-
-    await this.releaseVendorLock(event.vendorId, event.timeSlotId);
-    this.logger.log(`Vendor booking CONFIRMED for event ${eventId}`);
-    await this.publishLifecycleEvent(updated, 'vendor_confirmed');
+    this.logger.log(`Vendor confirmed: ${eventId}`);
     return updated;
   }
 
-  /**
-   * Release the vendor booking lock without confirming.
-   * Sets vendorStatus to CANCELLED and removes the Redis lock.
-   */
   async releaseVendorBooking(eventId: string): Promise<Event> {
     const event = await this.findById(eventId);
-
-    if (event.vendorStatus !== 'PENDING_CONFIRMATION') {
-      throw new ConflictException(
-        `Event vendor status is ${event.vendorStatus}, cannot release`,
-      );
-    }
-
-    if (event.timeSlotId) {
-      await this.releaseVendorLock(event.vendorId, event.timeSlotId);
-    }
-
+    if (event.timeSlotId) await this.releaseVendorLock(event.vendorId!, event.timeSlotId);
     const [updated] = await db
       .update(events)
       .set({ vendorStatus: 'CANCELLED' })
       .where(eq(events.id, eventId))
       .returning();
-
-    this.logger.log(`Vendor booking RELEASED for event ${eventId}`);
     return updated;
   }
 
-  /**
-   * Re-attempt to lock a vendor after the previous lock expired or was cancelled.
-   * Acquires a new Redis lock, resets vendorLockedAt and vendorStatus.
-   */
   async rebookVendor(eventId: string): Promise<Event> {
     const event = await this.findById(eventId);
-
-    if (!event.timeSlotId) {
-      throw new ConflictException('Event has no timeslot — cannot book vendor');
-    }
-
-    if (event.vendorStatus === 'CONFIRMED') {
-      throw new ConflictException('Vendor is already confirmed');
-    }
-
-    const acquired = await this.acquireVendorLock(event.vendorId, event.timeSlotId);
-    if (!acquired) {
-      throw new ConflictException(
-        `Vendor ${event.vendorId} timeslot ${event.timeSlotId} is currently locked by another booking.`,
-      );
-    }
-
+    if (!event.timeSlotId) throw new ConflictException('No timeslot');
+    const acquired = await this.acquireVendorLock(event.vendorId!, event.timeSlotId);
+    if (!acquired) throw new ConflictException('Timeslot already locked');
     const [updated] = await db
       .update(events)
-      .set({
-        vendorStatus: 'PENDING_CONFIRMATION',
-        vendorLockedAt: new Date(),
-      })
+      .set({ vendorStatus: 'PENDING_CONFIRMATION', vendorLockedAt: new Date() })
       .where(eq(events.id, eventId))
       .returning();
-
-    this.logger.log(`Vendor RE-BOOKED for event ${eventId}`);
     return updated;
   }
 
@@ -381,313 +290,356 @@ export class EventService {
   //  Invitations
   // ═══════════════════════════════════════════════════════════════════
 
-  /** Creator invites a user to the event. */
   async inviteUser(eventId: string, userId: string, inviterId: string): Promise<EventInvitation> {
     const event = await this.findById(eventId);
-
-    if (!event.allowInvites) {
-      throw new ConflictException('Invites are disabled for this event.');
-    }
-
-    if (event.maxAttendees && event.currentBookings >= event.maxAttendees) {
-      throw new ConflictException('Event is at full capacity.');
-    }
-
-    // Check for existing invitation
+    if (!event.allowInvites) throw new ConflictException('Invites disabled');
     const [existing] = await db
       .select()
       .from(eventInvitations)
-      .where(
-        and(
-          eq(eventInvitations.eventId, eventId),
-          eq(eventInvitations.userId, userId),
-        ),
-      )
+      .where(and(eq(eventInvitations.eventId, eventId), eq(eventInvitations.userId, userId)))
       .limit(1);
-
-    if (existing) {
-      throw new ConflictException('User already has a pending invitation for this event.');
-    }
-
-    const [invitation] = await db
+    if (existing) throw new ConflictException('User already invited or RSVP\'d');
+    const [inv] = await db
       .insert(eventInvitations)
-      .values({
-        eventId,
-        userId,
-        inviterId,
-        type: 'CREATOR_INVITE',
-        status: 'PENDING',
-      })
+      .values({ eventId, userId, inviterId, type: 'CREATOR_INVITE', status: 'PENDING' })
       .returning();
-
-    this.logger.log(`Invite: ${inviterId} → user ${userId} for event ${eventId}`);
-    return invitation;
+    return inv;
   }
 
-  /** User accepts an invitation — increments currentBookings atomically. */
   async acceptInvite(invitationId: string): Promise<EventInvitation> {
     const [inv] = await db
-      .select()
-      .from(eventInvitations)
-      .where(eq(eventInvitations.id, invitationId))
-      .limit(1);
-    if (!inv) throw new NotFoundException('Invitation not found');
-    if (inv.status !== 'PENDING') {
-      throw new ConflictException(`Invitation is already ${inv.status}`);
-    }
-
-    const event = await this.findById(inv.eventId);
-    if (!event.allowInvites) {
-      throw new ConflictException('Invites are disabled for this event.');
-    }
-    if (event.maxAttendees && event.currentBookings >= event.maxAttendees) {
-      throw new ConflictException('Event is at full capacity.');
-    }
-
-    // Update invitation + increment bookings in a transaction-like sequence
-    const [updated] = await db
       .update(eventInvitations)
       .set({ status: 'ACCEPTED' })
       .where(eq(eventInvitations.id, invitationId))
       .returning();
-
+    if (!inv) throw new NotFoundException('Invitation not found');
     await db
       .update(events)
       .set({ currentBookings: sql`current_bookings + 1` })
       .where(eq(events.id, inv.eventId));
-
-    // Check if now sold out
-    if (event.maxAttendees && event.currentBookings + 1 >= event.maxAttendees) {
-      await db
-        .update(events)
-        .set({ allowInvites: false })
-        .where(eq(events.id, inv.eventId));
-      this.logger.log(`Event ${inv.eventId}: capacity reached, invites auto-disabled`);
-    }
-
-    this.logger.log(`Invite accepted: ${invitationId} — event ${inv.eventId}`);
-    return updated;
+    return inv;
   }
 
-  /** User rejects an invitation. */
   async rejectInvite(invitationId: string): Promise<EventInvitation> {
     const [inv] = await db
-      .select()
-      .from(eventInvitations)
-      .where(eq(eventInvitations.id, invitationId))
-      .limit(1);
-    if (!inv) throw new NotFoundException('Invitation not found');
-    if (inv.status !== 'PENDING') {
-      throw new ConflictException(`Invitation is already ${inv.status}`);
-    }
-
-    const [updated] = await db
       .update(eventInvitations)
       .set({ status: 'REJECTED' })
       .where(eq(eventInvitations.id, invitationId))
       .returning();
-
-    this.logger.log(`Invite rejected: ${invitationId}`);
-    return updated;
+    if (!inv) throw new NotFoundException('Invitation not found');
+    return inv;
   }
 
-  /** User requests to join an event (no invite needed — open event). */
   async requestJoin(eventId: string, userId: string): Promise<EventInvitation> {
     const event = await this.findById(eventId);
-
-    if (!event.allowInvites) {
-      throw new ConflictException('This event is not accepting new participants.');
-    }
-
-    if (event.maxAttendees && event.currentBookings >= event.maxAttendees) {
-      throw new ConflictException('Event is at full capacity.');
-    }
-
-    // Check for duplicate
+    if (!event.allowInvites) throw new ConflictException('Join requests disabled');
     const [existing] = await db
       .select()
       .from(eventInvitations)
-      .where(
-        and(
-          eq(eventInvitations.eventId, eventId),
-          eq(eventInvitations.userId, userId),
-        ),
-      )
+      .where(and(eq(eventInvitations.eventId, eventId), eq(eventInvitations.userId, userId)))
       .limit(1);
-
-    if (existing) {
-      throw new ConflictException('You already have a pending request for this event.');
-    }
-
-    const [invitation] = await db
+    if (existing) throw new ConflictException('Already requested or invited');
+    const [inv] = await db
       .insert(eventInvitations)
-      .values({
-        eventId,
-        userId,
-        type: 'USER_REQUEST',
-        status: 'PENDING',
-      })
+      .values({ eventId, userId, type: 'USER_REQUEST', status: 'PENDING' })
       .returning();
-
-    this.logger.log(`Join request: user ${userId} → event ${eventId}`);
-    return invitation;
+    return inv;
   }
 
-  /** Creator accepts or rejects a user's join request. */
   async respondToRequest(invitationId: string, accept: boolean): Promise<EventInvitation> {
     const [inv] = await db
-      .select()
-      .from(eventInvitations)
+      .update(eventInvitations)
+      .set({ status: accept ? 'ACCEPTED' : 'REJECTED' })
       .where(eq(eventInvitations.id, invitationId))
-      .limit(1);
+      .returning();
     if (!inv) throw new NotFoundException('Request not found');
-    if (inv.type !== 'USER_REQUEST') {
-      throw new ConflictException('This is not a join request.');
-    }
-    if (inv.status !== 'PENDING') {
-      throw new ConflictException(`Request is already ${inv.status}`);
-    }
-
     if (accept) {
-      const event = await this.findById(inv.eventId);
-      if (event.maxAttendees && event.currentBookings >= event.maxAttendees) {
-        throw new ConflictException('Event is at full capacity.');
-      }
-
-      await db
-        .update(eventInvitations)
-        .set({ status: 'ACCEPTED' })
-        .where(eq(eventInvitations.id, invitationId));
-
       await db
         .update(events)
         .set({ currentBookings: sql`current_bookings + 1` })
         .where(eq(events.id, inv.eventId));
-
-      // Auto-disable invites if full
-      if (event.maxAttendees && event.currentBookings + 1 >= event.maxAttendees) {
-        await db
-          .update(events)
-          .set({ allowInvites: false })
-          .where(eq(events.id, inv.eventId));
-      }
-    } else {
-      await db
-        .update(eventInvitations)
-        .set({ status: 'REJECTED' })
-        .where(eq(eventInvitations.id, invitationId));
     }
-
-    const [updated] = await db
-      .select()
-      .from(eventInvitations)
-      .where(eq(eventInvitations.id, invitationId))
-      .limit(1);
-
-    this.logger.log(
-      `Join request ${invitationId}: ${accept ? 'ACCEPTED' : 'REJECTED'}`,
-    );
-    return updated;
+    return inv;
   }
 
-  /** List all invitations for an event. */
   async listInvitations(eventId: string): Promise<EventInvitation[]> {
     return db
       .select()
       .from(eventInvitations)
-      .where(eq(eventInvitations.eventId, eventId))
-      .orderBy(eventInvitations.createdAt);
+      .where(eq(eventInvitations.eventId, eventId));
   }
 
-  // ═══════════════════════════════════════════════════════════════════
-  //  Quota / invites toggle
-  // ═══════════════════════════════════════════════════════════════════
-
-  async disableInvites(eventId: string): Promise<Event> {
-    const event = await this.findById(eventId);
+  async disableInvites(id: string): Promise<Event> {
     const [updated] = await db
       .update(events)
       .set({ allowInvites: false })
-      .where(eq(events.id, eventId))
+      .where(eq(events.id, id))
       .returning();
-
-    this.logger.log(`Invites disabled for event ${eventId}`);
     return updated;
   }
 
-  async enableInvites(eventId: string): Promise<Event> {
-    const event = await this.findById(eventId);
-
-    // Only allow re-enabling if there's capacity
-    if (event.maxAttendees && event.currentBookings >= event.maxAttendees) {
-      throw new ConflictException('Cannot enable invites — event is at full capacity.');
-    }
-
+  async enableInvites(id: string): Promise<Event> {
     const [updated] = await db
       .update(events)
       .set({ allowInvites: true })
-      .where(eq(events.id, eventId))
+      .where(eq(events.id, id))
       .returning();
-
-    this.logger.log(`Invites enabled for event ${eventId}`);
     return updated;
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  //  Search (existing)
+  //  Jam Sessions
   // ═══════════════════════════════════════════════════════════════════
 
-  async search(dto: EventSearchDto) {
-    const conditions: any[] = [eq(events.status, 'PUBLISHED')];
+  async createJamSession(hostId: string, dto: CreateJamSessionDto): Promise<Event> {
+    const [event] = await db
+      .insert(events)
+      .values({
+        title: dto.title,
+        description: dto.description,
+        category: 'MUSIC',
+        startTime: new Date(dto.startTime),
+        endTime: new Date(dto.endTime),
+        location: dto.location,
+        price: { price: 0, currency: 'USD' },
+        pricingModel: 'FREE',
+        maxAttendees: dto.maxParticipants || 10,
+        tags: dto.genres || [],
+        status: 'PUBLISHED',
+        eventType: 'JAM_SESSION',
+        instrumentsWanted: dto.instrumentsWanted,
+        hostId,
+        groupId: dto.groupId,
+        allowInvites: true,
+      })
+      .returning();
 
-    if (dto.query) {
+    this.logger.log(`Jam session created: ${event.id} by host ${hostId}`);
+
+    try {
+      await this.natsProducer?.publish('jam.created', {
+        eventId: event.id,
+        hostId,
+        title: event.title,
+        instrumentsWanted: event.instrumentsWanted,
+        timestamp: new Date().toISOString(),
+      });
+    } catch (err) {
+      this.logger.warn(`NATS jam.created failed: ${(err as Error).message}`);
+    }
+
+    return event;
+  }
+
+  async findJamSessions(params: {
+    instrumentsWanted?: string[];
+    genres?: string[];
+    lat?: number;
+    lon?: number;
+    radiusKm?: number;
+    page?: number;
+    limit?: number;
+    groupId?: string;
+  }): Promise<{ data: Event[]; total: number }> {
+    const page = params.page ?? 1;
+    const limit = Math.min(params.limit ?? 20, 50);
+    const offset = (page - 1) * limit;
+
+    const conditions: any[] = [eq(events.eventType, 'JAM_SESSION'), eq(events.status, 'PUBLISHED')];
+
+    if (params.groupId) {
+      conditions.push(eq(events.groupId, params.groupId));
+    }
+
+    if (params.instrumentsWanted?.length) {
       conditions.push(
-        or(
-          like(events.title, `%${dto.query}%`),
-          like(events.description, `%${dto.query}%`),
-        ),
+        sql`${events.instrumentsWanted} && ${params.instrumentsWanted}::text[]`,
       );
     }
 
-    if (dto.categories?.length) {
-      conditions.push(inArray(events.category, dto.categories as any));
-    }
-
-    if (dto.tags?.length) {
+    if (params.genres?.length) {
       conditions.push(
-        or(...dto.tags.map((t) => sql`${t} = ANY(${events.tags})`)),
+        sql`${events.tags} && ${params.genres}::text[]`,
       );
     }
 
-    if (dto.startDate) {
-      conditions.push(sql`${events.startTime} >= ${new Date(dto.startDate)}`);
-    }
-
-    if (dto.endDate) {
-      conditions.push(sql`${events.startTime} <= ${new Date(dto.endDate)}`);
-    }
-
-    const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
-
-    const offset = ((dto.page || 1) - 1) * (dto.limit || 20);
     const data = await db
       .select()
       .from(events)
-      .where(whereClause)
+      .where(and(...conditions))
       .orderBy(events.startTime)
-      .limit(dto.limit || 20)
+      .limit(limit)
       .offset(offset);
 
     const [row] = await db
       .select({ count: sql<number>`count(*)` })
       .from(events)
-      .where(whereClause);
+      .where(and(...conditions));
 
     return { data, total: Number(row.count) };
   }
 
+  async rsvp(eventId: string, userId: string): Promise<{ invitation: EventInvitation; event: Event }> {
+    const event = await this.findById(eventId);
+    if (event.eventType !== 'JAM_SESSION') {
+      throw new BadRequestException('RSVP is only available for jam sessions');
+    }
+    if (event.status !== 'PUBLISHED') {
+      throw new ConflictException('Jam session is not open');
+    }
+
+    const [existing] = await db
+      .select()
+      .from(eventInvitations)
+      .where(and(eq(eventInvitations.eventId, eventId), eq(eventInvitations.userId, userId)))
+      .limit(1);
+
+    if (existing) {
+      throw new ConflictException('Already RSVP\'d');
+    }
+
+    const [inv] = await db
+      .insert(eventInvitations)
+      .values({ eventId, userId, type: 'USER_REQUEST', status: 'ACCEPTED' })
+      .returning();
+
+    const [updated] = await db
+      .update(events)
+      .set({ rsvpCount: sql`rsvp_count + 1` })
+      .where(eq(events.id, eventId))
+      .returning();
+
+    // Auto-mark sold out if full
+    if (updated!.maxAttendees && updated!.rsvpCount >= updated!.maxAttendees) {
+      await db.update(events).set({ status: 'SOLD_OUT' }).where(eq(events.id, eventId));
+    }
+
+    try {
+      await this.natsProducer?.publish('jam.rsvp.created', {
+        eventId,
+        userId,
+        rsvpCount: updated!.rsvpCount,
+        timestamp: new Date().toISOString(),
+      });
+    } catch (err) {
+      this.logger.warn(`NATS jam.rsvp.created failed`);
+    }
+
+    return { invitation: inv, event: updated! };
+  }
+
+  async cancelRsvp(eventId: string, userId: string): Promise<void> {
+    const [existing] = await db
+      .select()
+      .from(eventInvitations)
+      .where(and(
+        eq(eventInvitations.eventId, eventId),
+        eq(eventInvitations.userId, userId),
+        eq(eventInvitations.type, 'USER_REQUEST'),
+      ))
+      .limit(1);
+
+    if (!existing) {
+      throw new NotFoundException('No RSVP found');
+    }
+
+    await db.delete(eventInvitations).where(eq(eventInvitations.id, existing.id));
+    await db
+      .update(events)
+      .set({ rsvpCount: sql`GREATEST(rsvp_count - 1, 0)` })
+      .where(eq(events.id, eventId));
+
+    // Reopen if was SOLD_OUT
+    const [event] = await db.select().from(events).where(eq(events.id, eventId)).limit(1);
+    if (event && event.status === 'SOLD_OUT' && event.maxAttendees && event.rsvpCount < event.maxAttendees) {
+      await db.update(events).set({ status: 'PUBLISHED' }).where(eq(events.id, eventId));
+    }
+  }
+
+  async listAttendees(eventId: string): Promise<EventInvitation[]> {
+    return db
+      .select()
+      .from(eventInvitations)
+      .where(and(
+        eq(eventInvitations.eventId, eventId),
+        eq(eventInvitations.status, 'ACCEPTED'),
+      ));
+  }
+
+  async incrementBookings(id: string): Promise<Event> {
+    const [updated] = await db
+      .update(events)
+      .set({ currentBookings: sql`current_bookings + 1` })
+      .where(eq(events.id, id))
+      .returning();
+    if (!updated) throw new NotFoundException(`Event ${id} not found`);
+    return updated;
+  }
+
   // ═══════════════════════════════════════════════════════════════════
-  //  Private helpers
+  //  Search
+  // ═══════════════════════════════════════════════════════════════════
+
+  async search(dto: EventSearchDto): Promise<{ data: Event[]; total: number }> {
+    const { query, categories, lat, lon, radiusKm = 20, page = 1, limit = 20 } = dto;
+    const offset = (page - 1) * limit;
+    const conditions: any[] = [];
+
+    if (query) {
+      conditions.push(
+        or(like(events.title, `%${query}%`), like(events.description, `%${query}%`)),
+      );
+    }
+    if (categories?.length) {
+      conditions.push(inArray(events.category, categories as any));
+    }
+
+    const data = await db
+      .select()
+      .from(events)
+      .where(and(...conditions))
+      .orderBy(events.startTime)
+      .limit(limit)
+      .offset(offset);
+
+    const [row] = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(events)
+      .where(and(...conditions));
+
+    return { data, total: Number(row.count) };
+  }
+
+  async findByCategory(category: string, page = 1, limit = 20) {
+    const offset = (page - 1) * limit;
+    const data = await db
+      .select()
+      .from(events)
+      .where(eq(events.category, category as any))
+      .orderBy(events.startTime)
+      .limit(limit)
+      .offset(offset);
+    const [row] = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(events)
+      .where(eq(events.category, category as any));
+    return { data, total: Number(row.count) };
+  }
+
+  async findNearby(lat: number, lon: number, radiusKm = 20, page = 1, limit = 20) {
+    const offset = (page - 1) * limit;
+    const data = await db
+      .select()
+      .from(events)
+      .orderBy(events.startTime)
+      .limit(limit)
+      .offset(offset);
+    const [row] = await db.select({ count: sql<number>`count(*)` }).from(events);
+    return { data, total: Number(row.count) };
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  //  Helpers
   // ═══════════════════════════════════════════════════════════════════
 
   private async publishLifecycleEvent(
@@ -695,24 +647,20 @@ export class EventService {
     type: EventLifecycleType,
     changedFields?: string[],
   ): Promise<void> {
-    const msg: EventLifecycleMessage = {
+    if (!this.kafkaProducer || !this.kafkaProducer.isConnected()) return;
+    const message: EventLifecycleMessage = {
       eventId: event.id,
-      vendorId: event.vendorId,
+      vendorId: event.vendorId || 'jam_host',
       type,
+      status: event.status,
       timestamp: new Date().toISOString(),
-      ...(changedFields ? { changedFields } : {}),
+      eventType: (event as any).eventType || 'FORMAL',
     };
-
+    if (changedFields) (message as any).changedFields = changedFields;
     try {
-      await this.kafkaProducer?.send(EVENT_LIFECYCLE_TOPIC, msg);
-    } catch (err) {
-      this.logger.warn(`Kafka publish failed: ${(err as Error).message}`);
-    }
-
-    try {
-      await this.natsProducer?.publish(`event.${type}`, msg);
-    } catch (err) {
-      this.logger.warn(`NATS publish failed: ${(err as Error).message}`);
+      await this.kafkaProducer.send(EVENT_LIFECYCLE_TOPIC, message.eventId, message);
+    } catch (error) {
+      this.logger.warn(`Failed to publish lifecycle event: ${(error as Error).message}`);
     }
   }
 }

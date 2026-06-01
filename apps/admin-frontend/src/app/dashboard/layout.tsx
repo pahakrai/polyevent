@@ -30,6 +30,7 @@ const NAV_ITEMS = [
   { href: '/dashboard/insights', label: 'AI Insights', icon: Sparkles },
   { href: '/dashboard/knowledge', label: 'Knowledge Base', icon: BookMarked },
   { href: '/dashboard/settings', label: 'Settings', icon: Settings },
+  { href: '/dashboard/settings/config', label: 'Platform Config', icon: Settings },
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {

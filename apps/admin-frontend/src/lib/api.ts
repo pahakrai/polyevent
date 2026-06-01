@@ -97,3 +97,56 @@ api.interceptors.response.use(
     return Promise.reject(error);
   },
 );
+
+// ── Event APIs ─────────────────────────────────────────────────────────
+
+export async function getEvent(id: string) {
+  const { data } = await api.get(`/events/${id}`);
+  return data;
+}
+
+// ── Vendor booking ─────────────────────────────────────────────────────
+
+export async function confirmVendor(eventId: string) {
+  const { data } = await api.post(`/events/${eventId}/confirm-vendor`);
+  return data;
+}
+
+export async function releaseVendor(eventId: string) {
+  const { data } = await api.post(`/events/${eventId}/release-vendor`);
+  return data;
+}
+
+export async function rebookVendor(eventId: string) {
+  const { data } = await api.post(`/events/${eventId}/rebook-vendor`);
+  return data;
+}
+
+// ── Invitations ────────────────────────────────────────────────────────
+
+export async function listInvitations(eventId: string) {
+  const { data } = await api.get(`/events/${eventId}/invitations`);
+  return data;
+}
+
+export async function inviteUser(eventId: string, userId: string, inviterId: string) {
+  const { data } = await api.post(`/events/${eventId}/invite`, { userId, inviterId });
+  return data;
+}
+
+export async function respondToRequest(invitationId: string, accept: boolean) {
+  const { data } = await api.post(`/events/invitations/${invitationId}/respond`, { accept });
+  return data;
+}
+
+// ── Quota / invites toggle ─────────────────────────────────────────────
+
+export async function disableInvites(eventId: string) {
+  const { data } = await api.post(`/events/${eventId}/disable-invites`);
+  return data;
+}
+
+export async function enableInvites(eventId: string) {
+  const { data } = await api.post(`/events/${eventId}/enable-invites`);
+  return data;
+}

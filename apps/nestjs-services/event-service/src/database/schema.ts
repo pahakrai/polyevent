@@ -9,15 +9,20 @@ import {
   real,
   pgEnum,
   uniqueIndex,
+  index,
 } from 'drizzle-orm/pg-core';
 
-// Top-level category enum
 export const eventCategoryEnum = pgEnum('event_category', [
   'MUSIC',
   'ART',
   'SPORTS',
   'ACTIVITIES',
   'OTHER',
+]);
+
+export const eventTypeEnum = pgEnum('event_type', [
+  'FORMAL',
+  'JAM_SESSION',
 ]);
 
 export const eventStatusEnum = pgEnum('event_status', [
@@ -54,11 +59,10 @@ export const invitationStatusEnum = pgEnum('invitation_status', [
   'REJECTED',
 ]);
 
-// Event table
 export const events = pgTable('events', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
-  vendorId: text('vendor_id').notNull(), // Reference to vendor service vendor ID
-  venueId: text('venue_id'), // Reference to vendor service venue ID
+  vendorId: text('vendor_id'),
+  venueId: text('venue_id'),
   title: text('title').notNull(),
   description: text('description').notNull(),
   category: eventCategoryEnum('category').notNull(),
@@ -66,7 +70,7 @@ export const events = pgTable('events', {
   startTime: timestamp('start_time').notNull(),
   endTime: timestamp('end_time').notNull(),
   location: json('location').notNull(),
-  price: json('price').notNull(),
+  price: json('price'),
   pricingModel: pricingModelEnum('pricing_model').notNull().default('FREE'),
   maxAttendees: integer('max_attendees'),
   currentBookings: integer('current_bookings').notNull().default(0),
@@ -78,38 +82,38 @@ export const events = pgTable('events', {
   recurringRule: text('recurring_rule'),
   timeSlotId: text('time_slot_id'),
   groupId: text('group_id'),
-  // Vendor booking lifecycle
   vendorStatus: vendorStatusEnum('vendor_status').notNull().default('NONE'),
   vendorLockedAt: timestamp('vendor_locked_at'),
-  // Invite / quota control
   allowInvites: boolean('allow_invites').notNull().default(true),
+  eventType: eventTypeEnum('event_type').notNull().default('FORMAL'),
+  instrumentsWanted: text('instruments_wanted').array().notNull().default([]),
+  hostId: text('host_id'),
+  rsvpCount: integer('rsvp_count').notNull().default(0),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdateFn(() => new Date()),
 });
 
-// Event invitations — both creator-invited and user-requested
 export const eventInvitations = pgTable('event_invitations', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
   eventId: text('event_id').notNull().references(() => events.id, { onDelete: 'cascade' }),
   userId: text('user_id').notNull(),
-  inviterId: text('inviter_id'), // The user who sent the invite (null for USER_REQUEST)
+  inviterId: text('inviter_id'),
   type: invitationTypeEnum('type').notNull(),
   status: invitationStatusEnum('status').notNull().default('PENDING'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdateFn(() => new Date()),
 });
 
-// Indexes
 export const eventInvitationsEventIdIdx = uniqueIndex('event_invitations_event_user_idx')
   .on(eventInvitations.eventId, eventInvitations.userId);
+export const eventsEventTypeIdx = index('events_event_type_idx').on(events.eventType);
+export const eventsHostIdIdx = index('events_host_id_idx').on(events.hostId);
 
-// Export schema
 export const schema = {
   events,
   eventInvitations,
 };
 
-// Export types
 export type Event = typeof events.$inferSelect;
 export type NewEvent = typeof events.$inferInsert;
 export type EventInvitation = typeof eventInvitations.$inferSelect;

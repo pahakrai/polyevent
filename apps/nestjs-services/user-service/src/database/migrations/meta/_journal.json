@@ -8,6 +8,20 @@
       "when": 1778303034096,
       "tag": "0000_silky_shinobi_shaw",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1780284336808,
+      "tag": "0001_messy_shiver_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1780284915680,
+      "tag": "0002_empty_infant_terrible",
+      "breakpoints": true
     }
   ]
 }

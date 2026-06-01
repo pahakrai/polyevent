@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
   Plus,
@@ -25,6 +26,7 @@ const STATUS_STYLES: Record<string, string> = {
 };
 
 export default function EventsPage() {
+  const router = useRouter();
   const [events, setEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
@@ -171,7 +173,8 @@ export default function EventsPage() {
                 return (
                   <tr
                     key={event.id}
-                    className="border-b border-border/30 transition-colors hover:bg-muted/30"
+                    className="border-b border-border/30 transition-colors hover:bg-muted/30 cursor-pointer"
+                    onClick={() => router.push(`/dashboard/events/${event.id}`)}
                   >
                     <td className="px-4 py-3">
                       <div>

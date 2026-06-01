@@ -18,6 +18,8 @@ import { CreateGroupDto, UpdateGroupDto } from './dto';
 export class GroupController {
   constructor(private readonly groupService: GroupService) {}
 
+  // ── CRUD ──────────────────────────────────────────────────────────
+
   @Post()
   create(@Headers('x-user-id') userId: string, @Body() dto: CreateGroupDto) {
     return this.groupService.create(userId, dto);
@@ -30,6 +32,11 @@ export class GroupController {
     @Query('interests') interests?: string,
   ) {
     return this.groupService.findAll(page, limit, interests);
+  }
+
+  @Get('discover')
+  suggestGroups(@Headers('x-user-id') userId: string) {
+    return this.groupService.suggestGroups(userId);
   }
 
   @Get('user/:userId')
@@ -82,5 +89,60 @@ export class GroupController {
     @Headers('x-user-id') ownerId: string,
   ) {
     return this.groupService.removeMember(groupId, ownerId, targetUserId);
+  }
+
+  // ── Posts ─────────────────────────────────────────────────────────
+
+  @Post(':id/posts')
+  createPost(
+    @Param('id') groupId: string,
+    @Headers('x-user-id') userId: string,
+    @Body() dto: { type?: string; title?: string; content: string; eventId?: string; instrumentsWanted?: string[] },
+  ) {
+    return this.groupService.createPost(groupId, userId, dto);
+  }
+
+  @Get(':id/posts')
+  findPosts(
+    @Param('id') groupId: string,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
+  ) {
+    return this.groupService.findPosts(groupId, page, limit);
+  }
+
+  // ── Chat ──────────────────────────────────────────────────────────
+
+  @Post(':id/messages')
+  sendMessage(
+    @Param('id') groupId: string,
+    @Headers('x-user-id') userId: string,
+    @Body('content') content: string,
+  ) {
+    return this.groupService.sendMessage(groupId, userId, content);
+  }
+
+  @Get(':id/messages')
+  findMessages(
+    @Param('id') groupId: string,
+    @Query('after') after?: string,
+    @Query('limit', new DefaultValuePipe(50), ParseIntPipe) limit?: number,
+  ) {
+    return this.groupService.findMessages(groupId, after, limit);
+  }
+
+  // ── Invite ────────────────────────────────────────────────────────
+
+  @Post(':id/invite-link')
+  generateInviteLink(@Param('id') groupId: string) {
+    return this.groupService.generateInviteLink(groupId);
+  }
+
+  @Post('join/:inviteCode')
+  joinViaInvite(
+    @Param('inviteCode') inviteCode: string,
+    @Headers('x-user-id') userId: string,
+  ) {
+    return this.groupService.joinViaInvite(inviteCode, userId);
   }
 }

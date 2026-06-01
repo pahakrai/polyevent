@@ -111,7 +111,7 @@ export default function EventDetailPage() {
   const [actionLoading, setActionLoading] = useState("");
   const [actionError, setActionError] = useState("");
 
-  const LOCK_TTL = 600; // 10 minutes, matching backend default
+  const LOCK_TTL = parseInt(process.env.NEXT_PUBLIC_VENDOR_LOCK_TTL_SECONDS || '600', 10);
 
   const { remaining, expired } = useCountdown(
     event?.vendorLockedAt,
@@ -441,6 +441,28 @@ export default function EventDetailPage() {
                   </span>
                 )}
               </div>
+
+              {/* Book Now button */}
+              {event.status === 'PUBLISHED' && (
+                <div className="pt-2">
+                  <Link
+                    href={`/checkout?eventId=${event.id}&vendorId=${event.vendorId}&amount=${Math.round((price.price || 0) * 100)}&title=${encodeURIComponent(event.title)}`}
+                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary py-2.5 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:shadow-primary/40"
+                  >
+                    Book Now
+                    <span className="text-xs opacity-70">
+                      {price.price != null
+                        ? `€${price.price}`
+                        : price.minPrice != null
+                          ? `€${price.minPrice}`
+                          : 'Free'}
+                    </span>
+                  </Link>
+                  <p className="mt-1 text-center text-[10px] text-muted-foreground">
+                    {price.price ? 'Secured payment via Stripe' : 'No payment required'}
+                  </p>
+                </div>
+              )}
 
               {/* Vendor booking section */}
               {hasVendor && (

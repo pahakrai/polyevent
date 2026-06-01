@@ -8,6 +8,13 @@
       "when": 1778301982317,
       "tag": "0000_bouncy_the_stranger",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1780284670393,
+      "tag": "0001_rare_northstar",
+      "breakpoints": true
     }
   ]
 }
