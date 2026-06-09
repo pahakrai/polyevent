@@ -78,12 +78,12 @@ Neon (production): `yarn db:push:neon:<service>` or `yarn db:push:neon:all` (aut
 | **user-service** | 3002 | 9231 | `user_db` | Active |
 | **vendor-service** | 3003 | 9232 | `vendor_db` | Active |
 | **event-service** | 3004 | 9233 | `event_db` | Active |
-| **booking-service** | — | — | `booking_db` | DB layer only (no app bootstrap) |
+| **booking-service** | 3007 | 9234 | `booking_db` | Active — Stripe payments, webhooks, payouts |
 | **search-service** | 3060 | 9235 | External (ES + pgvector) | Active |
 | **agent-service** | 3010 | 9234 | `agent_db` (pgvector) | Active — LLM agent, RAG, BullMQ |
-| **notification-service** | — | — | — | Stub (webpack.config.js only) |
+| **notification-service** | 3008 | 9236 | `notification_db` | Active — multi-channel (email/SMS/push), templates |
 | **analytics-service** | — | — | — | Stub (webpack.config.js only) |
-| **admin-service** | — | — | — | Stub (webpack.config.js only) |
+| **admin-service** | 3009 | 9237 | `admin_db` | Active — feature flags, audit logs, vendor mgmt proxy |
 
 ### Frontends
 | App | Framework | Docker Port | Local Dev |

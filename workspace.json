@@ -12,6 +12,8 @@
     "search-service": "apps/nestjs-services/search-service",
     "booking-service": "apps/nestjs-services/booking-service",
     "agent-service": "apps/nestjs-services/agent-service",
+    "notification-service": "apps/nestjs-services/notification-service",
+    "admin-service": "apps/nestjs-services/admin-service",
     "shared-types": "libs/shared-types",
     "kafka-client": "libs/kafka-client",
     "nats-client": "libs/nats-client",

@@ -329,6 +329,63 @@ services:
     command: yarn nest start --watch
     working_dir: /app/apps/nestjs-services/agent-service
 
+  notification-service:
+    build:
+      context: .
+      dockerfile: ./apps/nestjs-services/notification-service/Dockerfile
+      target: development
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    environment:
+      NODE_ENV: development
+      NOTIFICATION_DATABASE_URL: postgresql://eventbooking:eventbooking123@postgres:5432/notification_db
+      REDIS_URL: redis://:redispass123@redis:6379
+      KAFKA_BROKERS: kafka:9092
+      SMTP_HOST: ${SMTP_HOST:-smtp.mailtrap.io}
+      SMTP_PORT: ${SMTP_PORT:-2525}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      PORT: 3008
+    ports:
+      - "3008:3008"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/apps/nestjs-services/notification-service/node_modules
+    command: yarn nest start --watch
+    working_dir: /app/apps/nestjs-services/notification-service
+
+  admin-service:
+    build:
+      context: .
+      dockerfile: ./apps/nestjs-services/admin-service/Dockerfile
+      target: development
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: development
+      ADMIN_DATABASE_URL: postgresql://eventbooking:eventbooking123@postgres:5432/admin_db
+      REDIS_URL: redis://:redispass123@redis:6379
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-change-in-production}
+      AUTH_SERVICE_URL: http://auth-service:3000
+      USER_SERVICE_URL: http://user-service:3000
+      VENDOR_SERVICE_URL: http://vendor-service:3000
+      EVENT_SERVICE_URL: http://event-service:3000
+      BOOKING_SERVICE_URL: http://booking-service:3007
+      PORT: 3009
+    ports:
+      - "3009:3009"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/apps/nestjs-services/admin-service/node_modules
+    command: yarn nest start --watch
+    working_dir: /app/apps/nestjs-services/admin-service
+
   frontend:
     build:
       context: .
