@@ -65,6 +65,24 @@ build:
         dockerfile: apps/nestjs-services/search-service/Dockerfile
         target: development
 
+    - image: polydom/notification-service
+      context: .
+      docker:
+        dockerfile: apps/nestjs-services/notification-service/Dockerfile
+        target: development
+
+    - image: polydom/admin-service
+      context: .
+      docker:
+        dockerfile: apps/nestjs-services/admin-service/Dockerfile
+        target: development
+
+    - image: polydom/booking-service
+      context: .
+      docker:
+        dockerfile: apps/nestjs-services/booking-service/Dockerfile
+        target: development
+
     - image: polydom/frontend
       context: .
       docker:
@@ -194,6 +212,36 @@ portForward:
     namespace: polydom-dev
     port: 9235
     localPort: 9235
+  - resourceType: service
+    resourceName: notification-service
+    namespace: polydom-dev
+    port: 3008
+    localPort: 3080
+  - resourceType: service
+    resourceName: notification-service
+    namespace: polydom-dev
+    port: 9236
+    localPort: 9236
+  - resourceType: service
+    resourceName: admin-service
+    namespace: polydom-dev
+    port: 3009
+    localPort: 3090
+  - resourceType: service
+    resourceName: admin-service
+    namespace: polydom-dev
+    port: 9237
+    localPort: 9237
+  - resourceType: service
+    resourceName: booking-service
+    namespace: polydom-dev
+    port: 3007
+    localPort: 3070
+  - resourceType: service
+    resourceName: booking-service
+    namespace: polydom-dev
+    port: 9238
+    localPort: 9238
 
 profiles:
   - name: ml

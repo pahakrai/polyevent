@@ -652,13 +652,40 @@ export class EventService {
       eventId: event.id,
       vendorId: event.vendorId || 'jam_host',
       type,
-      status: event.status,
       timestamp: new Date().toISOString(),
-      eventType: (event as any).eventType || 'FORMAL',
+      event: {
+        title: event.title,
+        description: event.description,
+        category: event.category,
+        subCategory: event.subCategory ?? undefined,
+        genres: [],
+        tags: event.tags,
+        location: {
+          venueName: (event.location as any)?.venueName || '',
+          address: (event.location as any)?.address || '',
+          city: (event.location as any)?.city || '',
+          country: (event.location as any)?.country || '',
+          latitude: (event.location as any)?.latitude || 0,
+          longitude: (event.location as any)?.longitude || 0,
+        },
+        schedule: {
+          startDate: event.startTime.toISOString(),
+          endDate: event.endTime.toISOString(),
+          timezone: 'UTC',
+        },
+        pricing: {
+          minPrice: (event.price as any)?.min || 0,
+          maxPrice: (event.price as any)?.max || 0,
+          currency: (event.price as any)?.currency || 'EUR',
+        },
+        capacity: event.maxAttendees || 0,
+        ageRestriction: event.ageRestriction != null ? String(event.ageRestriction) : undefined,
+        images: event.images,
+      },
     };
-    if (changedFields) (message as any).changedFields = changedFields;
+    if (changedFields) message.changedFields = changedFields;
     try {
-      await this.kafkaProducer.send(EVENT_LIFECYCLE_TOPIC, message.eventId, message);
+      await this.kafkaProducer.send(EVENT_LIFECYCLE_TOPIC, message, message.eventId);
     } catch (error) {
       this.logger.warn(`Failed to publish lifecycle event: ${(error as Error).message}`);
     }

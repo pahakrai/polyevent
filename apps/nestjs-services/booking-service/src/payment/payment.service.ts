@@ -1,10 +1,16 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, Optional } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { eq } from 'drizzle-orm';
 import { db } from '../database/client';
 import { bookings, payments, vendorPayouts, NewBooking, NewPayment, NewVendorPayout } from '../database/schema';
 import { StripeService } from './stripe.service';
 import { PlatformFeeService, FeeCalculation } from './platform-fee.service';
+import { BaseProducer } from '@polydom/kafka-client';
+import {
+  BOOKING_EVENTS_TOPIC,
+  BookingEventMessage,
+  BookingEventType,
+} from '@polydom/kafka-client';
 import { v4 as uuid } from 'uuid';
 
 export interface CreateBookingInput {
@@ -34,6 +40,7 @@ export class PaymentService {
     private readonly stripeService: StripeService,
     private readonly feeService: PlatformFeeService,
     private readonly nestConfig: ConfigService,
+    @Optional() private readonly kafkaProducer?: BaseProducer,
   ) {}
 
   /**
@@ -115,6 +122,9 @@ export class PaymentService {
       `Booking ${booking.id}: ${amountCents}¢ — fee=${feeBreakdown.feeAmountCents}¢, net=${feeBreakdown.netAmountCents}¢`,
     );
 
+    // Emit booking_initiated event for ML pipeline
+    await this.publishBookingEvent('booking_initiated', booking);
+
     return { booking, payment, clientSecret, feeBreakdown };
   }
 
@@ -161,6 +171,70 @@ export class PaymentService {
     }
 
     this.logger.log(`Booking ${bookingId} CONFIRMED — payout scheduled`);
+
+    // Re-read booking to get updated status for the Kafka event
+    const [updatedBooking] = await db
+      .select()
+      .from(bookings)
+      .where(eq(bookings.id, bookingId))
+      .limit(1);
+
+    // Emit booking_confirmed event for ML pipeline
+    if (updatedBooking) {
+      await this.publishBookingEvent('booking_confirmed', updatedBooking);
+    }
+  }
+
+  /** Publish a booking lifecycle event to Kafka for ML pipeline consumption. */
+  private async publishBookingEvent(
+    type: BookingEventType,
+    booking: typeof bookings.$inferSelect,
+  ): Promise<void> {
+    if (!this.kafkaProducer || !this.kafkaProducer.isConnected()) return;
+
+    try {
+      const message: BookingEventMessage = {
+        bookingId: booking.id,
+        userId: booking.userId,
+        eventId: booking.eventId,
+        vendorId: booking.vendorId,
+        type,
+        timestamp: new Date().toISOString(),
+        booking: {
+          tickets: [{
+            tier: (booking.ticketType || 'GENERAL') as string,
+            quantity: booking.ticketCount,
+            unitPrice: booking.totalAmount / booking.ticketCount,
+          }],
+          totalAmount: booking.totalAmount,
+          currency: booking.currency,
+          status: booking.status,
+        },
+        event: {
+          title: '',
+          category: '',
+          genres: [],
+          tags: [],
+          startTime: '',
+          endTime: '',
+          location: {
+            venueName: '',
+            city: '',
+            country: '',
+            latitude: 0,
+            longitude: 0,
+          },
+        },
+        source: booking.source ? {
+          channel: booking.source as string,
+        } : undefined,
+      };
+
+      await this.kafkaProducer.send(BOOKING_EVENTS_TOPIC, message, booking.userId);
+      this.logger.debug(`Published ${type} event for booking ${booking.id}`);
+    } catch (err) {
+      this.logger.warn(`Failed to publish ${type} event: ${(err as Error).message}`);
+    }
   }
 
   async getBooking(bookingId: string) {

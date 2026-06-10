@@ -154,7 +154,7 @@ export class ConfigService {
   /** List all configs with their current values (for admin UI). */
   async listAll(): Promise<Array<{ key: ConfigKey; value: any; description: string }>> {
     const dbRows = await db.select().from(appConfig);
-    const dbMap = new Map(dbRows.map((r) => [r.key, r]));
+    const dbMap = new Map<string, (typeof dbRows)[number]>(dbRows.map((r) => [r.key, r]));
 
     return (Object.keys(DEFAULT_VALUES) as ConfigKey[]).map((key) => ({
       key,

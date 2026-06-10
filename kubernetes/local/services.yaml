@@ -977,15 +977,17 @@ spec:
               key: redis-url
         - name: KAFKA_BROKERS
           value: kafka:9092
+        - name: NODE_OPTIONS
+          value: "--max-old-space-size=768"
         - name: PORT
           value: "3008"
         resources:
           requests:
-            memory: "128Mi"
+            memory: "256Mi"
             cpu: "100m"
           limits:
-            memory: "512Mi"
-            cpu: "500m"
+            memory: "1Gi"
+            cpu: "1000m"
         livenessProbe:
           httpGet:
             path: /health
@@ -1088,15 +1090,17 @@ spec:
           value: http://event-service:3000
         - name: BOOKING_SERVICE_URL
           value: http://booking-service:3007
+        - name: NODE_OPTIONS
+          value: "--max-old-space-size=768"
         - name: PORT
           value: "3009"
         resources:
           requests:
-            memory: "128Mi"
+            memory: "256Mi"
             cpu: "100m"
           limits:
-            memory: "512Mi"
-            cpu: "500m"
+            memory: "1Gi"
+            cpu: "1000m"
         livenessProbe:
           httpGet:
             path: /health
@@ -1124,4 +1128,110 @@ spec:
     name: http
   - port: 9237
     targetPort: 9237
+    name: debug
+
+---
+# ============================================================
+# Booking Service
+# ============================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: booking-service
+  namespace: polydom-dev
+  labels:
+    app: booking-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: booking-service
+  template:
+    metadata:
+      labels:
+        app: booking-service
+    spec:
+      serviceAccountName: app-sa
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: booking-service
+        image: polydom/booking-service:dev
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3007
+          name: http
+        - containerPort: 9238
+          name: debug
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
+        env:
+        - name: NODE_ENV
+          value: development
+        - name: NODE_OPTIONS
+          value: "--max-old-space-size=768"
+        - name: USE_NEON
+          value: "false"
+        - name: BOOKING_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database-secrets
+              key: booking-database-url
+        - name: NEON_BOOKING_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database-secrets
+              key: neon-booking-database-url
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: redis-secrets
+              key: redis-url
+        - name: KAFKA_BROKERS
+          value: kafka:9092
+        - name: EVENT_SERVICE_URL
+          value: http://event-service:3000
+        - name: STRIPE_SECRET_KEY
+          value: sk_test_placeholder
+        - name: STRIPE_WEBHOOK_SECRET
+          value: whsec_placeholder
+        - name: PORT
+          value: "3007"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3007
+          initialDelaySeconds: 60
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 3007
+          initialDelaySeconds: 30
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: booking-service
+  namespace: polydom-dev
+spec:
+  selector:
+    app: booking-service
+  ports:
+  - port: 3007
+    targetPort: 3007
+    name: http
+  - port: 9238
+    targetPort: 9238
     name: debug

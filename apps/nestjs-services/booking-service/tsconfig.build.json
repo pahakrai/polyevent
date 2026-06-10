@@ -4,6 +4,7 @@
     "outDir": "dist",
     "noEmit": false,
     "strictPropertyInitialization": false,
+    "allowImportingTsExtensions": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noImplicitAny": false,

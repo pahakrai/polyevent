@@ -43,7 +43,7 @@
           "buildTarget": "booking-service:build:development",
           "inspect": true,
           "host": "0.0.0.0",
-          "port": 9234,
+          "port": 9238,
           "watch": false
         }
       }

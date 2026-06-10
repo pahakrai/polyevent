@@ -17,7 +17,7 @@ COPY apps/nestjs-services/booking-service/ apps/nestjs-services/booking-service/
 COPY scripts/entrypoint-dev.sh scripts/entrypoint-dev.sh
 RUN chmod +x scripts/entrypoint-dev.sh
 ENV NODE_ENV=development PORT=3007
-EXPOSE 3007 9234
+EXPOSE 3007 9238
 CMD ["/app/scripts/entrypoint-dev.sh", "booking-service"]
 FROM development AS builder
 ENV NODE_ENV=production

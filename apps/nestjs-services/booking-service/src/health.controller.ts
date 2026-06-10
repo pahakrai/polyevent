@@ -6,4 +6,9 @@ export class HealthController {
   check() {
     return { status: 'ok', service: 'booking-service' };
   }
+
+  @Get('ready')
+  ready() {
+    return { status: 'ready', timestamp: new Date().toISOString(), checks: { booking: 'up' } };
+  }
 }
