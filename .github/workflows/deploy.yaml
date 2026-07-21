@@ -50,7 +50,7 @@ jobs:
       - name: Compute affected services
         id: affected
         run: |
-          DEPLOYABLE='["api-gateway","auth-service","user-service","vendor-service","event-service","agent-service","search-service","frontend","admin-frontend"]'
+          DEPLOYABLE='["api-gateway","auth-service","user-service","vendor-service","event-service","booking-service","search-service","notification-service","admin-service","agent-service","frontend","admin-frontend"]'
 
           AFFECTED=$(yarn nx show projects --affected --base=origin/main --head=HEAD --json)
           echo "All NX-affected projects: $AFFECTED"

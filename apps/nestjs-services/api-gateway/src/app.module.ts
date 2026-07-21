@@ -11,6 +11,10 @@ import { VendorProxyController } from './proxy/vendor-proxy.controller';
 import { UserProxyController } from './proxy/user-proxy.controller';
 import { EventProxyController } from './proxy/event-proxy.controller';
 import { AgentProxyController } from './proxy/agent-proxy.controller';
+import { BookingProxyController } from './proxy/booking-proxy.controller';
+import { SearchProxyController } from './proxy/search-proxy.controller';
+import { NotificationProxyController } from './proxy/notification-proxy.controller';
+import { AdminProxyController } from './proxy/admin-proxy.controller';
 import { APP_INTERCEPTOR, APP_GUARD } from '@nestjs/core';
 import { HttpModule } from '@nestjs/axios';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -27,7 +31,7 @@ const imports: any[] = [
   }),
 ];
 
-const controllers: any[] = [HealthController, AuthProxyController, VendorProxyController, UserProxyController, EventProxyController, AgentProxyController, TrackingController];
+const controllers: any[] = [HealthController, AuthProxyController, VendorProxyController, UserProxyController, EventProxyController, AgentProxyController, BookingProxyController, SearchProxyController, NotificationProxyController, AdminProxyController, TrackingController];
 
 const providers: any[] = [
   TrackingService,

@@ -19,6 +19,7 @@
     "nats-client": "libs/nats-client",
     "database-client": "libs/database-client",
     "elasticsearch-client": "libs/elasticsearch-client",
-    "utils": "libs/utils"
+    "utils": "libs/utils",
+    "auth": "libs/auth"
   }
 }

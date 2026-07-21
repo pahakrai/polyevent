@@ -30,6 +30,27 @@ services:
       timeout: 5s
       retries: 5
 
+  # PostgreSQL MCP server — exposes database tools via SSE transport for the agent service
+  # crystaldba/postgres-mcp provides read-only SQL access with schema introspection
+  postgres-mcp:
+    image: crystaldba/postgres-mcp:latest
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URI: "postgresql://eventbooking:eventbooking123@postgres:5432/eventbooking"
+    ports:
+      - "3006:8099"
+    command:
+      - "--transport=sse"
+      - "--sse-port=8099"
+      - "--access-mode=restricted"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:8099/sse"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
   mongodb:
     image: mongo:7
     environment:

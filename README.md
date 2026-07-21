@@ -1007,12 +1007,15 @@ nx generate @nx/nest:application booking-service --directory=apps/nestjs-service
 | User Service | Schema + migrations + seed data + onion architecture |
 | Vendor Service | Schema + migrations + seed data |
 | Event Service | Schema + migrations + seed data |
-| Booking Service | Not generated |
-| Search Service | Not generated |
-| Notification Service | Not generated |
-| Analytics Service | Not generated |
-| Admin Service | Not generated |
-| Shared Libraries | `shared-types` (complete), `database-client` (complete), others stubs |
-| Docker | Multi-stage production Dockerfiles for all services |
+| Booking Service | Active — Stripe payments, webhooks, payouts |
+| Search Service | Active — Elasticsearch + pgvector hybrid search |
+| Notification Service | Active — multi-channel (email/SMS/push), templates |
+| Analytics Service | Stub — planned, no implementation yet |
+| Admin Service | Active — feature flags, audit logs, vendor mgmt proxy |
+| Agent Service | Active — LLM agent, RAG knowledge base, MCP tools |
+| Frontend (Customer) | Active — Next.js 14, TanStack Query, Zustand, Shadcn/ui |
+| Frontend (Admin) | Active — Next.js 14, react-day-picker |
+| Shared Libraries | `shared-types` (complete), `auth` (complete), `kafka-client` (complete), `nats-client` (complete), `database-client` (partial), `elasticsearch-client` (partial), `utils` (partial) |
+| Docker | Multi-stage production Dockerfiles for all active services |
 | Kubernetes | Deployments, services, network policies, PDBs, secrets, configmaps |
-| Migrations | Generated for auth, user, vendor, event services |
+| Migrations | Generated for auth, user, vendor, event, booking, notification, admin, agent services |

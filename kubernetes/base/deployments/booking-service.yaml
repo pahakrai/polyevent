@@ -1,0 +1,123 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: booking-service
+  namespace: production
+  labels:
+    app: booking-service
+    tier: backend
+spec:
+  replicas: 1
+  revisionHistoryLimit: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: booking-service
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: booking-service
+        tier: backend
+    spec:
+      serviceAccountName: app-sa
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: booking-service
+        image: polydom/booking-service:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3007
+          protocol: TCP
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - ALL
+        env:
+        - name: NODE_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: NODE_ENV
+        - name: BOOKING_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database-secrets
+              key: booking-database-url
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: redis-secrets
+              key: redis-url
+        - name: STRIPE_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: stripe-secrets
+              key: stripe-secret-key
+        - name: STRIPE_WEBHOOK_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: stripe-secrets
+              key: stripe-webhook-secret
+        - name: PLATFORM_FEE_ENABLED
+          value: "false"
+        - name: PLATFORM_FEE_PERCENTAGE
+          value: "0"
+        - name: PLATFORM_FEE_FLAT_CENTS
+          value: "0"
+        - name: PLATFORM_FEE_MINIMUM_CENTS
+          value: "0"
+        - name: PAYOUTS_ENABLED
+          value: "false"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3007
+          initialDelaySeconds: 15
+          periodSeconds: 20
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 3007
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: booking-service
+  namespace: production
+spec:
+  selector:
+    app: booking-service
+    tier: backend
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 3007
+  type: ClusterIP

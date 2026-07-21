@@ -20,6 +20,10 @@ resources:
   - deployments/vendor-service.yaml
   - deployments/event-service.yaml
   - deployments/agent-service.yaml
+  - deployments/booking-service.yaml
+  - deployments/search-service.yaml
+  - deployments/notification-service.yaml
+  - deployments/admin-service.yaml
   - deployments/frontend.yaml
   - services/api-gateway.yaml
   - network-policies/deny-all.yaml

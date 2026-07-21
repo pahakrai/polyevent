@@ -6,7 +6,7 @@ CREATE DATABASE vendor_db;
 CREATE DATABASE event_db;
 CREATE DATABASE booking_db;
 CREATE DATABASE notification_db;
-CREATE DATABASE analytics_db;
+CREATE DATABASE analytics_db;   -- PLANNED: analytics-service is a stub, DB exists for future implementation
 CREATE DATABASE admin_db;
 CREATE DATABASE agent_db;
 
