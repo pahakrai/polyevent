@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { RedisClient, REDIS_CLIENT_CONFIG } from '@polydom/database-client';
+import { RedisClient } from '@polydom/database-client';
+import { EventTypeModule } from '../event-type/event-type.module';
+import { EventTypeService } from '../event-type/event-type.service';
 import { EventController } from './event.controller';
 import { EventService } from './event.service';
 import { EventSearchController } from './event-search.controller';
 
 @Module({
-  imports: [ConfigModule],
+  imports: [ConfigModule, EventTypeModule],
   controllers: [EventController, EventSearchController],
   providers: [
     EventService,

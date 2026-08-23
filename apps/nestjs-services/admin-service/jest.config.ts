@@ -1,12 +1,15 @@
-export default {
+import type { Config } from 'jest';
+
+const config: Config = {
   displayName: 'admin-service',
-  preset: '../../../jest.preset.js',
+  preset: 'ts-jest',
   testEnvironment: 'node',
-  transform: {
-    '^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
-  },
   moduleFileExtensions: ['ts', 'js', 'json'],
-  coverageDirectory: '../../../coverage/apps/nestjs-services/admin-service',
+  testMatch: ['<rootDir>/src/**/*.spec.ts'],
+  setupFiles: ['<rootDir>/../../../jest.setup.ts'],
+  transform: {
+    '^.+\\.ts$': 'ts-jest',
+  },
   moduleNameMapper: {
     '^@polydom/auth$': '<rootDir>/../../../libs/auth/src/index.ts',
     '^@polydom/database-client$': '<rootDir>/../../../libs/database-client/src/index.ts',
@@ -14,3 +17,5 @@ export default {
     '^@polydom/utils$': '<rootDir>/../../../libs/utils/src/index.ts',
   },
 };
+
+export default config;

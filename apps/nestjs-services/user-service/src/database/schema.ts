@@ -23,21 +23,15 @@ export const activityTypeEnum = pgEnum('activity_type', [
   'LOGOUT',
 ]);
 
-export const instrumentEnum = pgEnum('instrument', [
-  'GUITAR', 'BASS', 'DRUMS', 'PIANO', 'KEYBOARD', 'VOCALS',
-  'VIOLIN', 'CELLO', 'SAXOPHONE', 'TRUMPET', 'TROMBONE',
-  'FLUTE', 'CLARINET', 'HARMONICA', 'UKULELE', 'SYNTH',
-  'DJ', 'PRODUCER', 'OTHER',
-]);
-
 export const skillLevelEnum = pgEnum('skill_level', [
   'BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'PROFESSIONAL',
 ]);
 
-export const musicianIntentEnum = pgEnum('musician_intent', [
+// Generic participation intent (replaces the music-specific "OPEN_TO_JAM").
+export const participantIntentEnum = pgEnum('participant_intent', [
   'LOOKING_TO_JOIN',
   'LOOKING_FOR_MEMBERS',
-  'OPEN_TO_JAM',
+  'OPEN_TO_PARTICIPATE',
   'JUST_BROWSING',
 ]);
 
@@ -104,10 +98,11 @@ export const musicianProfiles = pgTable('musician_profiles', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
   userId: text('user_id').notNull().unique()
     .references(() => users.id, { onDelete: 'cascade' }),
-  instruments: instrumentEnum('instruments').array().notNull().default([]),
+  // Generic skills/tags (was a hardcoded instrument enum).
+  instruments: text('instruments').array().notNull().default([]),
   skillLevel: skillLevelEnum('skill_level').notNull().default('INTERMEDIATE'),
   genres: text('genres').array().notNull().default([]),
-  intent: musicianIntentEnum('intent').notNull().default('JUST_BROWSING'),
+  intent: participantIntentEnum('intent').notNull().default('JUST_BROWSING'),
   lookingFor: text('looking_for').array().default([]),
   bio: text('bio'),
   influences: text('influences').array().default([]),

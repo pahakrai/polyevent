@@ -33,6 +33,7 @@ export class VendorService {
         address: dto.address || {},
         location: dto.location || {},
         coverImage: dto.coverImage,
+        stripeAccountId: dto.stripeAccountId,
       })
       .returning();
 
@@ -105,6 +106,7 @@ export class VendorService {
     if (dto.address !== undefined) updateData.address = dto.address;
     if (dto.location !== undefined) updateData.location = dto.location;
     if (dto.coverImage !== undefined) updateData.coverImage = dto.coverImage;
+    if (dto.stripeAccountId !== undefined) updateData.stripeAccountId = dto.stripeAccountId;
 
     const [updated] = await db
       .update(vendors)

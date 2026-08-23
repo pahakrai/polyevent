@@ -28,6 +28,14 @@ export class UpdateEventDto {
   @IsOptional()
   subCategory?: string;
 
+  @IsString()
+  @IsOptional()
+  eventTypeId?: string;
+
+  @IsObject()
+  @IsOptional()
+  attributes?: Record<string, any>;
+
   @IsDateString()
   @IsOptional()
   startTime?: string;

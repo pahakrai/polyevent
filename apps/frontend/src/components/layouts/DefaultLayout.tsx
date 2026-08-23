@@ -10,6 +10,7 @@ import { useState, useRef, useEffect } from "react";
 
 const NAV_LINKS = [
   { href: "/search", label: "Search" },
+  { href: "/types", label: "Explore" },
   { href: "/category/music", label: "Music" },
   { href: "/category/art", label: "Art" },
   { href: "/category/sports", label: "Sports" },

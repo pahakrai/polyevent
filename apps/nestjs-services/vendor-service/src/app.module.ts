@@ -5,6 +5,7 @@ import { HealthController } from './health.controller';
 import { VendorModule } from './vendor/vendor.module';
 import { VenueModule } from './venue/venue.module';
 import { TimeslotModule } from './timeslot/timeslot.module';
+import { ReviewModule } from './review/review.module';
 
 const imports: any[] = [
   ConfigModule.forRoot({
@@ -14,6 +15,7 @@ const imports: any[] = [
   VendorModule,
   VenueModule,
   TimeslotModule,
+  ReviewModule,
 ];
 
 if (process.env.NATS_SERVERS) {

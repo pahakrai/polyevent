@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useAuthStore } from "@/stores/auth-store";
-import { api, rsvpToJam, cancelRsvp, getAttendees, type JamSession } from "@/lib/api";
+import { api, rsvpToJam, cancelRsvp, getAttendees, sessionWanted, type JamSession } from "@/lib/api";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
@@ -132,13 +132,13 @@ export default function JamDetailPage() {
           </div>
         </div>
 
-        {jam.instrumentsWanted?.length > 0 && (
+        {sessionWanted(jam).length > 0 && (
           <div className="mt-6">
             <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-              Instruments Needed
+              Looking For
             </h3>
             <div className="mt-2 flex flex-wrap gap-2">
-              {jam.instrumentsWanted.map((inst) => (
+              {sessionWanted(jam).map((inst) => (
                 <Badge key={inst} variant="accent" className="px-3 py-1 text-sm">
                   {inst.replace(/_/g, " ")}
                 </Badge>

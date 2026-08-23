@@ -55,16 +55,17 @@ export const bookings = pgTable('bookings', {
   eventId: text('event_id').notNull(),
   vendorId: text('vendor_id').notNull(),
   ticketCount: integer('ticket_count').notNull().default(1),
-  totalAmount: real('total_amount').notNull(),
+  // Monetary amounts are stored as integer minor units (cents) to avoid float rounding.
+  totalAmount: integer('total_amount').notNull(),
   currency: text('currency').notNull().default('EUR'),
   status: bookingStatusEnum('status').notNull().default('PENDING'),
   ticketType: text('ticket_type').default('GENERAL'),
   promoCode: text('promo_code'),
-  discountAmount: real('discount_amount').default(0),
+  discountAmount: integer('discount_amount').default(0),
   source: text('source').default('web'),
   platformFeePercent: real('platform_fee_percent').default(0),
-  platformFeeAmount: real('platform_fee_amount').default(0),
-  netVendorAmount: real('net_vendor_amount'),
+  platformFeeAmount: integer('platform_fee_amount').default(0),
+  netVendorAmount: integer('net_vendor_amount'),
   metadata: json('metadata').default({}),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdateFn(() => new Date()),
@@ -75,15 +76,16 @@ export const payments = pgTable('payments', {
   bookingId: text('booking_id')
     .notNull()
     .references(() => bookings.id, { onDelete: 'cascade' }),
-  amount: real('amount').notNull(),
+  amount: integer('amount').notNull(), // cents
   currency: text('currency').notNull().default('EUR'),
   status: paymentStatusEnum('status').notNull().default('PENDING'),
   method: paymentMethodEnum('method').notNull().default('STRIPE'),
   stripePaymentIntentId: text('stripe_payment_intent_id'),
   stripeChargeId: text('stripe_charge_id'),
+  stripeRefundId: text('stripe_refund_id'),
   alipayTransactionId: text('alipay_transaction_id'),
   wechatPayTransactionId: text('wechat_pay_transaction_id'),
-  refundAmount: real('refund_amount'),
+  refundAmount: integer('refund_amount'), // cents
   refundReason: text('refund_reason'),
   metadata: json('metadata').default({}),
   createdAt: timestamp('created_at').notNull().defaultNow(),
@@ -122,9 +124,9 @@ export const vendorPayouts = pgTable('vendor_payouts', {
   bookingId: text('booking_id')
     .notNull()
     .references(() => bookings.id, { onDelete: 'cascade' }),
-  bookingAmount: real('booking_amount').notNull(),
-  platformFee: real('platform_fee').notNull().default(0),
-  netAmount: real('net_amount').notNull(),
+  bookingAmount: integer('booking_amount').notNull(), // cents
+  platformFee: integer('platform_fee').notNull().default(0), // cents
+  netAmount: integer('net_amount').notNull(), // cents
   currency: text('currency').notNull().default('EUR'),
   status: payoutStatusEnum('status').notNull().default('PENDING'),
   stripeTransferId: text('stripe_transfer_id'),

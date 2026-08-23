@@ -1,9 +1,13 @@
-import { Controller, Post, Get, Body, Param, Req } from '@nestjs/common';
+import { Controller, Post, Get, Body, Param } from '@nestjs/common';
 import { PaymentService, CreateBookingInput } from './payment.service';
+import { RefundService } from './refund.service';
 
 @Controller('payments')
 export class PaymentController {
-  constructor(private readonly paymentService: PaymentService) {}
+  constructor(
+    private readonly paymentService: PaymentService,
+    private readonly refundService: RefundService,
+  ) {}
 
   @Post('create-booking')
   async createBooking(@Body() input: CreateBookingInput) {
@@ -22,5 +26,14 @@ export class PaymentController {
   ) {
     await this.paymentService.confirmBooking(id, stripePaymentIntentId);
     return { status: 'confirmed' };
+  }
+
+  @Post('bookings/:id/refund')
+  async refundBooking(
+    @Param('id') id: string,
+    @Body('reason') reason?: string,
+    @Body('amountCents') amountCents?: number,
+  ) {
+    return this.refundService.refund({ bookingId: id, reason, amountCents });
   }
 }

@@ -80,7 +80,7 @@ export default function BookingsPage() {
           { label: 'Total', value: bookings.length, icon: BookOpen, color: 'text-blue-400', bg: 'bg-blue-500/10' },
           { label: 'Confirmed', value: bookings.filter((b) => b.status === 'CONFIRMED').length, icon: Users, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
           { label: 'Pending', value: bookings.filter((b) => b.status === 'PENDING').length, icon: Clock, color: 'text-amber-400', bg: 'bg-amber-500/10' },
-          { label: 'Revenue', value: `$${bookings.reduce((sum, b) => sum + (b.totalAmount || 0), 0)}`, icon: DollarSign, color: 'text-violet-400', bg: 'bg-violet-500/10' },
+          { label: 'Revenue', value: `$${((bookings.reduce((sum, b) => sum + (b.totalAmount || 0), 0)) / 100).toFixed(2)}`, icon: DollarSign, color: 'text-violet-400', bg: 'bg-violet-500/10' },
         ].map((stat) => {
           const Icon = stat.icon;
           return (
@@ -202,7 +202,7 @@ export default function BookingsPage() {
                   </td>
                   <td className="px-4 py-3 text-right">
                     <span className="text-sm font-medium">
-                      ${booking.totalAmount?.toFixed(2) || '0.00'}
+                      ${((booking.totalAmount ?? 0) / 100).toFixed(2)}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-right">

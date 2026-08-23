@@ -201,7 +201,7 @@ export class UserService {
     const myProfile = await this.getMusicianProfile(userId);
     if (!myProfile || myProfile.intent === 'JUST_BROWSING') {
       // Fallback: show active musicians nearby
-      const fallback = await this.browseMusicians({ intent: 'OPEN_TO_JAM', limit: 10 });
+      const fallback = await this.browseMusicians({ intent: 'OPEN_TO_PARTICIPATE', limit: 10 });
       return { musicians: fallback.data, totalMusicians: fallback.total };
     }
 
@@ -225,9 +225,9 @@ export class UserService {
     params.intent = 'LOOKING_TO_JOIN';
     let result = await this.browseMusicians(params);
 
-    // If few results, broaden to OPEN_TO_JAM
+    // If few results, broaden to OPEN_TO_PARTICIPATE
     if (result.total < 3) {
-      params.intent = 'OPEN_TO_JAM';
+      params.intent = 'OPEN_TO_PARTICIPATE';
       result = await this.browseMusicians(params);
     }
 

@@ -31,8 +31,8 @@ export class CreateEventDto {
   description: string;
 
   @IsString()
-  @IsNotEmpty()
-  category: string;
+  @IsOptional()
+  category?: string;
 
   @IsString()
   @IsOptional()
@@ -94,6 +94,16 @@ export class CreateEventDto {
   @IsOptional()
   recurringRule?: string;
 
+  // Preferred: reference a configurable event type.
+  @IsString()
+  @IsOptional()
+  eventTypeId?: string;
+
+  @IsString()
+  @IsOptional()
+  eventTypeSlug?: string;
+
+  // Deprecated (kept for backward compatibility): legacy music-centric fields.
   @IsString()
   @IsOptional()
   eventType?: string;
@@ -102,6 +112,11 @@ export class CreateEventDto {
   @IsString({ each: true })
   @IsOptional()
   instrumentsWanted?: string[];
+
+  // Type-specific data, validated against the event type's attributesSchema.
+  @IsObject()
+  @IsOptional()
+  attributes?: Record<string, any>;
 
   @IsString()
   @IsOptional()

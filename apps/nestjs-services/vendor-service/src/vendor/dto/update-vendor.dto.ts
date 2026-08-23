@@ -40,4 +40,8 @@ export class UpdateVendorDto {
   @IsString()
   @IsOptional()
   coverImage?: string;
+
+  @IsString()
+  @IsOptional()
+  stripeAccountId?: string;
 }

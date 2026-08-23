@@ -3,7 +3,7 @@
 import { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { getAllEvents } from '@/lib/api';
+import { getAllEvents, getEventTypes, type EventTypeDefinition } from '@/lib/api';
 import { useAuthStore } from '@/stores/auth-store';
 import { EventCard } from '@/components/EventCard';
 import { Button } from '@/components/ui/button';
@@ -22,13 +22,22 @@ const CATEGORIES = [
 function EventsContent() {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get('category') || '';
+  const initialType = searchParams.get('type') || '';
   const [events, setEvents] = useState<any[]>([]);
+  const [types, setTypes] = useState<EventTypeDefinition[]>([]);
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState(initialCategory);
+  const [typeFilter, setTypeFilter] = useState(initialType);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const limit = 12;
+
+  useEffect(() => {
+    getEventTypes()
+      .then(setTypes)
+      .catch(() => setTypes([]));
+  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -41,9 +50,15 @@ function EventsContent() {
       .finally(() => setLoading(false));
   }, [page]);
 
-  const filtered = category
-    ? events.filter((e) => e.category === category)
-    : events;
+  const typeById = new Map(types.map((t) => [t.id, t]));
+  const filtered = events.filter((e) => {
+    if (category && e.category !== category) return false;
+    if (typeFilter) {
+      const type = typeById.get(e.eventTypeId);
+      if (!type || type.slug !== typeFilter) return false;
+    }
+    return true;
+  });
 
   const totalPages = Math.max(1, Math.ceil(total / limit));
 
@@ -66,7 +81,7 @@ function EventsContent() {
         )}
       </div>
 
-      <div className="mb-6 flex flex-wrap gap-2">
+      <div className="mb-6 flex flex-wrap items-center gap-2">
         {CATEGORIES.map((cat) => (
           <button
             key={cat.value}
@@ -81,6 +96,20 @@ function EventsContent() {
             </Badge>
           </button>
         ))}
+
+        <select
+          value={typeFilter}
+          onChange={(e) => setTypeFilter(e.target.value)}
+          className="ml-2 rounded-md border border-border bg-background px-3 py-1.5 text-sm"
+          aria-label="Filter by event type"
+        >
+          <option value="">All types</option>
+          {types.map((t) => (
+            <option key={t.id} value={t.slug}>
+              {t.name}
+            </option>
+          ))}
+        </select>
       </div>
 
       {loading ? (

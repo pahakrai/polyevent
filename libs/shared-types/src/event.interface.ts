@@ -1,10 +1,49 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// Dynamic event types
+//
+// The platform supports arbitrary event categories (music, art, sports,
+// activities, ...). Each event references a configurable `EventTypeDefinition`
+// and carries type-specific data in `attributes`, whose shape is described by
+// the type's `attributesSchema` (a JSON Schema fragment).
+// ─────────────────────────────────────────────────────────────────────────────
+
+export type EventCategory =
+  | 'MUSIC'
+  | 'ART'
+  | 'SPORTS'
+  | 'ACTIVITIES'
+  | 'OTHER'
+  | (string & {});
+
+/** A configurable event type (admin-managed). */
+export interface EventTypeDefinition {
+  id: string;
+  /** Stable, URL-friendly identifier, e.g. "jam_session", "art_class". */
+  slug: string;
+  name: string;
+  description?: string;
+  category: EventCategory;
+  icon?: string;
+  /** JSON Schema fragment describing the shape of `Event.attributes`. */
+  attributesSchema?: Record<string, unknown>;
+  /** Whether attendees can RSVP (collaborative/session-style types). */
+  allowRsvp?: boolean;
+  isActive?: boolean;
+}
+
+/** Type-specific event data (validated against the type's attributesSchema). */
+export type EventAttributes = Record<string, unknown>;
+
 export interface Event {
   id: string;
   title: string;
   description: string;
-  type: EventType;
-  genre: string;
-  vendorId: string;
+  eventTypeId: string;
+  eventTypeSlug: string;
+  category: EventCategory;
+  attributes: EventAttributes;
+  tags: string[];
+  vendorId?: string;
   location: EventLocation;
   schedule: EventSchedule;
   pricing: Pricing[];
@@ -15,8 +54,6 @@ export interface Event {
   createdAt: Date;
   updatedAt: Date;
 }
-
-export type EventType = 'concert' | 'workshop' | 'jam_session' | 'open_mic' | 'festival' | 'private_lesson';
 
 export interface EventLocation {
   venueName: string;
@@ -63,12 +100,13 @@ export interface EventSearchFilters {
     start: Date;
     end: Date;
   };
-  genres?: string[];
+  categories?: EventCategory[];
+  tags?: string[];
   priceRange?: {
     min: number;
     max: number;
   };
-  eventTypes?: EventType[];
+  eventTypeSlugs?: string[];
   query?: string;
   page: number;
   limit: number;

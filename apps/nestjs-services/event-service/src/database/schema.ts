@@ -20,10 +20,21 @@ export const eventCategoryEnum = pgEnum('event_category', [
   'OTHER',
 ]);
 
-export const eventTypeEnum = pgEnum('event_type', [
-  'FORMAL',
-  'JAM_SESSION',
-]);
+// Configurable event types (admin-managed). Each type describes its category
+// and the JSON Schema for its type-specific `attributes` payload.
+export const eventTypes = pgTable('event_types', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  slug: text('slug').notNull().unique(),
+  name: text('name').notNull(),
+  description: text('description'),
+  category: eventCategoryEnum('category').notNull(),
+  icon: text('icon'),
+  attributesSchema: json('attributes_schema').default({}),
+  allowRsvp: boolean('allow_rsvp').notNull().default(false),
+  isActive: boolean('is_active').notNull().default(true),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdateFn(() => new Date()),
+});
 
 export const eventStatusEnum = pgEnum('event_status', [
   'DRAFT',
@@ -85,8 +96,9 @@ export const events = pgTable('events', {
   vendorStatus: vendorStatusEnum('vendor_status').notNull().default('NONE'),
   vendorLockedAt: timestamp('vendor_locked_at'),
   allowInvites: boolean('allow_invites').notNull().default(true),
-  eventType: eventTypeEnum('event_type').notNull().default('FORMAL'),
-  instrumentsWanted: text('instruments_wanted').array().notNull().default([]),
+  eventTypeId: text('event_type_id').references(() => eventTypes.id),
+  // Type-specific data (e.g. { instrumentsWanted: [...] } for a jam session).
+  attributes: json('attributes').default({}),
   hostId: text('host_id'),
   rsvpCount: integer('rsvp_count').notNull().default(0),
   createdAt: timestamp('created_at').notNull().defaultNow(),
@@ -106,15 +118,18 @@ export const eventInvitations = pgTable('event_invitations', {
 
 export const eventInvitationsEventIdIdx = uniqueIndex('event_invitations_event_user_idx')
   .on(eventInvitations.eventId, eventInvitations.userId);
-export const eventsEventTypeIdx = index('events_event_type_idx').on(events.eventType);
+export const eventsEventTypeIdIdx = index('events_event_type_id_idx').on(events.eventTypeId);
 export const eventsHostIdIdx = index('events_host_id_idx').on(events.hostId);
 
 export const schema = {
   events,
   eventInvitations,
+  eventTypes,
 };
 
 export type Event = typeof events.$inferSelect;
 export type NewEvent = typeof events.$inferInsert;
 export type EventInvitation = typeof eventInvitations.$inferSelect;
 export type NewEventInvitation = typeof eventInvitations.$inferInsert;
+export type EventType = typeof eventTypes.$inferSelect;
+export type NewEventType = typeof eventTypes.$inferInsert;

@@ -17,9 +17,11 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { EventCard } from "@/components/EventCard";
+import { EventAttributes } from "@/components/EventAttributes";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import {
   getEvent,
+  getEventTypes,
   getEventsByCategory,
   confirmVendor,
   releaseVendor,
@@ -96,6 +98,7 @@ export default function EventDetailPage() {
   const { isAuthenticated, user } = useAuthStore();
 
   const [event, setEvent] = useState<any>(null);
+  const [eventType, setEventType] = useState<any>(null);
   const [similarEvents, setSimilarEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [saved, setSaved] = useState(false);
@@ -117,6 +120,16 @@ export default function EventDetailPage() {
     event?.vendorLockedAt,
     LOCK_TTL,
   );
+
+  // ── Resolve the event's type definition ────────────────────────────
+  useEffect(() => {
+    if (!event?.eventTypeId) return;
+    getEventTypes()
+      .then((types) => {
+        setEventType(types.find((t) => t.id === event.eventTypeId) ?? null);
+      })
+      .catch(() => setEventType(null));
+  }, [event?.eventTypeId]);
 
   // ── Load event ─────────────────────────────────────────────────────
   useEffect(() => {
@@ -295,6 +308,11 @@ export default function EventDetailPage() {
           <Badge variant="accent" className="uppercase tracking-wider">
             {event.category.replace(/_/g, " ")}
           </Badge>
+          {eventType && (
+            <Badge variant="secondary" className="uppercase tracking-wider">
+              {eventType.name}
+            </Badge>
+          )}
           {hasVendor && (
             <Badge
               variant="outline"
@@ -357,6 +375,18 @@ export default function EventDetailPage() {
               </p>
             </CardContent>
           </Card>
+
+          {event.attributes && Object.keys(event.attributes).length > 0 && (
+            <Card className="mb-6">
+              <CardContent className="p-6">
+                <h2 className="mb-3 text-lg font-semibold">Event Details</h2>
+                <EventAttributes
+                  attributes={event.attributes}
+                  attributesSchema={eventType?.attributesSchema}
+                />
+              </CardContent>
+            </Card>
+          )}
 
           <Card className="mb-6">
             <CardContent className="p-6">

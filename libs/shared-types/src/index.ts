@@ -1,7 +1,7 @@
 // Legacy interfaces (type-only)
 export type { User } from './user.interface';
 export type { UserActivity, ActivityType } from './user.interface';
-export type { Event, EventStatus, EventType, EventLocation, EventSchedule, RecurrencePattern, Pricing, EventSearchFilters } from './event.interface';
+export type { Event, EventStatus, EventCategory, EventTypeDefinition, EventAttributes, EventLocation, EventSchedule, RecurrencePattern, Pricing, EventSearchFilters } from './event.interface';
 export type { Vendor, VendorCategory, VendorPricingModel } from './vendor.interface';
 export type { Booking, BookingStatus } from './booking.interface';
 export type { LoginRequest, LoginResponse, RegisterRequest, RefreshTokenRequest, RefreshTokenResponse, LogoutRequest, AuthUser, JwtPayload } from './auth.interface';

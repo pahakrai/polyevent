@@ -40,4 +40,45 @@ export class StripeService {
   async retrievePaymentIntent(id: string): Promise<Stripe.PaymentIntent> {
     return this.stripe.paymentIntents.retrieve(id);
   }
+
+  /**
+   * Refund a PaymentIntent/Charge.
+   * `amountCents` is the amount to refund in cents (defaults to full refund).
+   * `idempotencyKey` prevents duplicate refunds on retries.
+   */
+  async refundPaymentIntent(
+    paymentIntentId: string,
+    amountCents?: number,
+    idempotencyKey?: string,
+  ): Promise<Stripe.Refund> {
+    return this.stripe.refunds.create(
+      {
+        payment_intent: paymentIntentId,
+        ...(amountCents !== undefined ? { amount: amountCents } : {}),
+      },
+      idempotencyKey ? { idempotencyKey } : undefined,
+    );
+  }
+
+  /**
+   * Transfer the vendor's net amount to their Stripe connected account.
+   * Uses the booking id as the idempotency key so a retried payout never double-pays.
+   */
+  async createTransfer(
+    amountCents: number,
+    currency: string,
+    destinationAccountId: string,
+    idempotencyKey: string,
+    metadata?: Record<string, string>,
+  ): Promise<Stripe.Transfer> {
+    return this.stripe.transfers.create(
+      {
+        amount: amountCents,
+        currency: currency.toLowerCase(),
+        destination: destinationAccountId,
+        ...(metadata ? { metadata } : {}),
+      },
+      { idempotencyKey },
+    );
+  }
 }

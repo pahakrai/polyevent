@@ -134,7 +134,10 @@ export interface JamSession {
   startTime: string;
   endTime: string;
   location: any;
-  instrumentsWanted: string[];
+  /** @deprecated type-specific data now lives in `attributes` */
+  instrumentsWanted?: string[];
+  attributes?: Record<string, any>;
+  eventTypeId?: string;
   hostId: string;
   rsvpCount: number;
   maxAttendees?: number;
@@ -143,6 +146,11 @@ export interface JamSession {
   groupId?: string;
   createdAt: string;
   updatedAt: string;
+}
+
+/** Read a session's requested skills/tags from its dynamic attributes. */
+export function sessionWanted(event: { attributes?: Record<string, any>; instrumentsWanted?: string[] } | null | undefined): string[] {
+  return event?.attributes?.instrumentsWanted ?? event?.instrumentsWanted ?? [];
 }
 
 export async function createJamSession(payload: {
@@ -208,6 +216,7 @@ export interface GroupData {
   ownerId: string;
   interests: string[];
   memberCount?: number;
+  members?: { id: string; groupId: string; userId: string; role: string; joinedAt: string }[];
   isPrivate: boolean;
   createdAt: string;
 }
@@ -336,6 +345,30 @@ export async function discoverForYou(): Promise<{
   return data;
 }
 
+// ── Event Types (configurable / dynamic) ──────────────────────────────
+
+export interface EventTypeDefinition {
+  id: string;
+  slug: string;
+  name: string;
+  description?: string;
+  category: string;
+  icon?: string;
+  attributesSchema?: Record<string, any>;
+  allowRsvp?: boolean;
+  isActive?: boolean;
+}
+
+export async function getEventTypes(): Promise<EventTypeDefinition[]> {
+  const { data } = await api.get('/event-types');
+  return Array.isArray(data) ? data : data?.data ?? [];
+}
+
+export async function getEventTypeBySlug(slug: string): Promise<EventTypeDefinition | null> {
+  const { data } = await api.get(`/event-types/slug/${slug}`);
+  return data ?? null;
+}
+
 // ── Events ─────────────────────────────────────────────────────────────
 
 export async function searchEvents(params: {
@@ -405,6 +438,9 @@ export async function createEvent(payload: {
   vendorId?: string;
   venueId?: string;
   timeSlotId?: string;
+  eventTypeId?: string;
+  eventTypeSlug?: string;
+  attributes?: Record<string, any>;
 }) {
   const { data } = await api.post('/events', payload);
   return data;

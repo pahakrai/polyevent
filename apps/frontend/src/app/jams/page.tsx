@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useAuthStore } from "@/stores/auth-store";
-import { findJamSessions, type JamSession } from "@/lib/api";
+import { findJamSessions, sessionWanted, type JamSession } from "@/lib/api";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -36,9 +36,9 @@ export default function JamsPage() {
     <div className="mx-auto max-w-6xl px-4 py-8">
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Jam Sessions</h1>
+          <h1 className="text-2xl font-bold">Sessions & Meetups</h1>
           <p className="mt-1 text-muted-foreground">
-            {total} jam session{total !== 1 ? "s" : ""} looking for musicians
+            {total} open session{total !== 1 ? "s" : ""} looking for participants
           </p>
         </div>
         {isAuthenticated && (
@@ -46,7 +46,7 @@ export default function JamsPage() {
             href="/jams/new"
             className="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90"
           >
-            Host a Jam
+            Host a Session
           </Link>
         )}
       </div>
@@ -81,9 +81,9 @@ export default function JamsPage() {
                   </div>
 
                   <div className="mt-3">
-                    {jam.instrumentsWanted?.length > 0 && (
+                    {sessionWanted(jam).length > 0 && (
                       <div className="flex flex-wrap gap-1">
-                        {jam.instrumentsWanted.slice(0, 4).map((inst) => (
+                        {sessionWanted(jam).slice(0, 4).map((inst) => (
                           <Badge key={inst} variant="accent" className="text-[10px]">
                             {inst.replace(/_/g, " ")}
                           </Badge>
@@ -119,14 +119,14 @@ export default function JamsPage() {
 
       {!loading && jams.length === 0 && (
         <div className="py-16 text-center">
-          <p className="text-lg text-muted-foreground">No jam sessions yet.</p>
+          <p className="text-lg text-muted-foreground">No sessions yet.</p>
           {isAuthenticated ? (
             <Link href="/jams/new" className="mt-2 inline-block text-sm font-medium text-primary underline">
-              Host the first jam
+              Host the first session
             </Link>
           ) : (
             <Link href="/login" className="mt-2 inline-block text-sm font-medium text-primary underline">
-              Sign in to host a jam
+              Sign in to host a session
             </Link>
           )}
         </div>

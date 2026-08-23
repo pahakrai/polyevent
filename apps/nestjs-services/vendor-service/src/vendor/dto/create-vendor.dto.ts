@@ -44,4 +44,8 @@ export class CreateVendorDto {
   @IsString()
   @IsOptional()
   coverImage?: string;
+
+  @IsString()
+  @IsOptional()
+  stripeAccountId?: string;
 }

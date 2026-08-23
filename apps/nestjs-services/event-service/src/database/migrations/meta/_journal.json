@@ -15,6 +15,13 @@
       "when": 1780284670393,
       "tag": "0001_rare_northstar",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1780284680000,
+      "tag": "0002_dynamic_event_types",
+      "breakpoints": false
     }
   ]
 }

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useAuthStore } from "@/stores/auth-store";
-import { getGroup, listGroupPosts, findJamSessions, type GroupData, type GroupPost, type JamSession } from "@/lib/api";
+import { getGroup, listGroupPosts, findJamSessions, sessionWanted, type GroupData, type GroupPost, type JamSession } from "@/lib/api";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -176,7 +176,7 @@ export default function GroupHubPage() {
                           </p>
                         </div>
                         <div className="flex gap-1">
-                          {jam.instrumentsWanted?.slice(0, 3).map((inst) => (
+                          {sessionWanted(jam).slice(0, 3).map((inst) => (
                             <Badge key={inst} variant="accent" className="text-[10px]">
                               {inst.replace(/_/g, " ")}
                             </Badge>

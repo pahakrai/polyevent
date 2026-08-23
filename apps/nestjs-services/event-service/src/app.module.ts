@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { KafkaModule } from '@polydom/kafka-client';
 import { NatsModule } from '@polydom/nats-client';
 import { EventModule } from './event/event.module';
+import { EventTypeModule } from './event-type/event-type.module';
 import { HealthController } from './health.controller';
 
 const imports: any[] = [
@@ -11,6 +12,7 @@ const imports: any[] = [
     envFilePath: ['.env', '../../../.env'],
   }),
   EventModule,
+  EventTypeModule,
 ];
 
 if (process.env.KAFKA_BROKERS) {

@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { createEvent } from '@/lib/api';
+import { createEvent, getEventTypes, type EventTypeDefinition } from '@/lib/api';
 import { useAuthStore } from '@/stores/auth-store';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -50,6 +50,9 @@ function NewEventForm() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [mounted, setMounted] = useState(false);
+  const [eventTypes, setEventTypes] = useState<EventTypeDefinition[]>([]);
+  const [eventTypeSlug, setEventTypeSlug] = useState('');
+  const [attributes, setAttributes] = useState<Record<string, string>>({});
 
   const [form, setForm] = useState<FormData>({
     title: '',
@@ -76,6 +79,15 @@ function NewEventForm() {
   });
 
   useEffect(() => { setMounted(true); }, []);
+
+  useEffect(() => {
+    getEventTypes()
+      .then(setEventTypes)
+      .catch(() => setEventTypes([]));
+  }, []);
+
+  const selectedType = eventTypes.find((t) => t.slug === eventTypeSlug) || null;
+  const schemaProps = (selectedType?.attributesSchema as any)?.properties ?? {};
 
   if (!mounted) return null;
 
@@ -135,6 +147,21 @@ function NewEventForm() {
       price.price = 0;
     }
 
+    // Build type-specific attributes from the schema-driven inputs.
+    const attributesPayload: Record<string, any> = {};
+    for (const [key, spec] of Object.entries(schemaProps)) {
+      const raw = attributes[key];
+      if (raw == null || raw === '') continue;
+      const s = spec as any;
+      if (s.type === 'array') {
+        attributesPayload[key] = raw.split(',').map((x) => x.trim()).filter(Boolean);
+      } else if (s.type === 'number' || s.type === 'integer') {
+        attributesPayload[key] = Number(raw);
+      } else {
+        attributesPayload[key] = raw;
+      }
+    }
+
     setSubmitting(true);
     try {
       const res = await createEvent({
@@ -156,6 +183,8 @@ function NewEventForm() {
         groupId: form.groupId || undefined,
         vendorId: form.vendorId || undefined,
         timeSlotId: form.timeSlotId || undefined,
+        eventTypeSlug: eventTypeSlug || undefined,
+        attributes: Object.keys(attributesPayload).length > 0 ? attributesPayload : undefined,
       });
 
       router.push(`/events/${res.id || res.data?.id}`);
@@ -239,6 +268,63 @@ function NewEventForm() {
               ))}
             </select>
           </div>
+        </Card>
+
+        {/* Event type + dynamic attributes */}
+        <Card className="space-y-4 p-6">
+          <h2 className="text-lg font-semibold">Event Type</h2>
+          <div>
+            <label className={labelClass}>Type</label>
+            <select
+              className={inputClass}
+              value={eventTypeSlug}
+              onChange={(e) => {
+                setEventTypeSlug(e.target.value);
+                setAttributes({});
+              }}
+            >
+              <option value="">General event (no specific type)</option>
+              {eventTypes.map((t) => (
+                <option key={t.id} value={t.slug}>
+                  {t.name} — {t.category.toLowerCase()}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {selectedType?.description && (
+            <p className="text-sm text-muted-foreground">{selectedType.description}</p>
+          )}
+
+          {Object.keys(schemaProps).length > 0 && (
+            <div className="space-y-4 border-t border-border pt-4">
+              <p className="text-sm text-muted-foreground">
+                Additional details for this event type:
+              </p>
+              {Object.entries(schemaProps).map(([key, spec]) => {
+                const s = spec as any;
+                const isArray = s.type === 'array';
+                const isNumber = s.type === 'number' || s.type === 'integer';
+                const label =
+                  s.title ||
+                  key.replace(/([A-Z])/g, ' $1').replace(/^./, (c: string) => c.toUpperCase());
+                return (
+                  <div key={key}>
+                    <label className={labelClass}>{label}</label>
+                    <input
+                      type={isNumber ? 'number' : 'text'}
+                      className={inputClass}
+                      placeholder={isArray ? 'Comma-separated values' : ''}
+                      value={attributes[key] ?? ''}
+                      onChange={(e) =>
+                        setAttributes((prev) => ({ ...prev, [key]: e.target.value }))
+                      }
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </Card>
 
         {/* Schedule */}

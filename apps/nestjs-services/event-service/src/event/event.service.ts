@@ -1,6 +1,6 @@
 import { Injectable, Logger, NotFoundException, ConflictException, GoneException, BadRequestException, Optional } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { eq, and, sql, like, or, inArray } from 'drizzle-orm';
+import { eq, and, sql, like, or, inArray, lt, isNull } from 'drizzle-orm';
 import { db } from '../database/client';
 import { events, eventInvitations, Event, NewEvent, EventInvitation, NewEventInvitation } from '../database/schema';
 import { RedisClient } from '@polydom/database-client';
@@ -11,6 +11,7 @@ import {
   EventLifecycleType,
   EventLifecycleMessage,
 } from '@polydom/kafka-client';
+import { EventTypeService } from '../event-type/event-type.service';
 import { CreateEventDto, UpdateEventDto, EventSearchDto, CreateJamSessionDto } from './dto';
 
 function vendorLockKey(vendorId: string, timeslotId: string): string {
@@ -24,6 +25,7 @@ export class EventService {
 
   constructor(
     private readonly configService: ConfigService,
+    private readonly eventTypeService: EventTypeService,
     @Optional() private readonly redisClient?: RedisClient,
     @Optional() private readonly kafkaProducer?: BaseProducer,
     @Optional() private readonly natsProducer?: NatsProducer,
@@ -39,6 +41,8 @@ export class EventService {
   // ═══════════════════════════════════════════════════════════════════
 
   async create(dto: CreateEventDto): Promise<Event> {
+    const ctx = await this.resolveEventTypeContext(dto);
+
     const [event] = await db
       .insert(events)
       .values({
@@ -46,7 +50,7 @@ export class EventService {
         venueId: dto.venueId,
         title: dto.title,
         description: dto.description,
-        category: dto.category,
+        category: ctx.category as any,
         subCategory: dto.subCategory,
         startTime: new Date(dto.startTime),
         endTime: new Date(dto.endTime),
@@ -58,14 +62,14 @@ export class EventService {
         ageRestriction: dto.ageRestriction,
         isRecurring: dto.isRecurring || false,
         recurringRule: dto.recurringRule,
-        eventType: (dto.eventType as any) || 'FORMAL',
-        instrumentsWanted: dto.instrumentsWanted || [],
+        eventTypeId: ctx.eventTypeId,
+        attributes: ctx.attributes,
         hostId: dto.hostId,
         groupId: dto.groupId,
       })
       .returning();
 
-    this.logger.log(`Event created: ${event.id} — "${event.title}"`);
+    this.logger.log(`Event created: ${event.id} — "${event.title}" (${ctx.category})`);
     await this.publishLifecycleEvent(event, 'event_created');
     return event;
   }
@@ -80,6 +84,8 @@ export class EventService {
       }
     }
 
+    const ctx = await this.resolveEventTypeContext(dto);
+
     const [event] = await db
       .insert(events)
       .values({
@@ -87,7 +93,7 @@ export class EventService {
         venueId: dto.venueId,
         title: dto.title,
         description: dto.description,
-        category: dto.category,
+        category: ctx.category as any,
         subCategory: dto.subCategory,
         startTime: new Date(dto.startTime),
         endTime: new Date(dto.endTime),
@@ -102,7 +108,8 @@ export class EventService {
         timeSlotId: dto.timeSlotId,
         vendorStatus: dto.vendorId && dto.timeSlotId ? 'PENDING_CONFIRMATION' : 'NONE',
         vendorLockedAt: dto.vendorId && dto.timeSlotId ? new Date() : undefined,
-        eventType: (dto.eventType as any) || 'FORMAL',
+        eventTypeId: ctx.eventTypeId,
+        attributes: ctx.attributes,
       })
       .returning();
 
@@ -160,6 +167,8 @@ export class EventService {
     if (dto.tags !== undefined) updateData.tags = dto.tags;
     if (dto.images !== undefined) updateData.images = dto.images;
     if (dto.ageRestriction !== undefined) updateData.ageRestriction = dto.ageRestriction;
+    if (dto.eventTypeId !== undefined) updateData.eventTypeId = dto.eventTypeId;
+    if (dto.attributes !== undefined) updateData.attributes = dto.attributes;
 
     const [updated] = await db
       .update(events)
@@ -392,12 +401,14 @@ export class EventService {
   // ═══════════════════════════════════════════════════════════════════
 
   async createJamSession(hostId: string, dto: CreateJamSessionDto): Promise<Event> {
+    const type = await this.eventTypeService.findBySlug('jam_session');
+
     const [event] = await db
       .insert(events)
       .values({
         title: dto.title,
         description: dto.description,
-        category: 'MUSIC',
+        category: type?.category ?? 'MUSIC',
         startTime: new Date(dto.startTime),
         endTime: new Date(dto.endTime),
         location: dto.location,
@@ -406,8 +417,8 @@ export class EventService {
         maxAttendees: dto.maxParticipants || 10,
         tags: dto.genres || [],
         status: 'PUBLISHED',
-        eventType: 'JAM_SESSION',
-        instrumentsWanted: dto.instrumentsWanted,
+        eventTypeId: type?.id,
+        attributes: { instrumentsWanted: dto.instrumentsWanted },
         hostId,
         groupId: dto.groupId,
         allowInvites: true,
@@ -421,7 +432,7 @@ export class EventService {
         eventId: event.id,
         hostId,
         title: event.title,
-        instrumentsWanted: event.instrumentsWanted,
+        attributes: event.attributes,
         timestamp: new Date().toISOString(),
       });
     } catch (err) {
@@ -445,16 +456,17 @@ export class EventService {
     const limit = Math.min(params.limit ?? 20, 50);
     const offset = (page - 1) * limit;
 
-    const conditions: any[] = [eq(events.eventType, 'JAM_SESSION'), eq(events.status, 'PUBLISHED')];
+    const jamType = await this.eventTypeService.findBySlug('jam_session');
+    const conditions: any[] = [eq(events.status, 'PUBLISHED')];
+    if (jamType) {
+      conditions.push(eq(events.eventTypeId, jamType.id));
+    } else {
+      // No seeded jam_session type — return nothing rather than every event.
+      return { data: [], total: 0 };
+    }
 
     if (params.groupId) {
       conditions.push(eq(events.groupId, params.groupId));
-    }
-
-    if (params.instrumentsWanted?.length) {
-      conditions.push(
-        sql`${events.instrumentsWanted} && ${params.instrumentsWanted}::text[]`,
-      );
     }
 
     if (params.genres?.length) {
@@ -481,11 +493,12 @@ export class EventService {
 
   async rsvp(eventId: string, userId: string): Promise<{ invitation: EventInvitation; event: Event }> {
     const event = await this.findById(eventId);
-    if (event.eventType !== 'JAM_SESSION') {
-      throw new BadRequestException('RSVP is only available for jam sessions');
+    const type = event.eventTypeId ? await this.eventTypeService.findById(event.eventTypeId) : null;
+    if (!type?.allowRsvp) {
+      throw new BadRequestException('RSVP is not available for this event type');
     }
     if (event.status !== 'PUBLISHED') {
-      throw new ConflictException('Jam session is not open');
+      throw new ConflictException('Event is not open');
     }
 
     const [existing] = await db
@@ -566,13 +579,50 @@ export class EventService {
       ));
   }
 
+  /**
+   * Atomically reserve one seat for a confirmed booking.
+   * Uses a conditional UPDATE so concurrent confirmations can never oversell:
+   * the increment only succeeds while `current_bookings < max_attendees`.
+   */
   async incrementBookings(id: string): Promise<Event> {
     const [updated] = await db
       .update(events)
       .set({ currentBookings: sql`current_bookings + 1` })
+      .where(and(
+        eq(events.id, id),
+        or(isNull(events.maxAttendees), lt(events.currentBookings, events.maxAttendees)),
+      ))
+      .returning();
+
+    if (!updated) {
+      const [event] = await db.select().from(events).where(eq(events.id, id)).limit(1);
+      if (!event) throw new NotFoundException(`Event ${id} not found`);
+      await db.update(events).set({ status: 'SOLD_OUT' }).where(eq(events.id, id));
+      throw new ConflictException('Event is sold out');
+    }
+
+    // Mark sold out the moment the last seat is taken.
+    if (updated.maxAttendees && updated.currentBookings >= updated.maxAttendees) {
+      await db.update(events).set({ status: 'SOLD_OUT' }).where(eq(events.id, id));
+    }
+
+    return updated;
+  }
+
+  /** Release one seat, e.g. when a booking is refunded/cancelled. */
+  async decrementBookings(id: string): Promise<Event> {
+    const [updated] = await db
+      .update(events)
+      .set({ currentBookings: sql`GREATEST(current_bookings - 1, 0)` })
       .where(eq(events.id, id))
       .returning();
     if (!updated) throw new NotFoundException(`Event ${id} not found`);
+
+    // Reopen if it had been marked sold out.
+    if (updated.status === 'SOLD_OUT' && updated.maxAttendees && updated.currentBookings < updated.maxAttendees) {
+      await db.update(events).set({ status: 'PUBLISHED' }).where(eq(events.id, id));
+    }
+
     return updated;
   }
 
@@ -641,6 +691,49 @@ export class EventService {
   // ═══════════════════════════════════════════════════════════════════
   //  Helpers
   // ═══════════════════════════════════════════════════════════════════
+
+  /**
+   * Resolve the event type, category, and type-specific `attributes` for a
+   * create/update request. Falls back gracefully for legacy callers that still
+   * pass `eventType` (FORMAL/JAM_SESSION) and `instrumentsWanted`.
+   */
+  private async resolveEventTypeContext(dto: {
+    eventTypeId?: string;
+    eventTypeSlug?: string;
+    eventType?: string;
+    category?: string;
+    attributes?: Record<string, any>;
+    instrumentsWanted?: string[];
+  }): Promise<{ category: string; eventTypeId: string | null; attributes: Record<string, any> }> {
+    let type: { id: string; category: string } | null = null;
+    if (dto.eventTypeId) {
+      type = await this.eventTypeService.findById(dto.eventTypeId);
+    } else {
+      const slug = dto.eventTypeSlug || this.legacyEventTypeToSlug(dto.eventType);
+      if (slug) type = await this.eventTypeService.findBySlug(slug);
+    }
+
+    const attributes =
+      dto.attributes ??
+      (dto.instrumentsWanted?.length ? { instrumentsWanted: dto.instrumentsWanted } : {});
+
+    return {
+      category: (type?.category as string) ?? dto.category ?? 'OTHER',
+      eventTypeId: type?.id ?? null,
+      attributes,
+    };
+  }
+
+  private legacyEventTypeToSlug(eventType?: string): string | null {
+    switch (eventType) {
+      case 'JAM_SESSION':
+        return 'jam_session';
+      case 'FORMAL':
+        return 'general';
+      default:
+        return eventType || null;
+    }
+  }
 
   private async publishLifecycleEvent(
     event: Event,

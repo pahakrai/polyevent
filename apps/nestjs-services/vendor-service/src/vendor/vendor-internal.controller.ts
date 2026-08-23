@@ -48,4 +48,13 @@ export class VendorInternalController {
     this.checkInternalKey(internalKey);
     return this.vendorService.findByUserId(userId);
   }
+
+  @Get(':id')
+  findById(
+    @Headers('x-internal-key') internalKey: string,
+    @Param('id') id: string,
+  ) {
+    this.checkInternalKey(internalKey);
+    return this.vendorService.findById(id);
+  }
 }

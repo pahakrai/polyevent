@@ -58,6 +58,7 @@ export const vendors = pgTable('vendors', {
   address: json('address').notNull(),
   location: json('location').notNull(),
   coverImage: text('cover_image'),
+  stripeAccountId: text('stripe_account_id'), // Stripe connected account for payouts
   verificationStatus: text('verification_status').notNull().default('PENDING'),
   rating: real('rating').notNull().default(0),
   totalReviews: integer('total_reviews').notNull().default(0),
@@ -96,15 +97,28 @@ export const timeSlots = pgTable('time_slots', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdateFn(() => new Date()),
 });
+// Review table — user reviews of a vendor (1-5 stars)
+export const reviews = pgTable('reviews', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  vendorId: text('vendor_id').notNull().references(() => vendors.id, { onDelete: 'cascade' }),
+  userId: text('user_id').notNull(),
+  rating: integer('rating').notNull(), // 1-5
+  comment: text('comment'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+});
+
 // Indexes
 export const venuesVendorIdIdx = index('venues_vendor_id_idx').on(venues.vendorId);
 export const timeSlotsVenueIdIdx = index('time_slots_venue_id_idx').on(timeSlots.venueId);
+export const reviewsVendorIdIdx = index('reviews_vendor_id_idx').on(reviews.vendorId);
+export const reviewsUserIdIdx = index('reviews_user_id_idx').on(reviews.userId);
 
 // Export schema
 export const schema = {
   vendors,
   venues,
   timeSlots,
+  reviews,
 };
 
 // Export types
@@ -114,3 +128,5 @@ export type Venue = typeof venues.$inferSelect;
 export type NewVenue = typeof venues.$inferInsert;
 export type TimeSlot = typeof timeSlots.$inferSelect;
 export type NewTimeSlot = typeof timeSlots.$inferInsert;
+export type Review = typeof reviews.$inferSelect;
+export type NewReview = typeof reviews.$inferInsert;

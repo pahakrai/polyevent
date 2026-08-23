@@ -10,6 +10,7 @@ import {
   Headers,
   ParseIntPipe,
   DefaultValuePipe,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { EventService } from './event.service';
 import { CreateEventDto, UpdateEventDto, CreateJamSessionDto } from './dto';
@@ -202,8 +203,28 @@ export class EventController {
 
   // ── Internal: called by booking-service on payment confirmation ──────
 
+  private checkInternalKey(key?: string) {
+    const expected = process.env.INTERNAL_SERVICE_KEY || 'internal-secret';
+    if (key !== expected) {
+      throw new UnauthorizedException('Invalid internal service key');
+    }
+  }
+
   @Post(':id/increment-bookings')
-  incrementBookings(@Param('id') id: string) {
+  incrementBookings(
+    @Headers('x-internal-key') internalKey: string,
+    @Param('id') id: string,
+  ) {
+    this.checkInternalKey(internalKey);
     return this.eventService.incrementBookings(id);
+  }
+
+  @Post(':id/decrement-bookings')
+  decrementBookings(
+    @Headers('x-internal-key') internalKey: string,
+    @Param('id') id: string,
+  ) {
+    this.checkInternalKey(internalKey);
+    return this.eventService.decrementBookings(id);
   }
 }

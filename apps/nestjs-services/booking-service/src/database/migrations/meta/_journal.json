@@ -8,6 +8,13 @@
       "when": 1778303000000,
       "tag": "0000_flawless_stonewall",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1778303002000,
+      "tag": "0002_money_to_cents",
+      "breakpoints": false
     }
   ]
 }

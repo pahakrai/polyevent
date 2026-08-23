@@ -46,9 +46,9 @@ export default function MusiciansPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold">Musicians Near You</h1>
+        <h1 className="text-2xl font-bold">People Near You</h1>
         <p className="mt-1 text-muted-foreground">
-          {total} musician{total !== 1 ? "s" : ""} looking to connect
+          {total} {total === 1 ? "person" : "people"} looking to connect
         </p>
       </div>
 
@@ -123,7 +123,7 @@ export default function MusiciansPage() {
 
       {!loading && profiles.length === 0 && (
         <div className="py-16 text-center">
-          <p className="text-lg text-muted-foreground">No musicians found yet.</p>
+          <p className="text-lg text-muted-foreground">No people found yet.</p>
         </div>
       )}
     </div>

@@ -14,7 +14,7 @@ import { MusicianProfileForm } from "@/components/MusicianProfileForm";
 const INTENT_LABELS: Record<string, { label: string; color: string }> = {
   LOOKING_TO_JOIN: { label: "Looking to join", color: "bg-green-100 text-green-800" },
   LOOKING_FOR_MEMBERS: { label: "Looking for members", color: "bg-blue-100 text-blue-800" },
-  OPEN_TO_JAM: { label: "Open to jam", color: "bg-amber-100 text-amber-800" },
+  OPEN_TO_PARTICIPATE: { label: "Open to join", color: "bg-amber-100 text-amber-800" },
   JUST_BROWSING: { label: "Browsing", color: "bg-muted text-muted-foreground" },
 };
 

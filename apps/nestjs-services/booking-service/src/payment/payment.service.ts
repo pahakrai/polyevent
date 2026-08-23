@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException, Optional } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, ConflictException, Optional } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { eq } from 'drizzle-orm';
 import { db } from '../database/client';
@@ -81,14 +81,14 @@ export class PaymentService {
         eventId: input.eventId,
         vendorId: input.vendorId,
         ticketCount: input.ticketCount || 1,
-        totalAmount: amountCents / 100,
+        totalAmount: amountCents, // cents
         currency: input.currency,
         status: 'PENDING',
         promoCode: input.promoCode || undefined,
-        discountAmount: (input.discountCents || 0) / 100,
+        discountAmount: input.discountCents || 0, // cents
         platformFeePercent: feeBreakdown.feePercent,
-        platformFeeAmount: feeBreakdown.feeAmountCents / 100,
-        netVendorAmount: feeBreakdown.netAmountCents / 100,
+        platformFeeAmount: feeBreakdown.feeAmountCents, // cents
+        netVendorAmount: feeBreakdown.netAmountCents, // cents
         metadata: input.metadata || {},
       } as NewBooking)
       .returning();
@@ -98,7 +98,7 @@ export class PaymentService {
       .insert(payments)
       .values({
         bookingId: booking.id,
-        amount: amountCents / 100,
+        amount: amountCents, // cents
         currency: input.currency,
         status: 'PENDING',
         method: 'STRIPE',
@@ -111,9 +111,9 @@ export class PaymentService {
     await db.insert(vendorPayouts).values({
       vendorId: input.vendorId,
       bookingId: booking.id,
-      bookingAmount: amountCents / 100,
-      platformFee: feeBreakdown.feeAmountCents / 100,
-      netAmount: feeBreakdown.netAmountCents / 100,
+      bookingAmount: amountCents, // cents
+      platformFee: feeBreakdown.feeAmountCents, // cents
+      netAmount: feeBreakdown.netAmountCents, // cents
       currency: input.currency,
       status: 'PENDING',
     } as NewVendorPayout);
@@ -128,7 +128,12 @@ export class PaymentService {
     return { booking, payment, clientSecret, feeBreakdown };
   }
 
-  /** Confirm a booking after successful payment. Called by webhook or manual confirmation. */
+  /**
+   * Confirm a booking after successful payment. Called by webhook or manual confirmation.
+   *
+   * Idempotent: if the booking is already CONFIRMED we return without re-incrementing
+   * capacity or re-emitting events, so a retried Stripe webhook is a safe no-op.
+   */
   async confirmBooking(bookingId: string, stripePaymentIntentId?: string): Promise<void> {
     const [booking] = await db
       .select()
@@ -137,6 +142,20 @@ export class PaymentService {
       .limit(1);
 
     if (!booking) throw new NotFoundException(`Booking ${bookingId} not found`);
+
+    if (booking.status === 'CONFIRMED') {
+      this.logger.log(`Booking ${bookingId} already CONFIRMED — idempotent no-op`);
+      return;
+    }
+
+    if (booking.status !== 'PENDING') {
+      throw new ConflictException(
+        `Booking ${bookingId} is ${booking.status} and cannot be confirmed`,
+      );
+    }
+
+    // Reserve capacity in event-service BEFORE confirming. Throws if the event is full.
+    await this.incrementEventBookings(booking.eventId);
 
     await db
       .update(bookings)
@@ -156,20 +175,6 @@ export class PaymentService {
       .set({ status: 'SCHEDULED' })
       .where(eq(vendorPayouts.bookingId, bookingId));
 
-    // Notify event-service to increment currentBookings
-    const eventServiceUrl = this.nestConfig.get<string>(
-      'EVENT_SERVICE_URL',
-      'http://localhost:3004',
-    );
-    try {
-      await fetch(`${eventServiceUrl}/events/${booking.eventId}/increment-bookings`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-      });
-    } catch (err) {
-      this.logger.warn(`Failed to notify event-service: ${(err as Error).message}`);
-    }
-
     this.logger.log(`Booking ${bookingId} CONFIRMED — payout scheduled`);
 
     // Re-read booking to get updated status for the Kafka event
@@ -182,6 +187,39 @@ export class PaymentService {
     // Emit booking_confirmed event for ML pipeline
     if (updatedBooking) {
       await this.publishBookingEvent('booking_confirmed', updatedBooking);
+    }
+  }
+
+  /**
+   * Atomically reserve one seat for a confirmed booking in event-service.
+   * Throws ConflictException when the event is sold out.
+   */
+  private async incrementEventBookings(eventId: string): Promise<void> {
+    const eventServiceUrl =
+      this.nestConfig.get<string>('EVENT_SERVICE_URL') || 'http://localhost:3004';
+    const internalKey =
+      this.nestConfig.get<string>('INTERNAL_SERVICE_KEY') || 'internal-secret';
+
+    try {
+      const res = await fetch(`${eventServiceUrl}/events/${eventId}/increment-bookings`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-internal-key': internalKey,
+        },
+      });
+
+      if (res.status === 409) {
+        throw new ConflictException('Event is sold out');
+      }
+      if (!res.ok) {
+        throw new Error(`event-service returned ${res.status}`);
+      }
+    } catch (err) {
+      if (err instanceof ConflictException) throw err;
+      // Best-effort: log and continue so a paid booking is never lost if
+      // event-service is briefly unreachable. Stripe will retry the webhook.
+      this.logger.warn(`Failed to increment bookings for event ${eventId}: ${(err as Error).message}`);
     }
   }
 

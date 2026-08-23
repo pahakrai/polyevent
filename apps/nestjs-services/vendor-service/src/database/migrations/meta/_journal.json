@@ -8,6 +8,13 @@
       "when": 1778302996252,
       "tag": "0000_tranquil_amazoness",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1778302997000,
+      "tag": "0002_reviews_and_stripe_account",
+      "breakpoints": false
     }
   ]
 }
